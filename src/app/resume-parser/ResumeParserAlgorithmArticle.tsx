@@ -39,7 +39,6 @@ export const ResumeParserAlgorithmArticle = ({
     if (item.hasEOL) {
       content = `${content} NewLine`;
     }
-    content += ` Font=${item.fontName}`;
     return content;
   };
   const step1TextItemsTable = [
@@ -75,7 +74,7 @@ export const ResumeParserAlgorithmArticle = ({
         {scores
           .sort((a, b) => b.score - a.score)
           .map((item, idx) => (
-            <span key={idx}>
+            <span key={idx} className="break-all">
               <Badge>{item.score}</Badge> {item.text}
               <br />
             </span>
@@ -178,7 +177,7 @@ export const ResumeParserAlgorithmArticle = ({
                         </mrow>
                     </math>`,
           }}
-          className="my-2 block text-left"
+          className="my-2 block text-left text-base"
         />
         The average typical character width is calculated by dividing the sum of
         all text items' widths by the total number characters of the text items
