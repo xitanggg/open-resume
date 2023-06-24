@@ -1,0 +1,22 @@
+/* Adding a new font family needs to keep "public\fonts\fonts.ts" in sync */
+@font-face {font-family: "Roboto"; src: url("/fonts/Roboto-Regular.ttf");}
+@font-face {font-family: "Roboto"; src: url("/fonts/Roboto-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "Lato"; src: url("/fonts/Lato-Regular.ttf");}
+@font-face {font-family: "Lato"; src: url("/fonts/Lato-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "Montserrat"; src: url("/fonts/Montserrat-Regular.ttf");}
+@font-face {font-family: "Montserrat"; src: url("/fonts/Montserrat-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "OpenSans"; src: url("/fonts/OpenSans-Regular.ttf");}
+@font-face {font-family: "OpenSans"; src: url("/fonts/OpenSans-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "Raleway"; src: url("/fonts/Raleway-Regular.ttf");}
+@font-face {font-family: "Raleway"; src: url("/fonts/Raleway-Bold.ttf"); font-weight: bold;}
+
+@font-face {font-family: "RobotoSlab"; src: url("/fonts/RobotoSlab-Regular.ttf");}
+@font-face {font-family: "RobotoSlab"; src: url("/fonts/RobotoSlab-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "PlayfairDisplay"; src: url("/fonts/PlayfairDisplay-Regular.ttf");}
+@font-face {font-family: "PlayfairDisplay"; src: url("/fonts/PlayfairDisplay-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "Merriweather"; src: url("/fonts/Merriweather-Regular.ttf");}
+@font-face {font-family: "Merriweather"; src: url("/fonts/Merriweather-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "Lora"; src: url("/fonts/Lora-Regular.ttf");}
+@font-face {font-family: "Lora"; src: url("/fonts/Lora-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "Caladea"; src: url("/fonts/Caladea-Regular.ttf");}
+@font-face {font-family: "Caladea"; src: url("/fonts/Caladea-Bold.ttf"); font-weight: bold;}

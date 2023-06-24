@@ -19,8 +19,11 @@
         "name": "next"
       }
     ],
+    "baseUrl": "./src/app",
+    // Path Mapping Doc: https://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping
     "paths": {
-      "@/*": ["./src/*"]
+      "public/*": ["../../public/*"],
+      "*": ["*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
