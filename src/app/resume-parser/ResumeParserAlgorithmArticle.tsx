@@ -145,7 +145,7 @@ export const ResumeParserAlgorithmArticle = ({
         <Table
           table={step1TextItemsTable}
           className="!border-none"
-          tdClassNames={["", "", "whitespace-nowrap"]}
+          tdClassNames={["", "", "md:whitespace-nowrap"]}
         />
       </div>
       {/* Step 2. Group text items into lines */}

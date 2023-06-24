@@ -16,7 +16,7 @@ const LOGOS = [
 ];
 
 export const LogoCloud = () => (
-  <section className="mt-10">
+  <section className="mt-14 lg:mt-10">
     <h2 className="text-center font-semibold text-gray-500">
       Trusted by students and employees from top universities and companies
       worldwide
@@ -25,7 +25,7 @@ export const LogoCloud = () => (
       {LOGOS.map(({ src, alt }, idx) => (
         <Image
           key={idx}
-          className="col-span-3 h-full max-h-10 max-w-[10rem] lg:col-span-1"
+          className="col-span-3 h-full max-h-10 max-w-[130px] lg:col-span-1 lg:max-w-[160px]"
           src={src}
           alt={alt}
         />

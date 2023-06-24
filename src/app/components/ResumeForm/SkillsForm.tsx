@@ -59,7 +59,13 @@ export const SkillsForm = () => {
         <InputGroupWrapper
           label="Featured Skills (Optional)"
           className="col-span-full"
-        />
+        >
+          <p className="mt-2 text-sm font-normal text-gray-600">
+            Featured skills is optional to highlight top skills, with more
+            circles mean higher proficiency.
+          </p>
+        </InputGroupWrapper>
+
         {featuredSkills.map(({ skill, rating }, idx) => (
           <FeaturedSkillInput
             key={idx}

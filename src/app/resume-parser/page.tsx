@@ -53,17 +53,17 @@ export default function ResumeParser() {
 
   return (
     <main className="h-full w-full overflow-hidden">
-      <div className="grid sm:grid-cols-6">
-        <div className="flex justify-end px-2 sm:col-span-3 sm:h-[calc(100vh-var(--top-nav-bar-height))]">
-          <section className="mt-5 max-w-[600px] grow">
+      <div className="grid md:grid-cols-6">
+        <div className="flex justify-center px-2 md:col-span-3 md:h-[calc(100vh-var(--top-nav-bar-height))] md:justify-end">
+          <section className="mt-5 grow px-4 md:max-w-[600px] md:px-0">
             <div className="aspect-h-[9.5] aspect-w-7">
               <iframe src={`${fileUrl}#navpanes=0`} className="h-full w-full" />
             </div>
           </section>
-          <FlexboxSpacer maxWidth={45} className="hidden sm:block" />
+          <FlexboxSpacer maxWidth={45} className="hidden md:block" />
         </div>
-        <div className="flex px-6 text-gray-900 sm:col-span-3 sm:h-[calc(100vh-var(--top-nav-bar-height))] sm:overflow-y-scroll">
-          <FlexboxSpacer maxWidth={45} />
+        <div className="flex px-6 text-gray-900 md:col-span-3 md:h-[calc(100vh-var(--top-nav-bar-height))] md:overflow-y-scroll">
+          <FlexboxSpacer maxWidth={45} className="hidden md:block" />
           <section className="max-w-[600px] grow">
             <Heading className="text-primary !mt-4">
               Resume Parser Playground

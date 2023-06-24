@@ -34,7 +34,7 @@ export const ResumeForm = () => {
   return (
     <div
       className={cx(
-        "flex h-[calc(100vh-var(--top-nav-bar-height))] justify-end overflow-y-scroll scrollbar scrollbar-track-gray-100 scrollbar-w-3",
+        "flex justify-center scrollbar scrollbar-track-gray-100 scrollbar-w-3 md:h-[calc(100vh-var(--top-nav-bar-height))] md:justify-end md:overflow-y-scroll",
         isHover && "scrollbar-thumb-gray-200"
       )}
       onMouseOver={() => setIsHover(true)}
@@ -49,7 +49,7 @@ export const ResumeForm = () => {
         <ThemeForm />
         <br />
       </section>
-      <FlexboxSpacer maxWidth={50} />
+      <FlexboxSpacer maxWidth={50} className="hidden md:block" />
     </div>
   );
 };
