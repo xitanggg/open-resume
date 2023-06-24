@@ -25,7 +25,7 @@ It has 5 Core Features:
 
 OpenResume’s second component is the resume parser. For those who have an existing resume, the resume parser can help test and confirm its ATS readability.
 
-![Resume Parser Demo](https://i.ibb.co/GnbJGB5/resume-parser-demo.gif)
+![Resume Parser Demo](https://i.ibb.co/JvSVwNk/resume-parser-demo-optimize.gif)
 
 You can learn more about the resume parser algorithm in the ["Resume Parser Algorithm Deep Dive" section](https://open-resume.com/resume-parser).
 
