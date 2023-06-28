@@ -48,9 +48,8 @@ export const useSetDefaultScale = ({
       setScale(defaultScale);
     };
 
-    setDefaultScale();
-
     if (scaleOnResize) {
+      setDefaultScale();
       window.addEventListener("resize", setDefaultScale);
     }
 
