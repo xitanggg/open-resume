@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import addPdfSrc from "public/assets/add-pdf.svg";
 import Image from "next/image";
 import { cx } from "lib/cx";
+import isEmpty from "lodash/isEmpty";
+import cloneDeep from "lodash/cloneDeep";
 
 const defaultFileState = {
   name: "",
@@ -69,7 +71,17 @@ export const ResumeDropzone = ({
 
   const onImportClick = async () => {
     const resume = await parseResumeFromPdf(file.fileUrl);
-    saveStateToLocalStorage({ resume, settings: initialSettings });
+    let settings = cloneDeep(initialSettings);
+    const sections = Object.keys(
+      settings.formToShow
+    ) as (keyof typeof settings.formToShow)[];
+    for (const section of sections) {
+      if (isEmpty(resume[section])) {
+        settings.formToShow[section] = false;
+      }
+    }
+
+    saveStateToLocalStorage({ resume, settings });
     router.push("/resume-builder");
   };
 
