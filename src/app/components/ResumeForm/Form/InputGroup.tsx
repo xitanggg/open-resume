@@ -80,8 +80,17 @@ export const Textarea = <T extends string>({
   );
 };
 
+export const BulletListTextarea = <T extends string>(
+  props: InputProps<T, string[]> & { showBulletPoints?: boolean }
+) => {
+  if (navigator.userAgent.includes("Firefox")) {
+    return <BulletListTextareaFallback {...props} />;
+  }
+  return <BulletListTextareaGeneral {...props} />;
+};
+
 /**
- * BulletListTextarea is a textarea where each new line starts with a bullet point.
+ * BulletListTextareaGeneral is a textarea where each new line starts with a bullet point.
  *
  * In its core, it uses a div with contentEditable set to True. However, when
  * contentEditable is True, user can paste in any arbitrary html and it would
@@ -90,7 +99,7 @@ export const Textarea = <T extends string>({
  *
  * Reference: https://stackoverflow.com/a/74998090/7699841
  */
-export const BulletListTextarea = <T extends string>({
+const BulletListTextareaGeneral = <T extends string>({
   label,
   labelClassName: wrapperClassName,
   name,
@@ -100,7 +109,6 @@ export const BulletListTextarea = <T extends string>({
   showBulletPoints = true,
 }: InputProps<T, string[]> & { showBulletPoints?: boolean }) => {
   const html = getHTMLFromBulletListStrings(bulletListStrings);
-
   return (
     <InputGroupWrapper label={label} className={wrapperClassName}>
       <ContentEditable
@@ -112,7 +120,7 @@ export const BulletListTextarea = <T extends string>({
         placeholder={placeholder}
         onChange={(e) => {
           if (e.type === "input") {
-            const { innerText } = e.currentTarget;
+            const { innerText } = e.currentTarget as HTMLDivElement;
             const newBulletListStrings =
               getBulletListStringsFromInnerText(innerText);
             onChange(name, newBulletListStrings);
@@ -159,4 +167,97 @@ const getHTMLFromBulletListStrings = (bulletListStrings: string[]) => {
   }
 
   return bulletListStrings.map((text) => `<div>${text}</div>`).join("");
+};
+
+/**
+ * BulletListTextareaFallback is a fallback for BulletListTextareaGeneral to work around
+ * content editable div issue in some browsers. For example, in Firefox, if user enters
+ * space in the content editable div at the end of line, Firefox returns it as a new
+ * line character \n instead of space in innerText.
+ */
+const BulletListTextareaFallback = <T extends string>({
+  label,
+  labelClassName,
+  name,
+  value: bulletListStrings = [],
+  placeholder,
+  onChange,
+  showBulletPoints = true,
+}: InputProps<T, string[]> & { showBulletPoints?: boolean }) => {
+  const textareaValue = getTextareaValueFromBulletListStrings(
+    bulletListStrings,
+    showBulletPoints
+  );
+
+  return (
+    <Textarea
+      label={label}
+      labelClassName={labelClassName}
+      name={name}
+      value={textareaValue}
+      placeholder={placeholder}
+      onChange={(name, value) => {
+        onChange(
+          name,
+          getBulletListStringsFromTextareaValue(value, showBulletPoints)
+        );
+      }}
+    />
+  );
+};
+
+const getTextareaValueFromBulletListStrings = (
+  bulletListStrings: string[],
+  showBulletPoints: boolean
+) => {
+  const prefix = showBulletPoints ? "• " : "";
+
+  if (bulletListStrings.length === 0) {
+    return prefix;
+  }
+
+  let value = "";
+  for (let i = 0; i < bulletListStrings.length; i++) {
+    const string = bulletListStrings[i];
+    const isLastItem = i === bulletListStrings.length - 1;
+    value += `${prefix}${string}${isLastItem ? "" : "\r\n"}`;
+  }
+  return value;
+};
+
+const getBulletListStringsFromTextareaValue = (
+  textareaValue: string,
+  showBulletPoints: boolean
+) => {
+  const textareaValueWithNormalizedLineBreak =
+    normalizeLineBreak(textareaValue);
+
+  const strings = getStringsByLineBreak(textareaValueWithNormalizedLineBreak);
+
+  if (showBulletPoints) {
+    // Filter out empty strings
+    const nonEmptyStrings = strings.filter((s) => s !== "•");
+
+    let newStrings: string[] = [];
+    for (let string of nonEmptyStrings) {
+      if (string.startsWith("• ")) {
+        newStrings.push(string.slice(2));
+      } else if (string.startsWith("•")) {
+        // Handle the special case when user wants to delete the bullet point, in which case
+        // we combine it with the previous line if previous line exists
+        const lastItemIdx = newStrings.length - 1;
+        if (lastItemIdx >= 0) {
+          const lastItem = newStrings[lastItemIdx];
+          newStrings[lastItemIdx] = `${lastItem}${string.slice(1)}`;
+        } else {
+          newStrings.push(string.slice(1));
+        }
+      } else {
+        newStrings.push(string);
+      }
+    }
+    return newStrings;
+  }
+
+  return strings;
 };
