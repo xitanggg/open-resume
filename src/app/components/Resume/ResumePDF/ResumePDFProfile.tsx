@@ -56,31 +56,37 @@ export const ResumePDFProfile = ({
           const Wrapper = ({ children }: { children: React.ReactNode }) => {
             if (!shouldUseLinkWrapper) return <>{children}</>;
 
+            let urlSrc = "";
+
             switch (key) {
               case "email":
-                return (
-                  <ResumePDFLink src={`mailto:${value}`} isPDF={isPDF}>
-                    {children}
-                  </ResumePDFLink>
-                );
+                urlSrc = `mailto:${value}`;
+                break;
 
               case "phone":
-                return (
-                  <ResumePDFLink
-                    src={`tel:${value.replace(/[\(\)\s-]/g, "")}`} // This regex "cleans" the number
-                    isPDF={isPDF}
-                  >
-                    {children}
-                  </ResumePDFLink>
-                );
+                urlSrc = `tel:${value.replace(/[^\d+]/g, "")}`;
+                break;
 
-              default:
-                return (
-                  <ResumePDFLink src={`https://${value}`} isPDF={isPDF}>
-                    {children}
-                  </ResumePDFLink>
-                );
+              case "url":
+                let removalCases = ["http://", "https://"];
+                let http_protocol = "https://";
+
+                removalCases.forEach((item) => {
+                  if (value.startsWith(item)) {
+                    value = value.substring(item.length - 1, value.length - 1);
+                    http_protocol = item;
+                  }
+                });
+
+                urlSrc = `${http_protocol}${value}`;
+                break;
             }
+
+            return (
+              <ResumePDFLink src={urlSrc} isPDF={isPDF}>
+                {children}
+              </ResumePDFLink>
+            );
           };
 
           return (
