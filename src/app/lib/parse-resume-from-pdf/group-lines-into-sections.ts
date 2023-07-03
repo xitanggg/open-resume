@@ -52,6 +52,7 @@ const SECTION_TITLE_SECONDARY_KEYWORDS = [
   "course",
   "extracurricular",
   "objective",
+  "summary", // LinkedIn generated resume has a summary section
   "award",
   "honor",
   "project",

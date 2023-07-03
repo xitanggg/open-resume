@@ -150,8 +150,14 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
     textItems,
     SUMMARY_FEATURE_SETS
   );
+
+  const summaryLines = getSectionLinesByKeywords(sections, ["summary"]);
+  const summarySection = summaryLines
+    .flat()
+    .map((textItem) => textItem.text)
+    .join(" ");
   const objectiveLines = getSectionLinesByKeywords(sections, ["objective"]);
-  const objective = objectiveLines
+  const objectiveSection = objectiveLines
     .flat()
     .map((textItem) => textItem.text)
     .join(" ");
@@ -163,7 +169,8 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
       phone,
       location,
       url,
-      summary: objective || summary,
+      // Dedicated section takes higher precedence over profile summary
+      summary: summarySection || objectiveSection || summary,
     },
     // For debugging
     profileScores: {
