@@ -2,7 +2,10 @@ import { useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { parseResumeFromPdf } from "lib/parse-resume-from-pdf";
-import { saveStateToLocalStorage } from "lib/redux/local-storage";
+import {
+  isLocalStorageEmpty,
+  saveStateToLocalStorage,
+} from "lib/redux/local-storage";
 import { initialSettings } from "lib/redux/settingsSlice";
 import { useRouter } from "next/navigation";
 import addPdfSrc from "public/assets/add-pdf.svg";
@@ -75,9 +78,11 @@ export const ResumeDropzone = ({
     const sections = Object.keys(
       settings.formToShow
     ) as (keyof typeof settings.formToShow)[];
-    for (const section of sections) {
-      if (isEmpty(resume[section])) {
-        settings.formToShow[section] = false;
+    if (!isLocalStorageEmpty()) {
+      for (const section of sections) {
+        if (isEmpty(resume[section])) {
+          settings.formToShow[section] = false;
+        }
       }
     }
 

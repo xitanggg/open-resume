@@ -14,6 +14,10 @@ export function loadStateFromLocalStorage() {
   }
 }
 
+export function isLocalStorageEmpty() {
+  return !localStorage.length;
+}
+
 export function saveStateToLocalStorage(state: RootState) {
   try {
     const stringifiedState = JSON.stringify(state);
