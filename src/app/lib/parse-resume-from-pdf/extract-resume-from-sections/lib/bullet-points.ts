@@ -1,4 +1,4 @@
-import type { Lines } from "lib/parse-resume-from-pdf/types";
+import type { Lines, TextItem } from "lib/parse-resume-from-pdf/types";
 
 /**
  * List of bullet points
@@ -66,24 +66,6 @@ export const getBulletPointsFromLines = (lines: Lines): string[] => {
     .filter((text) => !!text);
 };
 
-export const getFirstBulletPointLineIdx = (
-  lines: Lines,
-  additionalChars: string[] = []
-): number | undefined => {
-  for (let i = 0; i < lines.length; i++) {
-    for (let item of lines[i]) {
-      if (
-        [...BULLET_POINTS, ...additionalChars].some((bullet) =>
-          item.text.includes(bullet)
-        )
-      ) {
-        return i;
-      }
-    }
-  }
-  return undefined;
-};
-
 const getMostCommonBulletPoint = (str: string): string => {
   const bulletToCount: { [bullet: string]: number } = BULLET_POINTS.reduce(
     (acc: { [bullet: string]: number }, cur) => {
@@ -103,4 +85,39 @@ const getMostCommonBulletPoint = (str: string): string => {
     }
   }
   return bulletWithMostCount;
+};
+
+const getFirstBulletPointLineIdx = (lines: Lines): number | undefined => {
+  for (let i = 0; i < lines.length; i++) {
+    for (let item of lines[i]) {
+      if (BULLET_POINTS.some((bullet) => item.text.includes(bullet))) {
+        return i;
+      }
+    }
+  }
+  return undefined;
+};
+
+// Only consider words that don't contain numbers
+const isWord = (str: string) => /^[^0-9]+$/.test(str);
+const hasAtLeast8Words = (item: TextItem) =>
+  item.text.split(/\s/).filter(isWord).length >= 8;
+
+export const getDescriptionsLineIdx = (lines: Lines): number | undefined => {
+  // The main heuristic to determine descriptions is to check if has bullet point
+  let idx = getFirstBulletPointLineIdx(lines);
+
+  // Fallback heuristic if the main heuristic doesn't apply (e.g. LinkedIn resume) to
+  // check if the line has at least 8 words
+  if (idx === undefined) {
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (line.length === 1 && hasAtLeast8Words(line[0])) {
+        idx = i;
+        break;
+      }
+    }
+  }
+
+  return idx;
 };

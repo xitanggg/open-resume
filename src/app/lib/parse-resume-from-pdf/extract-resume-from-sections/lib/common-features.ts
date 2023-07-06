@@ -8,8 +8,8 @@ export const hasNumber = (item: TextItem) => /[0-9]/.test(item.text);
 export const hasComma = (item: TextItem) => item.text.includes(",");
 export const getHasText = (text: string) => (item: TextItem) =>
   item.text.includes(text);
-export const hasOnlyLettersAndSpaces = (item: TextItem) =>
-  /^[A-Za-z\s]+$/.test(item.text);
+export const hasOnlyLettersSpacesAmpersands = (item: TextItem) =>
+  /^[A-Za-z\s&]+$/.test(item.text);
 export const hasLetterAndIsAllUpperCase = (item: TextItem) =>
   hasLetter(item) && item.text.toUpperCase() === item.text;
 

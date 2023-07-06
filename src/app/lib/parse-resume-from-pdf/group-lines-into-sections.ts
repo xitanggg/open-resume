@@ -6,7 +6,7 @@ import type {
 } from "lib/parse-resume-from-pdf/types";
 import {
   hasLetterAndIsAllUpperCase,
-  hasOnlyLettersAndSpaces,
+  hasOnlyLettersSpacesAmpersands,
   isBold,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
 
@@ -81,12 +81,13 @@ const isSectionTitle = (line: Line, lineNumber: number) => {
   // The following is a fallback heuristic to detect section title if it includes a keyword match
   // (This heuristics is not well tested and may not work well)
   const text = textItem.text.trim();
-  const textHasAtMost2Words = text.split(" ").length <= 2;
+  const textHasAtMost2Words =
+    text.split(" ").filter((s) => s !== "&").length <= 2;
   const startsWithCapitalLetter = /[A-Z]/.test(text.slice(0, 1));
 
   if (
     textHasAtMost2Words &&
-    hasOnlyLettersAndSpaces(textItem) &&
+    hasOnlyLettersSpacesAmpersands(textItem) &&
     startsWithCapitalLetter &&
     SECTION_TITLE_KEYWORDS.some((keyword) =>
       text.toLowerCase().includes(keyword)

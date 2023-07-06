@@ -15,7 +15,7 @@ import { divideSectionIntoSubsections } from "lib/parse-resume-from-pdf/extract-
 import { getTextWithHighestFeatureScore } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/feature-scoring-system";
 import {
   getBulletPointsFromLines,
-  getFirstBulletPointLineIdx,
+  getDescriptionsLineIdx,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
 
 // prettier-ignore
@@ -44,11 +44,10 @@ export const extractWorkExperience = (sections: ResumeSectionToLines) => {
   const subsections = divideSectionIntoSubsections(lines);
 
   for (const subsectionLines of subsections) {
-    const firstBulletPointLineIdx =
-      getFirstBulletPointLineIdx(subsectionLines) ?? 2;
+    const descriptionsLineIdx = getDescriptionsLineIdx(subsectionLines) ?? 2;
 
     const subsectionInfoTextItems = subsectionLines
-      .slice(0, firstBulletPointLineIdx)
+      .slice(0, descriptionsLineIdx)
       .flat();
     const [date, dateScores] = getTextWithHighestFeatureScore(
       subsectionInfoTextItems,
@@ -69,10 +68,9 @@ export const extractWorkExperience = (sections: ResumeSectionToLines) => {
       false
     );
 
-    const subsectionBulletPointLines = subsectionLines.slice(
-      firstBulletPointLineIdx
-    );
-    const descriptions = getBulletPointsFromLines(subsectionBulletPointLines);
+    const subsectionDescriptionsLines =
+      subsectionLines.slice(descriptionsLineIdx);
+    const descriptions = getBulletPointsFromLines(subsectionDescriptionsLines);
 
     workExperiences.push({ company, jobTitle, date, descriptions });
     workExperiencesScores.push({

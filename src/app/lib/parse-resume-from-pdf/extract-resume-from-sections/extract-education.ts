@@ -15,7 +15,7 @@ import {
 import { getTextWithHighestFeatureScore } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/feature-scoring-system";
 import {
   getBulletPointsFromLines,
-  getFirstBulletPointLineIdx,
+  getDescriptionsLineIdx,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
 
 /**
@@ -37,7 +37,7 @@ const hasDegree = (item: TextItem) =>
 const matchGPA = (item: TextItem) => item.text.match(/[0-4]\.\d{1,2}/);
 const matchGrade = (item: TextItem) => {
   const grade = parseFloat(item.text);
-  if (Number.isFinite(grade)) {
+  if (Number.isFinite(grade) && grade <= 110) {
     return [String(grade)] as RegExpMatchArray;
   }
   return null;
@@ -87,15 +87,10 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
     );
 
     let descriptions: string[] = [];
-    const firstBulletPointLineIdx = getFirstBulletPointLineIdx(
-      subsectionLines,
-      [":"]
-    );
-    if (firstBulletPointLineIdx !== undefined) {
-      const subsectionBulletPointLines = subsectionLines.slice(
-        firstBulletPointLineIdx
-      );
-      descriptions = getBulletPointsFromLines(subsectionBulletPointLines);
+    const descriptionsLineIdx = getDescriptionsLineIdx(subsectionLines);
+    if (descriptionsLineIdx !== undefined) {
+      const descriptionsLines = subsectionLines.slice(descriptionsLineIdx);
+      descriptions = getBulletPointsFromLines(descriptionsLines);
     }
 
     educations.push({ school, degree, gpa, date, descriptions });

@@ -13,7 +13,7 @@ import { divideSectionIntoSubsections } from "lib/parse-resume-from-pdf/extract-
 import { getTextWithHighestFeatureScore } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/feature-scoring-system";
 import {
   getBulletPointsFromLines,
-  getFirstBulletPointLineIdx,
+  getDescriptionsLineIdx,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
 
 export const extractProject = (sections: ResumeSectionToLines) => {
@@ -23,11 +23,10 @@ export const extractProject = (sections: ResumeSectionToLines) => {
   const subsections = divideSectionIntoSubsections(lines);
 
   for (const subsectionLines of subsections) {
-    const firstBulletPointLineIdx =
-      getFirstBulletPointLineIdx(subsectionLines) ?? 1;
+    const descriptionsLineIdx = getDescriptionsLineIdx(subsectionLines) ?? 1;
 
     const subsectionInfoTextItems = subsectionLines
-      .slice(0, firstBulletPointLineIdx)
+      .slice(0, descriptionsLineIdx)
       .flat();
     const [date, dateScores] = getTextWithHighestFeatureScore(
       subsectionInfoTextItems,
@@ -43,10 +42,8 @@ export const extractProject = (sections: ResumeSectionToLines) => {
       false
     );
 
-    const subsectionBulletPointLines = subsectionLines.slice(
-      firstBulletPointLineIdx
-    );
-    const descriptions = getBulletPointsFromLines(subsectionBulletPointLines);
+    const descriptionsLines = subsectionLines.slice(descriptionsLineIdx);
+    const descriptions = getBulletPointsFromLines(descriptionsLines);
 
     projects.push({ project, date, descriptions });
     projectsScores.push({
