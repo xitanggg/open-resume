@@ -50,7 +50,8 @@ const computeFeatureScores = (
 export const getTextWithHighestFeatureScore = (
   textItems: TextItems,
   featureSets: FeatureSet[],
-  returnEmptyStringIfHighestScoreIsNotPositive = true
+  returnEmptyStringIfHighestScoreIsNotPositive = true,
+  returnConcatenatedStringForTextsWithSameHighestScore = false
 ) => {
   const textScores = computeFeatureScores(textItems, featureSets);
 
@@ -61,7 +62,7 @@ export const getTextWithHighestFeatureScore = (
       if (score > highestScore) {
         textsWithHighestFeatureScore = [];
       }
-      textsWithHighestFeatureScore.push(text.trim());
+      textsWithHighestFeatureScore.push(text);
       highestScore = score;
     }
   }
@@ -69,5 +70,9 @@ export const getTextWithHighestFeatureScore = (
   if (returnEmptyStringIfHighestScoreIsNotPositive && highestScore <= 0)
     return ["", textScores] as const;
 
-  return [textsWithHighestFeatureScore.join(" "), textScores] as const;
+  const text = !returnConcatenatedStringForTextsWithSameHighestScore
+    ? textsWithHighestFeatureScore[0]
+    : textsWithHighestFeatureScore.map((s) => s.trim()).join(" ");
+
+  return [text, textScores] as const;
 };

@@ -4,7 +4,7 @@ import type { RootState } from "lib/redux/store";
 
 const LOCAL_STORAGE_KEY = "open-resume-state";
 
-export function loadStateFromLocalStorage() {
+export const loadStateFromLocalStorage = () => {
   try {
     const stringifiedState = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!stringifiedState) return undefined;
@@ -12,17 +12,15 @@ export function loadStateFromLocalStorage() {
   } catch (e) {
     return undefined;
   }
-}
+};
 
-export function isLocalStorageEmpty() {
-  return !localStorage.length;
-}
-
-export function saveStateToLocalStorage(state: RootState) {
+export const saveStateToLocalStorage = (state: RootState) => {
   try {
     const stringifiedState = JSON.stringify(state);
     localStorage.setItem(LOCAL_STORAGE_KEY, stringifiedState);
   } catch (e) {
     // Ignore
   }
-}
+};
+
+export const getHasUsedAppBefore = () => Boolean(loadStateFromLocalStorage());

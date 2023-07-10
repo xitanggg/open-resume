@@ -148,7 +148,9 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
   );
   const [summary, summaryScores] = getTextWithHighestFeatureScore(
     textItems,
-    SUMMARY_FEATURE_SETS
+    SUMMARY_FEATURE_SETS,
+    undefined,
+    true
   );
 
   const summaryLines = getSectionLinesByKeywords(sections, ["summary"]);
