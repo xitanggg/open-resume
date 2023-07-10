@@ -3,16 +3,15 @@ import { LockClosedIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { parseResumeFromPdf } from "lib/parse-resume-from-pdf";
 import {
-  isLocalStorageEmpty,
+  getHasUsedAppBefore,
   saveStateToLocalStorage,
 } from "lib/redux/local-storage";
-import { initialSettings } from "lib/redux/settingsSlice";
+import { type ShowForm, initialSettings } from "lib/redux/settingsSlice";
 import { useRouter } from "next/navigation";
 import addPdfSrc from "public/assets/add-pdf.svg";
 import Image from "next/image";
 import { cx } from "lib/cx";
-import isEmpty from "lodash/isEmpty";
-import cloneDeep from "lodash/cloneDeep";
+import { deepClone } from "lib/deep-clone";
 
 const defaultFileState = {
   name: "",
@@ -74,15 +73,20 @@ export const ResumeDropzone = ({
 
   const onImportClick = async () => {
     const resume = await parseResumeFromPdf(file.fileUrl);
-    let settings = cloneDeep(initialSettings);
-    const sections = Object.keys(
-      settings.formToShow
-    ) as (keyof typeof settings.formToShow)[];
-    if (!isLocalStorageEmpty()) {
+    const settings = deepClone(initialSettings);
+
+    // Set formToShow settings based on uploaded resume if users have used the app before
+    if (getHasUsedAppBefore()) {
+      const sections = Object.keys(settings.formToShow) as ShowForm[];
+      const sectionToFormToShow: Record<ShowForm, boolean> = {
+        workExperiences: resume.workExperiences.length > 0,
+        educations: resume.educations.length > 0,
+        projects: resume.projects.length > 0,
+        skills: resume.skills.descriptions.length > 0,
+        custom: resume.custom.descriptions.length > 0,
+      };
       for (const section of sections) {
-        if (isEmpty(resume[section])) {
-          settings.formToShow[section] = false;
-        }
+        settings.formToShow[section] = sectionToFormToShow[section];
       }
     }
 

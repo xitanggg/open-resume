@@ -17,8 +17,13 @@ type Object = { [key: string]: any };
  * iterator.next().value // {a : "ab"}
  * iterator.next().value // {a : "abc"}
  */
-export function* makeObjectCharIterator(start: Object, end: Object, level = 0) {
-  const object = level === 0 ? deepClone(start) : start;
+export function* makeObjectCharIterator<T extends Object>(
+  start: T,
+  end: T,
+  level = 0
+) {
+  // Have to manually cast Object type and return T type due to https://github.com/microsoft/TypeScript/issues/47357
+  const object: Object = level === 0 ? deepClone(start) : start;
   for (const [key, endValue] of Object.entries(end)) {
     if (typeof endValue === "object") {
       const recursiveIterator = makeObjectCharIterator(
@@ -31,12 +36,12 @@ export function* makeObjectCharIterator(start: Object, end: Object, level = 0) {
         if (next.done) {
           break;
         }
-        yield deepClone(object);
+        yield deepClone(object) as T;
       }
     } else {
       for (let i = 1; i <= endValue.length; i++) {
         object[key] = endValue.slice(0, i);
-        yield deepClone(object);
+        yield deepClone(object) as T;
       }
     }
   }

@@ -1,9 +1,5 @@
 import { Fragment } from "react";
-import type {
-  Resume,
-  ResumeEducation,
-  ResumeWorkExperience,
-} from "lib/redux/types";
+import type { Resume } from "lib/redux/types";
 import { initialEducation, initialWorkExperience } from "lib/redux/resumeSlice";
 import { deepClone } from "lib/deep-clone";
 import { cx } from "lib/cx";
@@ -45,11 +41,11 @@ const TableRow = ({
 export const ResumeTable = ({ resume }: { resume: Resume }) => {
   const educations =
     resume.educations.length === 0
-      ? [deepClone(initialEducation) as ResumeEducation]
+      ? [deepClone(initialEducation)]
       : resume.educations;
   const workExperiences =
     resume.workExperiences.length === 0
-      ? [deepClone(initialWorkExperience) as ResumeWorkExperience]
+      ? [deepClone(initialWorkExperience)]
       : resume.workExperiences;
   const skills = [...resume.skills.descriptions];
   const featuredSkills = resume.skills.featuredSkills

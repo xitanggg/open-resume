@@ -1,5 +1,5 @@
 "use client";
-import { loadStateFromLocalStorage } from "lib/redux/local-storage";
+import { getHasUsedAppBefore } from "lib/redux/local-storage";
 import { ResumeDropzone } from "components/ResumeDropzone";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -12,7 +12,7 @@ export default function ImportResume() {
   };
 
   useEffect(() => {
-    setHasUsedAppBefore(Boolean(loadStateFromLocalStorage()));
+    setHasUsedAppBefore(getHasUsedAppBefore());
   }, []);
 
   return (

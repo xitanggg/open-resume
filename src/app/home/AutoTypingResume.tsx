@@ -21,7 +21,7 @@ const CHARS_PER_INTERVAL = 10;
 const RESET_INTERVAL_MS = 60 * 1000; // 60s
 
 export const AutoTypingResume = () => {
-  const [resume, setResume] = useState(deepClone(initialResumeState) as Resume);
+  const [resume, setResume] = useState(deepClone(initialResumeState));
   const resumeCharIterator = useRef(
     makeObjectCharIterator(START_HOME_RESUME, END_HOME_RESUME)
   );
