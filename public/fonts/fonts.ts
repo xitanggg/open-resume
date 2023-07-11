@@ -12,6 +12,7 @@
  * (Note that some fonts might still not work after export.)
  */
 export const SANS_SERI_FONT_FAMILIES = [
+  "FangZheng",
   "Roboto",
   "Lato",
   "Montserrat",
@@ -35,6 +36,7 @@ export const FONT_FAMILIES = [
 export type FontFamily = (typeof FONT_FAMILIES)[number];
 
 export const FONT_FAMILY_TO_STANDARD_SIZE_IN_PT: Record<FontFamily, number> = {
+  FangZheng: 11,
   Roboto: 11,
   Lato: 11,
   Montserrat: 10,
