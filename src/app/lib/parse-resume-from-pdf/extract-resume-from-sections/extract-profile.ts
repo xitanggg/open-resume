@@ -6,10 +6,14 @@ import type {
 import { getSectionLinesByKeywords } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/get-section-lines";
 import {
   isBold,
+  hasAt,
   hasNumber,
   hasComma,
   hasLetter,
+  hasParenthesis,
+  has4OrMoreWords,
   hasLetterAndIsAllUpperCase,
+  URL_FEATURE_SETS,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
 import { getTextWithHighestFeatureScore } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/feature-scoring-system";
 
@@ -20,32 +24,23 @@ export const matchOnlyLetterSpaceOrPeriod = (item: TextItem) =>
 // Email
 // Simple email regex: xxx@xxx.xxx (xxx = anything not space)
 export const matchEmail = (item: TextItem) => item.text.match(/\S+@\S+\.\S+/);
-const hasAt = (item: TextItem) => item.text.includes("@");
+
 
 // Phone
 // Simple phone regex that matches (xxx)-xxx-xxxx where () and - are optional, - can also be space
 export const matchPhone = (item: TextItem) =>
   item.text.match(/\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}/);
-const hasParenthesis = (item: TextItem) => /\([0-9]+\)/.test(item.text);
+
 
 // Location
 // Simple location regex that matches "<City>, <ST>"
 export const matchCityAndState = (item: TextItem) =>
   item.text.match(/[A-Z][a-zA-Z\s]+, [A-Z]{2}/);
 
-// Url
-// Simple url regex that matches "xxx.xxx/xxx" (xxx = anything not space)
-export const matchUrl = (item: TextItem) => item.text.match(/\S+\.[a-z]+\/\S+/);
-// Match https://xxx.xxx where s is optional
-const matchUrlHttpFallback = (item: TextItem) =>
-  item.text.match(/https?:\/\/\S+\.\S+/);
-// Match www.xxx.xxx
-const matchUrlWwwFallback = (item: TextItem) =>
-  item.text.match(/www\.\S+\.\S+/);
+
 const hasSlash = (item: TextItem) => item.text.includes("/");
 
-// Summary
-const has4OrMoreWords = (item: TextItem) => item.text.split(" ").length >= 4;
+
 
 /**
  *              Unique Attribute
@@ -99,18 +94,6 @@ const LOCATION_FEATURE_SETS: FeatureSet[] = [
   [hasAt, -4], // Email
   [hasParenthesis, -3], // Phone
   [hasSlash, -4], // Url
-];
-
-// URL -> match url regex xxx.xxx/xxx
-const URL_FEATURE_SETS: FeatureSet[] = [
-  [matchUrl, 4, true],
-  [matchUrlHttpFallback, 3, true],
-  [matchUrlWwwFallback, 3, true],
-  [isBold, -1], // Name
-  [hasAt, -4], // Email
-  [hasParenthesis, -3], // Phone
-  [hasComma, -4], // Location
-  [has4OrMoreWords, -4], // Summary
 ];
 
 // Summary -> has 4 or more words
