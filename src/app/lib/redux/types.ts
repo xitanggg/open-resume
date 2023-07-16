@@ -25,6 +25,7 @@ export interface ResumeEducation {
 export interface ResumeProject {
   project: string;
   date: string;
+  link: string;
   descriptions: string[];
 }
 
