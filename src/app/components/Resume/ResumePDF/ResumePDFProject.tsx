@@ -5,6 +5,9 @@ import {
   ResumePDFText,
   ResumePDFLink,
 } from "components/Resume/ResumePDF/common";
+import {
+  ResumePDFIcon,
+} from "components/Resume/ResumePDF/common/ResumePDFIcon";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import type { ResumeProject } from "lib/redux/types";
 
@@ -30,9 +33,17 @@ export const ResumePDFProject = ({
               marginTop: spacing["0.5"],
             }}
           >
-            <ResumePDFLink src={link} isPDF={isPDF}>{
-              <ResumePDFText bold={true}>{project}</ResumePDFText>
-            }</ResumePDFLink>
+            <View style={{
+                ...styles.flexRow,
+                alignItems: "center",
+                gap: spacing["1"],
+              }}>
+              <ResumePDFLink src={link} isPDF={isPDF}>{
+                <ResumePDFText bold={true}>{project}</ResumePDFText>
+              }</ResumePDFLink>
+              {link && <ResumePDFIcon type="url" isPDF={isPDF}></ResumePDFIcon>}
+            </View>
+
             <ResumePDFText>{date}</ResumePDFText>
           </View>
           <View style={{ ...styles.flexCol, marginTop: spacing["0.5"] }}>
