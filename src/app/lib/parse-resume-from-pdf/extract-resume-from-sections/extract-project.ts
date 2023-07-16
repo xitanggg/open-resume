@@ -6,6 +6,7 @@ import type {
 import { getSectionLinesByKeywords } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/get-section-lines";
 import {
   DATE_FEATURE_SETS,
+  URL_FEATURE_SETS,
   getHasText,
   isBold,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
@@ -42,13 +43,18 @@ export const extractProject = (sections: ResumeSectionToLines) => {
       false
     );
 
+    const [link, linkScores] = getTextWithHighestFeatureScore(
+      subsectionInfoTextItems,
+      URL_FEATURE_SETS
+    )
     const descriptionsLines = subsectionLines.slice(descriptionsLineIdx);
     const descriptions = getBulletPointsFromLines(descriptionsLines);
 
-    projects.push({ project, date, descriptions });
+    projects.push({ project, date, link, descriptions });
     projectsScores.push({
       projectScores,
       dateScores,
+      linkScores
     });
   }
   return { projects, projectsScores };
