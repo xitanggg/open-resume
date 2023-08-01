@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { ResumePDF } from "components/Resume/ResumePDF";
 import { initialResumeState } from "lib/redux/resumeSlice";
 import { initialSettings } from "lib/redux/settingsSlice";
-import { ResumeIframeCSR } from "components/Resume/ResumeIframe";
+import { ResumeIframeCSR } from "components/Resume/ResumeIFrame";
 import { START_HOME_RESUME, END_HOME_RESUME } from "home/constants";
 import { makeObjectCharIterator } from "lib/make-object-char-iterator";
 import { useTailwindBreakpoints } from "lib/hooks/useTailwindBreakpoints";
