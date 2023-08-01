@@ -8,7 +8,7 @@ import {
 import { usePDF } from "@react-pdf/renderer";
 import dynamic from "next/dynamic";
 
-const ResumeControlBarComponent = ({
+const ResumeControlBar = ({
   scale,
   setScale,
   documentSize,
@@ -71,9 +71,11 @@ const ResumeControlBarComponent = ({
   );
 };
 
-// Make ResumeControlBar dynamic to make nextjs happy
-export const ResumeControlBar = dynamic(
-  () => Promise.resolve(ResumeControlBarComponent),
+/**
+ * Load ResumeControlBar client side since it uses usePDF, which is a web specific API
+ */
+export const ResumeControlBarCSR = dynamic(
+  () => Promise.resolve(ResumeControlBar),
   {
     ssr: false,
   }

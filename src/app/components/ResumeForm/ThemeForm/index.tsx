@@ -4,7 +4,7 @@ import { THEME_COLORS } from "components/ResumeForm/ThemeForm/constants";
 import { InlineInput } from "components/ResumeForm/ThemeForm/InlineInput";
 import {
   DocumentSizeSelections,
-  FontFamilySelections,
+  FontFamilySelectionsCSR,
   FontSizeSelections,
 } from "components/ResumeForm/ThemeForm/Selection";
 import {
@@ -14,7 +14,7 @@ import {
   type GeneralSetting,
 } from "lib/redux/settingsSlice";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
-import type { FontFamily } from "public/fonts/fonts";
+import type { FontFamily } from "components/fonts/constants";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 
 export const ThemeForm = () => {
@@ -65,7 +65,7 @@ export const ThemeForm = () => {
         </div>
         <div>
           <InputGroupWrapper label="Font Family" />
-          <FontFamilySelections
+          <FontFamilySelectionsCSR
             selectedFontFamily={fontFamily}
             themeColor={themeColor}
             handleSettingsChange={handleSettingsChange}

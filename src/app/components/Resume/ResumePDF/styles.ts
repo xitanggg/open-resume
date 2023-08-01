@@ -1,23 +1,4 @@
-import { StyleSheet, Font } from "@react-pdf/renderer";
-import { FONT_FAMILIES } from "public/fonts/fonts";
-
-FONT_FAMILIES.forEach((fontFamily) => {
-  Font.register({
-    family: fontFamily,
-    fonts: [
-      {
-        src: `fonts/${fontFamily}-Regular.ttf`,
-      },
-      {
-        src: `fonts/${fontFamily}-Bold.ttf`,
-        fontWeight: "bold",
-      },
-    ],
-  });
-});
-
-// Disable hyphenation https://github.com/diegomura/react-pdf/issues/311#issuecomment-548301604
-Font.registerHyphenationCallback((word) => [word]);
+import { StyleSheet } from "@react-pdf/renderer";
 
 // Tailwindcss Spacing Design System: https://tailwindcss.com/docs/theme#spacing
 // It is converted from rem to pt (1rem = 12pt) since https://react-pdf.org/styling only accepts pt unit

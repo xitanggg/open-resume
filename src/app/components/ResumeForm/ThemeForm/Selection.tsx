@@ -2,9 +2,11 @@ import type { GeneralSetting } from "lib/redux/settingsSlice";
 import { PX_PER_PT } from "lib/constants";
 import {
   FONT_FAMILY_TO_STANDARD_SIZE_IN_PT,
-  FONT_FAMILIES,
+  FONT_FAMILY_TO_DISPLAY_NAME,
   type FontFamily,
-} from "public/fonts/fonts";
+} from "components/fonts/constants";
+import { getAllFontFamiliesToLoad } from "components/fonts/lib";
+import dynamic from "next/dynamic";
 
 const Selection = ({
   selectedColor,
@@ -45,7 +47,7 @@ const SelectionsWrapper = ({ children }: { children: React.ReactNode }) => {
   return <div className="mt-2 flex flex-wrap gap-3">{children}</div>;
 };
 
-export const FontFamilySelections = ({
+const FontFamilySelections = ({
   selectedFontFamily,
   themeColor,
   handleSettingsChange,
@@ -54,9 +56,10 @@ export const FontFamilySelections = ({
   themeColor: string;
   handleSettingsChange: (field: GeneralSetting, value: string) => void;
 }) => {
+  const allFontFamilies = getAllFontFamiliesToLoad();
   return (
     <SelectionsWrapper>
-      {FONT_FAMILIES.map((fontFamily, idx) => {
+      {allFontFamilies.map((fontFamily, idx) => {
         const isSelected = selectedFontFamily === fontFamily;
         const standardSizePt = FONT_FAMILY_TO_STANDARD_SIZE_IN_PT[fontFamily];
         return (
@@ -70,13 +73,24 @@ export const FontFamilySelections = ({
             }}
             onClick={() => handleSettingsChange("fontFamily", fontFamily)}
           >
-            {fontFamily.split(/(?=[A-Z])/).join(" ")}
+            {FONT_FAMILY_TO_DISPLAY_NAME[fontFamily]}
           </Selection>
         );
       })}
     </SelectionsWrapper>
   );
 };
+
+/**
+ * Load FontFamilySelections client side since it calls getAllFontFamiliesToLoad,
+ * which uses navigator object that is only available on client side
+ */
+export const FontFamilySelectionsCSR = dynamic(
+  () => Promise.resolve(FontFamilySelections),
+  {
+    ssr: false,
+  }
+);
 
 export const FontSizeSelections = ({
   selectedFontSize,
