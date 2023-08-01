@@ -1,47 +1,58 @@
 "use client";
-import { FONT_FAMILIES } from "public/fonts/fonts";
+import { useMemo } from "react";
 import Frame from "react-frame-component";
 import {
   A4_HEIGHT_PX,
   A4_WIDTH_PX,
+  A4_WIDTH_PT,
   LETTER_HEIGHT_PX,
-  LETTER_WIDTH_PT,
   LETTER_WIDTH_PX,
+  LETTER_WIDTH_PT,
 } from "lib/constants";
 import dynamic from "next/dynamic";
+import { getAllFontFamiliesToLoad } from "components/fonts/lib";
 
-const IFRAME_INITIAL_CONTENT_FONT_FAMILIES_PRELOAD_LINKS = FONT_FAMILIES.map(
-  (
-    font
-  ) => `<link rel="preload" as="font" href="/fonts/${font}-Regular.ttf" type="font/ttf" crossorigin="anonymous">
-  <link rel="preload" as="font" href="/fonts/${font}-Bold.ttf" type="font/ttf" crossorigin="anonymous">`
-).join("");
+const getIframeInitialContent = (isA4: boolean) => {
+  const width = isA4 ? A4_WIDTH_PT : LETTER_WIDTH_PT;
+  const allFontFamilies = getAllFontFamiliesToLoad();
 
-const IFRAME_INITIAL_CONTENT_FONT_FAMILIES_FONT_FACE = FONT_FAMILIES.map(
-  (
-    font
-  ) => `@font-face {font-family: "${font}"; src: url("/fonts/${font}-Regular.ttf");}
-  @font-face {font-family: "${font}"; src: url("/fonts/${font}-Bold.ttf"); font-weight: bold;}`
-).join("");
+  const allFontFamiliesPreloadLinks = allFontFamilies
+    .map(
+      (
+        font
+      ) => `<link rel="preload" as="font" href="/fonts/${font}-Regular.ttf" type="font/ttf" crossorigin="anonymous">
+<link rel="preload" as="font" href="/fonts/${font}-Bold.ttf" type="font/ttf" crossorigin="anonymous">`
+    )
+    .join("");
 
-const IFRAME_INITIAL_CONTENT = `<!DOCTYPE html>
-    <html>
-      <head>
-        ${IFRAME_INITIAL_CONTENT_FONT_FAMILIES_PRELOAD_LINKS}
-        <style>
-          ${IFRAME_INITIAL_CONTENT_FONT_FAMILIES_FONT_FACE}
-        </style>
-      </head>
-      <body style='overflow: hidden; width: ${LETTER_WIDTH_PT}pt; margin: 0; padding: 0; -webkit-text-size-adjust:none;'>
-        <div></div>
-      </body>
-    </html>`;
+  const allFontFamiliesFontFaces = allFontFamilies
+    .map(
+      (
+        font
+      ) => `@font-face {font-family: "${font}"; src: url("/fonts/${font}-Regular.ttf");}
+@font-face {font-family: "${font}"; src: url("/fonts/${font}-Bold.ttf"); font-weight: bold;}`
+    )
+    .join("");
+
+  return `<!DOCTYPE html>
+<html>
+  <head>
+    ${allFontFamiliesPreloadLinks}
+    <style>
+      ${allFontFamiliesFontFaces}
+    </style>
+  </head>
+  <body style='overflow: hidden; width: ${width}pt; margin: 0; padding: 0; -webkit-text-size-adjust:none;'>
+    <div></div>
+  </body>
+</html>`;
+};
 
 /**
- * IFrame is used here for style isolation, since react pdf uses pt unit.
- * It creates a sandbox document body that uses letter/A4 size as width.
+ * Iframe is used here for style isolation, since react pdf uses pt unit.
+ * It creates a sandbox document body that uses letter/A4 pt size as width.
  */
-const ResumeIFrameComponent = ({
+const ResumeIframe = ({
   documentSize,
   scale,
   children,
@@ -52,6 +63,12 @@ const ResumeIFrameComponent = ({
   children: React.ReactNode;
   enablePDFViewer?: boolean;
 }) => {
+  const isA4 = documentSize === "A4";
+  const iframeInitialContent = useMemo(
+    () => getIframeInitialContent(isA4),
+    [isA4]
+  );
+
   if (enablePDFViewer) {
     return (
       <DynamicPDFViewer className="h-full w-full">
@@ -59,8 +76,8 @@ const ResumeIFrameComponent = ({
       </DynamicPDFViewer>
     );
   }
-  const width = documentSize === "A4" ? A4_WIDTH_PX : LETTER_WIDTH_PX;
-  const height = documentSize === "A4" ? A4_HEIGHT_PX : LETTER_HEIGHT_PX;
+  const width = isA4 ? A4_WIDTH_PX : LETTER_WIDTH_PX;
+  const height = isA4 ? A4_HEIGHT_PX : LETTER_HEIGHT_PX;
 
   return (
     <div
@@ -82,7 +99,9 @@ const ResumeIFrameComponent = ({
       >
         <Frame
           style={{ width: "100%", height: "100%" }}
-          initialContent={IFRAME_INITIAL_CONTENT}
+          initialContent={iframeInitialContent}
+          // key is used to force component to re-mount when document size changes
+          key={isA4 ? "A4" : "LETTER"}
         >
           {children}
         </Frame>
@@ -91,13 +110,12 @@ const ResumeIFrameComponent = ({
   );
 };
 
-// Iframe can't be server side rendered, so we use dynamic import to load it only on client side
-export const ResumeIFrame = dynamic(
-  () => Promise.resolve(ResumeIFrameComponent),
-  {
-    ssr: false,
-  }
-);
+/**
+ * Load iframe client side since iframe can't be SSR
+ */
+export const ResumeIframeCSR = dynamic(() => Promise.resolve(ResumeIframe), {
+  ssr: false,
+});
 
 // PDFViewer is only used for debugging. Its size is quite large, so we make it dynamic import
 const DynamicPDFViewer = dynamic(

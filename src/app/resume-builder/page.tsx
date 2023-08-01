@@ -2,7 +2,7 @@
 import { Provider } from "react-redux";
 import { store } from "lib/redux/store";
 import { ResumeForm } from "components/ResumeForm";
-import Resume from "components/Resume";
+import { Resume } from "components/Resume";
 
 export default function Create() {
   return (
