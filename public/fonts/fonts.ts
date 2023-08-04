@@ -17,6 +17,7 @@ export const SANS_SERI_FONT_FAMILIES = [
   "Montserrat",
   "OpenSans",
   "Raleway",
+  "Inter"
 ] as const;
 
 export const SERI_FONT_FAMILIES = [
@@ -40,6 +41,7 @@ export const FONT_FAMILY_TO_STANDARD_SIZE_IN_PT: Record<FontFamily, number> = {
   Montserrat: 10,
   OpenSans: 10,
   Raleway: 10,
+  Inter: 10,
   Caladea: 11,
   Lora: 11,
   RobotoSlab: 10,

@@ -9,6 +9,8 @@
 @font-face {font-family: "OpenSans"; src: url("/fonts/OpenSans-Bold.ttf"); font-weight: bold;}
 @font-face {font-family: "Raleway"; src: url("/fonts/Raleway-Regular.ttf");}
 @font-face {font-family: "Raleway"; src: url("/fonts/Raleway-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "Inter"; src: url("/fonts/Inter-Regular.ttf");}
+@font-face {font-family: "Inter"; src: url("/fonts/Inter-Bold.ttf"); font-weight: bold;}
 
 @font-face {font-family: "RobotoSlab"; src: url("/fonts/RobotoSlab-Regular.ttf");}
 @font-face {font-family: "RobotoSlab"; src: url("/fonts/RobotoSlab-Bold.ttf"); font-weight: bold;}
