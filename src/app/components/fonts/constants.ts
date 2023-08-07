@@ -5,11 +5,11 @@
  *         Non-English fonts -> NON_ENGLISH_FONT_FAMILIES
  *         Once the font is added, it would take care of
  *         a. Registering font family for React PDF at "components/fonts/hooks.tsx"
- *         b. Loading font family for React PDF iframe at "components/Resume/ResumeIframe.tsx"
+ *         b. Loading font family for React PDF iframe at "components/Resume/ResumeIFrame.tsx"
  *         c. Adding font family selection to Resume Settings at "components/ResumeForm/ThemeForm/Selection.tsx"
  * Step 2. To load css correctly for the Resume Form:
  *         English fonts -> add it to the "public\fonts\fonts.css" file
- *         Non-English fonts -> create/update "public\fonts\fonts-<language>.css" and update "components/fonts/NonEnglishFontsCSSLoader.tsx"
+ *         Non-English fonts -> create/update "public\fonts\fonts-<language>.css" and update "components/fonts/NonEnglishFontsCSSLazyLoader.tsx"
  * Step 3. Update FONT_FAMILY_TO_STANDARD_SIZE_IN_PT and FONT_FAMILY_TO_DISPLAY_NAME accordingly
  *
  * IMPORTANT NOTE:
@@ -51,7 +51,7 @@ type EnglishFontFamily = (typeof ENGLISH_FONT_FAMILIES)[number];
 export const NON_ENGLISH_FONT_FAMILIES = ["NotoSansSC"] as const;
 type NonEnglishFontFamily = (typeof NON_ENGLISH_FONT_FAMILIES)[number];
 
-export const NON_ENGLISH_FONT_FAMILIES_TO_LANGUAGE: Record<
+export const NON_ENGLISH_FONT_FAMILY_TO_LANGUAGE: Record<
   NonEnglishFontFamily,
   string[]
 > = {

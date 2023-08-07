@@ -15,7 +15,7 @@ import {
   useRegisterReactPDFFont,
   useRegisterReactPDFHyphenationCallback,
 } from "components/fonts/hooks";
-import { NonEnglishFontsCSSLoader } from "components/fonts/NonEnglishFontsCSSLoader";
+import { NonEnglishFontsCSSLazyLoader } from "components/fonts/NonEnglishFontsCSSLoader";
 
 export const Resume = () => {
   const [scale, setScale] = useState(0.8);
@@ -31,7 +31,7 @@ export const Resume = () => {
 
   return (
     <>
-      <NonEnglishFontsCSSLoader />
+      <NonEnglishFontsCSSLazyLoader />
       <div className="relative flex justify-center md:justify-start">
         <FlexboxSpacer maxWidth={50} className="hidden md:block" />
         <div className="relative">
