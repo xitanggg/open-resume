@@ -2,8 +2,9 @@ import {
   matchOnlyLetterSpaceOrPeriod,
   matchEmail,
   matchPhone,
-  matchUrl,
+  
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-profile";
+import { matchUrl } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
 import type { TextItem } from "lib/parse-resume-from-pdf/types";
 
 const makeTextItem = (text: string) =>
