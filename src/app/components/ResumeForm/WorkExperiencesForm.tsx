@@ -19,7 +19,7 @@ export const WorkExperiencesForm = () => {
 
   return (
     <Form form="workExperiences" addButtonText="Add Job">
-      {workExperiences.map(({ company, jobTitle, date, descriptions }, idx) => {
+      {workExperiences.map(({ company,link, jobTitle, date, descriptions }, idx) => {
         const handleWorkExperienceChange = (
           ...[
             field,
@@ -52,6 +52,14 @@ export const WorkExperiencesForm = () => {
               value={company}
               onChange={handleWorkExperienceChange}
             />
+            <Input
+              name="link"
+              label="Link"
+              placeholder="https://"
+              value={link}
+              onChange={handleWorkExperienceChange}
+              labelClassName="col-span-full"
+            />            
             <Input
               label="Job Title"
               labelClassName="col-span-4"
