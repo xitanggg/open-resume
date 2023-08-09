@@ -20,6 +20,7 @@ export const END_HOME_RESUME: Resume = {
   workExperiences: [
     {
       company: "ABC Company",
+      link: "https://www.example.com/",
       jobTitle: "Software Engineer",
       date: "May 2023 - Present",
       descriptions: [
@@ -30,6 +31,7 @@ export const END_HOME_RESUME: Resume = {
     },
     {
       company: "DEF Organization",
+      link: "https://www.example.com/",
       jobTitle: "Software Engineer Intern",
       date: "Summer 2022",
       descriptions: [
@@ -40,6 +42,7 @@ export const END_HOME_RESUME: Resume = {
     },
     {
       company: "XYZ University",
+      link: "https://www.example.com/",
       jobTitle: "Research Assistant",
       date: "Summer 2021",
       descriptions: [
@@ -64,6 +67,7 @@ export const END_HOME_RESUME: Resume = {
   projects: [
     {
       project: "OpenResume",
+      link: "https://www.open-resume.com/",
       date: "Spring 2023",
       descriptions: [
         "Created and launched a free resume builder web app that allows thousands of users to create professional resume easily and land their dream jobs",

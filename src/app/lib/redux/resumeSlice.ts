@@ -22,6 +22,7 @@ export const initialProfile: ResumeProfile = {
 
 export const initialWorkExperience: ResumeWorkExperience = {
   company: "",
+  link: "",
   jobTitle: "",
   date: "",
   descriptions: [],
@@ -37,6 +38,7 @@ export const initialEducation: ResumeEducation = {
 
 export const initialProject: ResumeProject = {
   project: "",
+  link: "",
   date: "",
   descriptions: [],
 };

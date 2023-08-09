@@ -7,6 +7,7 @@ import type {
 import { getSectionLinesByKeywords } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/get-section-lines";
 import {
   DATE_FEATURE_SETS,
+  URL_FEATURE_SETS,
   hasNumber,
   getHasText,
   isBold,
@@ -68,11 +69,15 @@ export const extractWorkExperience = (sections: ResumeSectionToLines) => {
       false
     );
 
+    const [link, linkScores] = getTextWithHighestFeatureScore(
+      subsectionInfoTextItems,
+      URL_FEATURE_SETS
+    )
     const subsectionDescriptionsLines =
       subsectionLines.slice(descriptionsLineIdx);
     const descriptions = getBulletPointsFromLines(subsectionDescriptionsLines);
 
-    workExperiences.push({ company, jobTitle, date, descriptions });
+    workExperiences.push({ company, link, jobTitle, date, descriptions });
     workExperiencesScores.push({
       companyScores,
       jobTitleScores,

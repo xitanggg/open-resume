@@ -57,6 +57,7 @@ export const ResumePDF = ({
         heading={formToHeading["workExperiences"]}
         workExperiences={workExperiences}
         themeColor={themeColor}
+        isPDF={isPDF}
       />
     ),
     educations: () => (
