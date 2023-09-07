@@ -27,7 +27,7 @@ export const ResumePDFSkills = ({
   ];
 
   return (
-    <ResumePDFSection themeColor={themeColor} heading={heading}>
+    <ResumePDFSection themeColor={themeColor} heading={heading} wrap={false}>
       {featuredSkillsWithText.length > 0 && (
         <View style={{ ...styles.flexRowBetween, marginTop: spacing["0.5"] }}>
           {featuredSkillsPair.map((pair, idx) => (

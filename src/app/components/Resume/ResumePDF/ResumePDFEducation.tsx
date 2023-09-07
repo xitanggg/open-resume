@@ -19,7 +19,7 @@ export const ResumePDFEducation = ({
   showBulletPoints: boolean;
 }) => {
   return (
-    <ResumePDFSection themeColor={themeColor} heading={heading}>
+    <ResumePDFSection themeColor={themeColor} heading={heading} wrap={false}>
       {educations.map(
         ({ school, degree, date, gpa, descriptions = [] }, idx) => {
           // Hide school name if it is the same as the previous school

@@ -9,13 +9,16 @@ export const ResumePDFSection = ({
   heading,
   style = {},
   children,
+  wrap,
 }: {
   themeColor?: string;
   heading?: string;
   style?: Style;
   children: React.ReactNode;
+  wrap?: boolean;
 }) => (
   <View
+    wrap={wrap}
     style={{
       ...styles.flexCol,
       gap: spacing["2"],
