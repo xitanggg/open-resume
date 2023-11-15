@@ -1,5 +1,6 @@
 import { BaseForm } from "components/ResumeForm/Form";
 import { Input, Textarea } from "components/ResumeForm/Form/InputGroup";
+import { AvatarImport } from "components/ResumeForm/Form/AvatarImport";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { changeProfile, selectProfile } from "lib/redux/resumeSlice";
 import { ResumeProfile } from "lib/redux/types";
@@ -16,6 +17,10 @@ export const ProfileForm = () => {
   return (
     <BaseForm>
       <div className="grid grid-cols-6 gap-3">
+        <AvatarImport
+          label="Avatar"
+          labelClassName="col-span-full"
+        />
         <Input
           label="Name"
           labelClassName="col-span-full"
