@@ -61,9 +61,14 @@ export const ResumeDropzone = ({
   const onInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
-
     const newFile = files[0];
-    setNewFile(newFile);
+
+    if (newFile.name.endsWith(".pdf")) {
+      setHasNonPdfFile(false);
+      setNewFile(newFile);
+    } else {
+      setHasNonPdfFile(true);
+    }
   };
 
   const onRemove = () => {
