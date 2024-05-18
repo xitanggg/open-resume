@@ -2,6 +2,7 @@ import { readPdf } from "lib/parse-resume-from-pdf/read-pdf";
 import { groupTextItemsIntoLines } from "lib/parse-resume-from-pdf/group-text-items-into-lines";
 import { groupLinesIntoSections } from "lib/parse-resume-from-pdf/group-lines-into-sections";
 import { extractResumeFromSections } from "lib/parse-resume-from-pdf/extract-resume-from-sections";
+import formatCompetencyFile from  "../../resume-parser-export-template/formatCompetencyFile"
 
 /**
  * Resume parser util that parses a resume from a resume pdf file
@@ -21,5 +22,8 @@ export const parseResumeFromPdf = async (fileUrl: string) => {
   // Step 4. Extract resume from sections
   const resume = extractResumeFromSections(sections);
 
-  return resume;
+  // Step 5. Format resume into the new competency file structure
+  const formattedResume = formatCompetencyFile(resume);
+
+  return formattedResume;
 };
