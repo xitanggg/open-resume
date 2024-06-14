@@ -20,8 +20,8 @@ export const ResumePDFProfile = ({
   themeColor: string;
   isPDF: boolean;
 }) => {
-  const { name, email, phone, url, summary, location } = profile;
-  const iconProps = { email, phone, location, url };
+  const { name, email, phone, url, url2, summary, location } = profile;
+  const iconProps = { email, phone, location, url, url2 };
 
   return (
     <ResumePDFSection style={{ marginTop: spacing["4"] }}>
@@ -44,7 +44,7 @@ export const ResumePDFProfile = ({
           if (!value) return null;
 
           let iconType = key as IconType;
-          if (key === "url") {
+          if (key === "url" || key === "url2") {
             if (value.includes("github")) {
               iconType = "url_github";
             } else if (value.includes("linkedin")) {
@@ -52,7 +52,7 @@ export const ResumePDFProfile = ({
             }
           }
 
-          const shouldUseLinkWrapper = ["email", "url", "phone"].includes(key);
+          const shouldUseLinkWrapper = ["email", "url", "url2", "phone"].includes(key);
           const Wrapper = ({ children }: { children: React.ReactNode }) => {
             if (!shouldUseLinkWrapper) return <>{children}</>;
 
