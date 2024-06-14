@@ -34,7 +34,7 @@ export const ProfileForm = () => {
         />
         <Input
           label="Email"
-          labelClassName="col-span-full" // todo maybe keep col-span-4
+          labelClassName="col-span-full"
           name="email"
           placeholder="hello@khanacademy.org"
           value={email}
