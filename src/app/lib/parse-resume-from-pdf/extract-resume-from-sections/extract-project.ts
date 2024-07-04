@@ -45,7 +45,9 @@ export const extractProject = (sections: ResumeSectionToLines) => {
     const descriptionsLines = subsectionLines.slice(descriptionsLineIdx);
     const descriptions = getBulletPointsFromLines(descriptionsLines);
 
-    projects.push({ project, date, descriptions });
+    const projectLink = "";
+
+    projects.push({ project, date, descriptions, projectLink });
     projectsScores.push({
       projectScores,
       dateScores,
