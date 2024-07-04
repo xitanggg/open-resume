@@ -50,7 +50,7 @@ OpenResume is created with the NextJS web framework and follows its project stru
 | / | /page.tsx | Home page that contains hero, auto typing resume, steps, testimonials, logo cloud, etc |
 | /resume-import | /resume-import/page.tsx | Resume import page, where you can choose to import data from an existing resume PDF. The main component used is `ResumeDropzone` (`/components/ResumeDropzone.tsx`) |
 | /resume-builder | /resume-builder/page.tsx | Resume builder page to build and download a resume PDF. The main components used are `ResumeForm` (`/components/ResumeForm`) and `Resume` (`/components/Resume`) |
-| /resume-parser | /resume-parser/page.tsx | Resume parser page to test a resume’s AST readability. The main library util used is `parseResumeFromPdf` (`/lib/parse-resume-from-pdf`) |
+| /resume-parser | /resume-parser/page.tsx | Resume parser page to test a resume’s ATS readability. The main library util used is `parseResumeFromPdf` (`/lib/parse-resume-from-pdf`) |
 
 ## 💻 Local Development
 
