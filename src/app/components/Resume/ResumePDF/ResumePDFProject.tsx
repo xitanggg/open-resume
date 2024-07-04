@@ -6,6 +6,8 @@ import {
 } from "components/Resume/ResumePDF/common";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import type { ResumeProject } from "lib/redux/types";
+import Link from "next/link";
+import { LinkIcon } from "./common/ResumePDFIcon";
 
 export const ResumePDFProject = ({
   heading,
@@ -18,7 +20,7 @@ export const ResumePDFProject = ({
 }) => {
   return (
     <ResumePDFSection themeColor={themeColor} heading={heading}>
-      {projects.map(({ project, date, descriptions }, idx) => (
+      {projects.map(({ project, date, descriptions, projectLink }, idx) => (
         <View key={idx}>
           <View
             style={{
@@ -26,7 +28,28 @@ export const ResumePDFProject = ({
               marginTop: spacing["0.5"],
             }}
           >
-            <ResumePDFText bold={true}>{project}</ResumePDFText>
+            <View
+              style={{
+                ...styles.flexRow,
+                alignItems: "center",
+                gap: spacing["1"],
+              }}
+            >
+              <ResumePDFText bold={true}>
+                <Link
+                  href={projectLink}
+                  style={{
+                    color: "inherit",
+                    textDecorationLine: "none",
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {projectLink ? <LinkIcon /> : <></>}
+                  {project}
+                </Link>
+              </ResumePDFText>
+            </View>
             <ResumePDFText>{date}</ResumePDFText>
           </View>
           <View style={{ ...styles.flexCol, marginTop: spacing["0.5"] }}>

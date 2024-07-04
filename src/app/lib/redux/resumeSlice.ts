@@ -39,6 +39,7 @@ export const initialProject: ResumeProject = {
   project: "",
   date: "",
   descriptions: [],
+  projectLink: "",
 };
 
 export const initialFeaturedSkill: FeaturedSkill = { skill: "", rating: 4 };
