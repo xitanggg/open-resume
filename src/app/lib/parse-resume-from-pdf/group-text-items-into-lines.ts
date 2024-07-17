@@ -20,7 +20,7 @@ export const groupTextItemsIntoLines = (textItems: TextItems): Lines => {
       line = [];
     }
     // Otherwise, add item to current line
-    else if (item.text.trim() !== "") {
+    else if (item.text.trim() !== "" || item.text === " ") {
       line.push({ ...item });
     }
   }
