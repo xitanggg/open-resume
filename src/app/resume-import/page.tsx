@@ -1,5 +1,5 @@
 "use client";
-import { getHasUsedAppBefore } from "lib/redux/local-storage";
+import { clearLocalStorage, getHasUsedAppBefore } from "lib/redux/local-storage";
 import { ResumeDropzone } from "components/ResumeDropzone";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -14,6 +14,11 @@ export default function ImportResume() {
   useEffect(() => {
     setHasUsedAppBefore(getHasUsedAppBefore());
   }, []);
+
+  const handleCreateFromScratch = () => {
+    clearLocalStorage(); 
+    setHasAddedResume(false);
+  };
 
   return (
     <main>
@@ -44,6 +49,8 @@ export default function ImportResume() {
                 <SectionWithHeadingAndCreateButton
                   heading="You have data saved in browser from prior session"
                   buttonText="Continue where I left off"
+                  secondaryButtonText="Create from scratch"
+                  onCreateFromScratch={handleCreateFromScratch}
                 />
                 <OrDivider />
               </>
@@ -73,20 +80,33 @@ const OrDivider = () => (
 const SectionWithHeadingAndCreateButton = ({
   heading,
   buttonText,
+  secondaryButtonText,
+  onCreateFromScratch,
 }: {
   heading: string;
   buttonText: string;
+  secondaryButtonText?: string;
+  onCreateFromScratch?: () => void;
 }) => {
   return (
     <>
       <p className="font-semibold text-gray-900">{heading}</p>
-      <div className="mt-5">
+      <div className="mt-5 flex flex-col md:flex-row md:justify-center md:items-center gap-2">
         <Link
           href="/resume-builder"
-          className="outline-theme-blue rounded-full bg-sky-500 px-6 pb-2 pt-1.5 text-base font-semibold text-white"
+          className="block md:inline-block w-full md:w-auto outline-theme-blue rounded-full bg-sky-500 px-6 pb-2 pt-1.5 text-base font-semibold text-white"
         >
           {buttonText}
         </Link>
+        {secondaryButtonText && (
+          <Link
+            href="/resume-builder"
+            onClick={onCreateFromScratch}
+            className="block md:inline-block w-full md:w-auto outline-theme-blue rounded-full bg-sky-500 px-6 pb-2 pt-1.5 text-base font-semibold text-white"
+          >
+            {secondaryButtonText}
+          </Link>
+        )}
       </div>
     </>
   );
