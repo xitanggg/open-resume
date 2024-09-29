@@ -21,13 +21,18 @@ export const InputGroupWrapper = ({
   label,
   className,
   children,
+  wordCount,
 }: {
   label: string;
   className?: string;
   children?: React.ReactNode;
+  wordCount?: number;
 }) => (
   <label className={`text-base font-medium text-gray-700 ${className}`}>
     {label}
+    {wordCount !== undefined && (
+      <span className="ml-2 text-sm text-gray-500">{wordCount} words</span>
+    )}
     {children}
   </label>
 );
@@ -65,7 +70,31 @@ export const Textarea = <T extends string>({
   placeholder,
   onChange,
 }: InputProps<T, string>) => {
+  const [wordCount, setWordCount] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
   const textareaRef = useAutosizeTextareaHeight({ value });
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value;
+    onChange(name, newValue);
+
+    // count words in the textArea/input
+    const words = newValue
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0);
+    const currentWordCount = words.length;
+
+    // update state of wordCount
+    setWordCount(currentWordCount);
+
+    // checking the word limit
+    if (currentWordCount > 25) {
+      setErrorMessage("Word limit exceeded. Please limit to 25 words.");
+    } else {
+      setErrorMessage("");
+    }
+  };
 
   return (
     <InputGroupWrapper label={label} className={wrapperClassName}>
@@ -75,8 +104,12 @@ export const Textarea = <T extends string>({
         className={`${INPUT_CLASS_NAME} resize-none overflow-hidden`}
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange(name, e.target.value)}
+        onChange={handleChange}
       />
+      <div className="text-sm text-gray-500">Word count: {wordCount} / 25</div>
+      {errorMessage && (
+        <div className="text-sm text-red-500">{errorMessage}</div>
+      )}
     </InputGroupWrapper>
   );
 };
@@ -112,7 +145,7 @@ export const BulletListTextarea = <T extends string>(
  *
  * Reference: https://stackoverflow.com/a/74998090/7699841
  */
-const BulletListTextareaGeneral = <T extends string>({
+export const BulletListTextareaGeneral = <T extends string>({
   label,
   labelClassName: wrapperClassName,
   name,
@@ -120,8 +153,44 @@ const BulletListTextareaGeneral = <T extends string>({
   placeholder,
   onChange,
   showBulletPoints = true,
-}: InputProps<T, string[]> & { showBulletPoints?: boolean }) => {
+  wordLimit = 60,
+  bulletPointLimit = 5,
+}: InputProps<T, string[]> & {
+  showBulletPoints?: boolean;
+  wordLimit?: number;
+  bulletPointLimit?: number;
+}) => {
+  const [currentWordCount, setCurrentWordCount] = useState(0);
+  const [currentBulletPointCount, setCurrentBulletPointCount] = useState(0);
   const html = getHTMLFromBulletListStrings(bulletListStrings);
+
+  const handleInputChange = (e: React.FormEvent<HTMLDivElement>) => {
+    const { innerText } = e.currentTarget as HTMLDivElement;
+    const newBulletListStrings = getBulletListStringsFromInnerText(innerText);
+
+    // Calculate the current word count
+    const words = innerText
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0);
+    const wordCount = words.length;
+
+    // Calculate the current bullet point count
+    const bulletPoints = innerText
+      .split("\n")
+      .filter((point) => point.trim().length > 0);
+    const bulletPointCount = bulletPoints.length;
+
+    // Update the word count and bullet point count states
+    setCurrentWordCount(wordCount);
+    setCurrentBulletPointCount(bulletPointCount);
+
+    // Only call onChange if both word count and bullet point count are within limits
+    if (wordCount <= wordLimit && bulletPointCount <= bulletPointLimit) {
+      onChange(name, newBulletListStrings);
+    }
+  };
+
   return (
     <InputGroupWrapper label={label} className={wrapperClassName}>
       <ContentEditable
@@ -129,18 +198,25 @@ const BulletListTextareaGeneral = <T extends string>({
         className={`${INPUT_CLASS_NAME} cursor-text [&>div]:list-item ${
           showBulletPoints ? "pl-7" : "[&>div]:list-['']"
         }`}
-        // Note: placeholder currently doesn't work
         placeholder={placeholder}
-        onChange={(e) => {
-          if (e.type === "input") {
-            const { innerText } = e.currentTarget as HTMLDivElement;
-            const newBulletListStrings =
-              getBulletListStringsFromInnerText(innerText);
-            onChange(name, newBulletListStrings);
-          }
-        }}
+        onChange={handleInputChange}
         html={html}
       />
+      <div className="text-sm text-gray-500">
+        Word count: {currentWordCount} / {wordLimit} | Bullet points:{" "}
+        {currentBulletPointCount} / {bulletPointLimit}
+      </div>
+      {currentWordCount > wordLimit && (
+        <div className="text-sm text-red-500">
+          Word limit exceeded. Please limit to {wordLimit} words.
+        </div>
+      )}
+      {currentBulletPointCount > bulletPointLimit && (
+        <div className="text-sm text-red-500">
+          Bullet point limit exceeded. Please limit to {bulletPointLimit} bullet
+          points.
+        </div>
+      )}
     </InputGroupWrapper>
   );
 };

@@ -27,6 +27,7 @@ import {
   deleteSectionInFormByIdx,
   moveSectionInForm,
 } from "lib/redux/resumeSlice";
+import React from "react";
 
 /**
  * BaseForm is the bare bone form, i.e. just the outline with no title and no control buttons.
