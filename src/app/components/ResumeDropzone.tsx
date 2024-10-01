@@ -17,6 +17,7 @@ const defaultFileState = {
   name: "",
   size: 0,
   fileUrl: "",
+  data: null as File | null,
 };
 
 export const ResumeDropzone = ({
@@ -30,7 +31,7 @@ export const ResumeDropzone = ({
 }) => {
   const [file, setFile] = useState(defaultFileState);
   const [isHoveredOnDropzone, setIsHoveredOnDropzone] = useState(false);
-  const [hasNonPdfFile, setHasNonPdfFile] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const router = useRouter();
 
   const hasFile = Boolean(file.name);
@@ -42,18 +43,18 @@ export const ResumeDropzone = ({
 
     const { name, size } = newFile;
     const fileUrl = URL.createObjectURL(newFile);
-    setFile({ name, size, fileUrl });
+    setFile({ name, size, fileUrl, data: newFile });
     onFileUrlChange(fileUrl);
   };
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const newFile = event.dataTransfer.files[0];
-    if (newFile.name.endsWith(".pdf")) {
-      setHasNonPdfFile(false);
+    if (newFile.name.endsWith(".pdf") || newFile.name.endsWith(".json")) {
+      setErrorMsg("");
       setNewFile(newFile);
     } else {
-      setHasNonPdfFile(true);
+      setErrorMsg("Only pdf/json file is supported");
     }
     setIsHoveredOnDropzone(false);
   };
@@ -72,8 +73,20 @@ export const ResumeDropzone = ({
   };
 
   const onImportClick = async () => {
-    const resume = await parseResumeFromPdf(file.fileUrl);
-    const settings = deepClone(initialSettings);
+    let resume, settings;
+    if (file.name.endsWith(".json")) {
+        const data = JSON.parse(await file.data!.text());
+        if (!data.resume || !data.settings) {
+            setErrorMsg("Invalid json file");
+            return;
+        }
+        resume = data.resume;
+        settings = data.settings;
+    } else {
+        resume = await parseResumeFromPdf(file.fileUrl);
+        settings = deepClone(initialSettings);
+    }
+    
 
     // Set formToShow settings based on uploaded resume if users have used the app before
     if (getHasUsedAppBefore()) {
@@ -132,7 +145,7 @@ export const ResumeDropzone = ({
                 !playgroundView && "text-lg font-semibold"
               )}
             >
-              Browse a pdf file or drop it here
+              Browse a pdf/json file or drop it here
             </p>
             <p className="flex text-sm text-gray-500">
               <LockClosedIcon className="mr-1 mt-1 h-3 w-3 text-gray-400" />
@@ -167,13 +180,11 @@ export const ResumeDropzone = ({
                 <input
                   type="file"
                   className="sr-only"
-                  accept=".pdf"
+                  accept=".pdf,.json"
                   onChange={onInputChange}
                 />
               </label>
-              {hasNonPdfFile && (
-                <p className="mt-6 text-red-400">Only pdf file is supported</p>
-              )}
+              {errorMsg && <p className="mt-6 text-red-400">{errorMsg}</p>}
             </>
           ) : (
             <>
