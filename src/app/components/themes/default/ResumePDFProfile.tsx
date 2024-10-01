@@ -2,13 +2,13 @@ import { View } from "@react-pdf/renderer";
 import {
   ResumePDFIcon,
   type IconType,
-} from "components/Resume/ResumePDF/common/ResumePDFIcon";
-import { styles, spacing } from "components/Resume/ResumePDF/styles";
+} from "components/themes/core/ResumePDFIcon";
+import { styles, spacing } from "components/themes/styles";
 import {
   ResumePDFLink,
   ResumePDFSection,
   ResumePDFText,
-} from "components/Resume/ResumePDF/common";
+} from "components/themes/core";
 import type { ResumeProfile } from "lib/redux/types";
 
 export const ResumePDFProfile = ({

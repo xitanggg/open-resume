@@ -2,8 +2,8 @@ import { View } from "@react-pdf/renderer";
 import {
   ResumePDFSection,
   ResumePDFBulletList,
-} from "components/Resume/ResumePDF/common";
-import { styles } from "components/Resume/ResumePDF/styles";
+} from "./common";
+import { styles } from "components/themes/styles";
 import type { ResumeCustom } from "lib/redux/types";
 
 export const ResumePDFCustom = ({

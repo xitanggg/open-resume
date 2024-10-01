@@ -7,6 +7,7 @@ import {
 } from "components/fonts/constants";
 import { getAllFontFamiliesToLoad } from "components/fonts/lib";
 import dynamic from "next/dynamic";
+import { getAllThemesAvailable } from "components/themes/lib";
 
 const Selection = ({
   selectedColor,
@@ -155,6 +156,37 @@ export const DocumentSizeSelections = ({
                 {type === "Letter" ? "(US, Canada)" : "(other countries)"}
               </div>
             </div>
+          </Selection>
+        );
+      })}
+    </SelectionsWrapper>
+  );
+};
+
+export const ThemeSelections = ({
+  selectedTheme,
+  themeColor,
+  handleSettingsChange,
+}: {
+  themeColor: string;
+  selectedTheme: string;
+  handleSettingsChange: (field: GeneralSetting, value: string) => void;
+}) => {
+  const allThemes = getAllThemesAvailable();
+  return (
+    <SelectionsWrapper>
+      {allThemes.map((type, idx) => {
+        return (
+          <Selection
+            key={idx}
+            selectedColor={themeColor}
+            isSelected={type === selectedTheme}
+            onClick={() => handleSettingsChange("theme", type)}
+            style={{
+                textTransform: "capitalize"
+            }}
+          >
+            {type}
           </Selection>
         );
       })}

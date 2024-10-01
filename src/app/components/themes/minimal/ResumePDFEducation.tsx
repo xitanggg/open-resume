@@ -3,8 +3,8 @@ import {
   ResumePDFBulletList,
   ResumePDFSection,
   ResumePDFText,
-} from "components/Resume/ResumePDF/common";
-import { styles, spacing } from "components/Resume/ResumePDF/styles";
+} from "./common";
+import { styles, spacing } from "components/themes/styles";
 import type { ResumeEducation } from "lib/redux/types";
 
 export const ResumePDFEducation = ({
