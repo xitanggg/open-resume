@@ -4,6 +4,7 @@ import {
   BulletListTextarea,
 } from "components/ResumeForm/Form/InputGroup";
 import type { CreateHandleChangeArgsWithDescriptions } from "components/ResumeForm/types";
+import ChatPage from "home/ChatPage";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import {
   changeWorkExperiences,
@@ -76,9 +77,11 @@ export const WorkExperiencesForm = () => {
               value={descriptions}
               onChange={handleWorkExperienceChange}
             />
+            <ChatPage/>
           </FormSection>
         );
       })}
+      
     </Form>
   );
 };

@@ -289,6 +289,7 @@ const BulletListTextareaFallback = <T extends string>({
         onChange(
           name,
           getBulletListStringsFromTextareaValue(value, showBulletPoints)
+    
         );
       }}
     />

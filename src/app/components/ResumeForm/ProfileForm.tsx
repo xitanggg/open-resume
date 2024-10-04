@@ -1,5 +1,6 @@
 import { BaseForm } from "components/ResumeForm/Form";
 import { Input, Textarea } from "components/ResumeForm/Form/InputGroup";
+import ChatPage from "home/ChatPage";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { changeProfile, selectProfile } from "lib/redux/resumeSlice";
 import { ResumeProfile } from "lib/redux/types";
@@ -32,6 +33,7 @@ export const ProfileForm = () => {
           value={summary}
           onChange={handleProfileChange}
         />
+        
         <Input
           label="Email"
           labelClassName="col-span-4"
@@ -65,6 +67,7 @@ export const ProfileForm = () => {
           onChange={handleProfileChange}
         />
       </div>
+      <ChatPage/>
     </BaseForm>
   );
 };

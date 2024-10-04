@@ -11,6 +11,7 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.3",
     "@heroicons/react": "^2.0.18",
     "@react-pdf/renderer": "^3.1.10",
     "@reduxjs/toolkit": "^1.9.5",
@@ -19,6 +20,7 @@
     "@types/react-dom": "18.2.4",
     "@vercel/analytics": "^1.0.1",
     "autoprefixer": "10.4.14",
+    "cohere-ai": "^7.14.0",
     "docx": "^8.5.0",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",

@@ -4,6 +4,7 @@ import {
   BulletListTextarea,
 } from "components/ResumeForm/Form/InputGroup";
 import type { CreateHandleChangeArgsWithDescriptions } from "components/ResumeForm/types";
+import ChatPage from "home/ChatPage";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { selectProjects, changeProjects } from "lib/redux/resumeSlice";
 import type { ResumeProject } from "lib/redux/types";
@@ -61,6 +62,7 @@ export const ProjectsForm = () => {
               onChange={handleProjectChange}
               labelClassName="col-span-full"
             />
+            <ChatPage/>
           </FormSection>
         );
       })}
