@@ -25,6 +25,7 @@
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
     "next": "13.4.4",
+    "open-resume": "file:",
     "pdfjs": "^2.5.0",
     "pdfjs-dist": "^3.7.107",
     "postcss": "8.4.24",

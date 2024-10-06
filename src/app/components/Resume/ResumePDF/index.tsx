@@ -10,6 +10,7 @@ import { DEFAULT_FONT_COLOR } from "lib/redux/settingsSlice";
 import type { Settings, ShowForm } from "lib/redux/settingsSlice";
 import type { Resume } from "lib/redux/types";
 import { SuppressResumePDFErrorMessage } from "components/Resume/ResumePDF/common/SuppressResumePDFErrorMessage";
+import React from "react";
 
 /**
  * Note: ResumePDF is supposed to be rendered inside PDFViewer. However,
