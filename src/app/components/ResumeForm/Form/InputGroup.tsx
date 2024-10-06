@@ -153,8 +153,8 @@ export const BulletListTextareaGeneral = <T extends string>({
   placeholder,
   onChange,
   showBulletPoints = true,
-  wordLimit = 60,
-  bulletPointLimit = 5,
+  wordLimit = 80,
+  bulletPointLimit = 6,
 }: InputProps<T, string[]> & {
   showBulletPoints?: boolean;
   wordLimit?: number;
