@@ -67,7 +67,6 @@ export const ProfileForm = () => {
           onChange={handleProfileChange}
         />
       </div>
-      <ChatPage/>
     </BaseForm>
   );
 };

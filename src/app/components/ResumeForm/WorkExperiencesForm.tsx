@@ -77,7 +77,6 @@ export const WorkExperiencesForm = () => {
               value={descriptions}
               onChange={handleWorkExperienceChange}
             />
-            <ChatPage/>
           </FormSection>
         );
       })}

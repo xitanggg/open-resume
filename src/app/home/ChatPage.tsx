@@ -1,13 +1,23 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
 
+interface Message {
+  type: 'user' | 'cohere';
+  text: string;
+}
+
 export default function ChatPage() {
-  const [userMessage, setUserMessage] = useState('');
-  const [cohereResponse, setCohereResponse] = useState('');
+  const [userMessage, setUserMessage] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    // Add user message to chat
+    const newMessages = [...messages, { type: 'user', text: userMessage }];
+    setMessages(newMessages);
+    setUserMessage('');
 
     try {
       const response = await fetch('/api/chat', {
@@ -19,36 +29,47 @@ export default function ChatPage() {
       });
 
       const data = await response.json();
-      setCohereResponse(data.message); 
+      const cohereMessage = data.message;
+
+      // Add cohere response to chat
+      setMessages([...newMessages, { type: 'cohere', text: cohereMessage }]);
     } catch (error) {
       console.error('Error sending request:', error);
     }
   };
 
-  useEffect(() => {
-    setCohereResponse('');
-  }, [userMessage]);
-
   return (
-    <div className="p-4">
-      <form onSubmit={handleSubmit} className="flex mb-4">
+    <div className="flex flex-col h-full">
+      {/* Chat display area */}
+      <div className="flex-grow p-4 overflow-y-auto space-y-4">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`p-2 max-w-xs rounded-lg ${
+              message.type === 'user' ? 'bg-blue-500 text-white self-end' : 'bg-gray-200 text-black self-start'
+            }`}
+          >
+            {message.text}
+          </div>
+        ))}
+      </div>
+
+      {/* Input section */}
+      <form onSubmit={handleSubmit} className="p-4 border-t flex items-center">
         <input
           type="text"
           value={userMessage}
           onChange={(e) => setUserMessage(e.target.value)}
-          placeholder="Enter the prompt"
+          placeholder="Enter your message..."
           className="border p-2 flex-grow rounded-l-md"
         />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded-r-md hover:bg-blue-600">
-          Submit
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded-r-md hover:bg-blue-600"
+        >
+          Send
         </button>
       </form>
-      {cohereResponse && (
-        <div className="border p-4 rounded-md cursor-text select-text"> 
-          <strong>Response:</strong> {cohereResponse}
-        </div>
-      )}
     </div>
   );
 }
-

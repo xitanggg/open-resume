@@ -81,7 +81,6 @@ export const SkillsForm = () => {
           />
         ))}
       </div>
-      <ChatPage/>
     </Form>
   );
 };

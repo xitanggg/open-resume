@@ -62,7 +62,6 @@ export const ProjectsForm = () => {
               onChange={handleProjectChange}
               labelClassName="col-span-full"
             />
-            <ChatPage/>
           </FormSection>
         );
       })}
