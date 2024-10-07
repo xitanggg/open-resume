@@ -1,11 +1,16 @@
 "use client";
-
 import { Provider } from "react-redux";
 import { store } from "lib/redux/store";
 import { ResumeForm } from "components/ResumeForm";
 import { Resume } from "components/Resume";
 import ChatPage from "home/ChatPage";
 import { useState } from "react";
+import { FaWandMagicSparkles } from "react-icons/fa6";
+
+// Floating Chat Button Component
+interface FloatingChatButtonProps {
+  toggleChat: () => void;
+}
 
 // Floating Chat Button Component
 interface FloatingChatButtonProps {
@@ -14,10 +19,11 @@ interface FloatingChatButtonProps {
 
 const FloatingChatButton: React.FC<FloatingChatButtonProps> = ({ toggleChat }) => (
   <button
-    className="fixed bottom-5 right-5 z-50 rounded-full bg-blue-500 p-3 text-white shadow-lg hover:bg-blue-600 focus:outline-none"
+    className="fixed shadow-md bottom-20 right-5 z-50 flex items-center rounded-full bg-blue-500 p-3 text-white shadow-lg hover:bg-blue-600 focus:outline-none"
     onClick={toggleChat}
   >
-    Chat
+    <FaWandMagicSparkles className="mr-2" /> {/* Margin to the right of the icon */}
+    <span>Chat</span> {/* Use a span for proper text alignment */}
   </button>
 );
 
