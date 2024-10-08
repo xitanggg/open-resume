@@ -72,6 +72,7 @@ export const AutoTypingResume = () => {
                 : "",
               educations: resume.educations[0].school ? "EDUCATION" : "",
               projects: resume.projects[0].project ? "PROJECT" : "",
+              awards:resume.awards[0].award ? "AWARD" : "",
               skills: resume.skills.featuredSkills[0].skill ? "SKILLS" : "",
               custom: "CUSTOM SECTION",
             },

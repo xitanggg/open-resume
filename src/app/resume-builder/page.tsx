@@ -19,7 +19,7 @@ interface FloatingChatButtonProps {
 
 const FloatingChatButton: React.FC<FloatingChatButtonProps> = ({ toggleChat }) => (
   <button
-    className="fixed shadow-md bottom-20 right-5 z-50 flex items-center rounded-full bg-blue-500 p-3 text-white shadow-lg hover:bg-blue-600 focus:outline-none"
+    className="fixed bottom-20 right-5 z-50 flex items-center rounded-full bg-blue-500 p-3 text-white shadow-lg hover:bg-blue-600 focus:outline-none"
     onClick={toggleChat}
   >
     <FaWandMagicSparkles className="mr-2" /> {/* Margin to the right of the icon */}

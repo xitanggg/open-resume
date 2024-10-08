@@ -119,6 +119,24 @@ export const ResumeTable = ({ resume }: { resume: Resume }) => {
             />
           </Fragment>
         ))}
+                {resume.awards.length > 0 && (
+          <TableRowHeader>Awards</TableRowHeader>
+        )}
+        {resume.awards.map((award, idx) => (
+          <Fragment key={idx}>
+            <TableRow label="award" value={award.award} />
+            <TableRow label="Date" value={award.date} />
+            <TableRow
+              label="Descriptions"
+              value={award.descriptions}
+              className={
+                resume.awards.length - 1 !== 0 &&
+                idx !== resume.awards.length - 1 &&
+                "!border-b-4"
+              }
+            />
+          </Fragment>
+        ))}
         <TableRowHeader>Skills</TableRowHeader>
         <TableRow label="Descriptions" value={skills} />
       </tbody>
