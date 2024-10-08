@@ -1,35 +1,47 @@
-'use client'; // Ensure the component is treated as a Client Component
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 const DarkModeToggle = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Check for saved user preference from localStorage and update state
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
+    // On initial load, set the theme based on user's preference
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme === "dark" || (!storedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
       setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+    } else {
+      setIsDarkMode(false);
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
-  // Toggle dark mode on button click
-  const toggleDarkMode = () => {
+  const toggleTheme = () => {
     if (isDarkMode) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      setIsDarkMode(false);
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     }
+    setIsDarkMode(!isDarkMode);
   };
 
   return (
-    <button onClick={toggleDarkMode} className="p-2 m-2 rounded bg-gray-200 dark:bg-gray-800">
-      {isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+    <button
+      onClick={toggleTheme}
+      className="flex items-center justify-center px-4 py-2 bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded-md shadow-md hover:bg-gray-300 dark:hover:bg-gray-700 transition duration-300"
+    >
+      {isDarkMode ? (
+        <>
+          <span className="mr-2">🌞</span> 
+        </>
+      ) : (
+        <>
+          <span className="mr-2">🌙</span> 
+        </>
+      )}
     </button>
   );
 };
