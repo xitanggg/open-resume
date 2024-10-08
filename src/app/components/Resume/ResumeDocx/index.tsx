@@ -5,6 +5,7 @@ import ResumeDocxWorkExperience from "./ResumeDocxWorkExperience";
 import ResumeDocxEducation from "./ResumeDocxEducation";
 import ResumeDocxProjects from "./ResumeDocxProjects";
 import ResumeDocxSkills from "./ResumeDocxSkills";
+import ResumeDocxAwards from "./ResumeDocxAwards";
 
 // Function to create and download the resume document
 const createDocx = async (resume: Resume | null) => {
@@ -24,6 +25,7 @@ const createDocx = async (resume: Resume | null) => {
     });
     const educationData = ResumeDocxEducation({ education: resume.educations });
     const projectsData = ResumeDocxProjects({ projects: resume.projects });
+    const awardsData = ResumeDocxAwards({ awards: resume.awards });
     const skillsData = ResumeDocxSkills({skills:resume.skills})
 
     // Create a new document with sections for profile and work experience ..etc
@@ -49,6 +51,7 @@ const createDocx = async (resume: Resume | null) => {
             ...workExperienceData,
             ...educationData,
             ...projectsData,
+            ...awardsData,
             ...skillsData
           ],
         },

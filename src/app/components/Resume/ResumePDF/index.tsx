@@ -4,6 +4,7 @@ import { ResumePDFProfile } from "components/Resume/ResumePDF/ResumePDFProfile";
 import { ResumePDFWorkExperience } from "components/Resume/ResumePDF/ResumePDFWorkExperience";
 import { ResumePDFEducation } from "components/Resume/ResumePDF/ResumePDFEducation";
 import { ResumePDFProject } from "components/Resume/ResumePDF/ResumePDFProject";
+import { ResumePDFAward } from "components/Resume/ResumePDF/ResumePDFAward";
 import { ResumePDFSkills } from "components/Resume/ResumePDF/ResumePDFSkills";
 import { ResumePDFCustom } from "components/Resume/ResumePDF/ResumePDFCustom";
 import { DEFAULT_FONT_COLOR } from "lib/redux/settingsSlice";
@@ -36,7 +37,7 @@ export const ResumePDF = ({
   settings: Settings;
   isPDF?: boolean;
 }) => {
-  const { profile, workExperiences, educations, projects, skills, custom } =
+  const { profile, workExperiences, educations, projects, awards, skills, custom } =
     resume;
   const { name } = profile;
   const {
@@ -72,6 +73,13 @@ export const ResumePDF = ({
       <ResumePDFProject
         heading={formToHeading["projects"]}
         projects={projects}
+        themeColor={themeColor}
+      />
+    ),
+    awards: () => (
+      <ResumePDFAward 
+      heading={formToHeading["awards"]}
+        awards={awards}
         themeColor={themeColor}
       />
     ),
