@@ -1,6 +1,7 @@
-import "globals.css";
-import { TopNavBar } from "components/TopNavBar";
-import { Analytics } from "@vercel/analytics/react";
+import "globals.css";  // Make sure Tailwind CSS is being used
+import { TopNavBar } from "components/TopNavBar";  // Your existing top navigation bar
+import { Analytics } from "@vercel/analytics/react";  // Analytics setup
+import DarkModeToggle from "components/DarkModeToggle";  // Import the dark mode toggle button
 
 export const metadata = {
   title: "OpenResume - Free Open-source Resume Builder and Parser",
@@ -15,10 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <TopNavBar />
+      <body className="bg-white dark:bg-gray-900 text-black dark:text-white">  {/* Add Tailwind dark classes */}
+        <TopNavBar />  {/* Your existing navigation */}
+        <DarkModeToggle />  {/* Add the dark mode toggle button here */}
         {children}
-        <Analytics />
+        <Analytics />  {/* Analytics tracking */}
       </body>
     </html>
   );

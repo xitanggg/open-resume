@@ -49,7 +49,6 @@ export const Tooltip = ({
       onMouseLeave={hideTooltip}
       onFocus={showTooltip}
       onBlur={hideTooltip}
-      // hide tooltip onClick to handle the edge case where the element position is changed after lick
       onClick={hideTooltip}
     >
       {children}
@@ -58,7 +57,7 @@ export const Tooltip = ({
           <div
             ref={tooltipRef}
             role="tooltip"
-            className="absolute left-0 top-0 z-10 w-max rounded-md bg-gray-600 px-2 py-0.5 text-sm text-white"
+            className="absolute left-0 top-0 z-10 w-max rounded-md bg-gray-200 dark:bg-gray-600 px-2 py-0.5 text-sm text-black dark:text-white" // Added light and dark mode styles
             style={{
               left: `${tooltipPos.left}px`,
               top: `${tooltipPos.top}px`,
