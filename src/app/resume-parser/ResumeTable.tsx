@@ -5,7 +5,7 @@ import { deepClone } from "lib/deep-clone";
 import { cx } from "lib/cx";
 
 const TableRowHeader = ({ children }: { children: React.ReactNode }) => (
-  <tr className="divide-x bg-gray-50">
+  <tr className="divide-x bg-primary"> {/* Updated to bg-primary */}
     <th className="px-3 py-2 font-semibold" scope="colgroup" colSpan={2}>
       {children}
     </th>
@@ -57,8 +57,8 @@ export const ResumeTable = ({ resume }: { resume: Resume }) => {
     skills.unshift(featuredSkills);
   }
   return (
-    <table className="mt-2 w-full border text-sm text-gray-900">
-      <tbody className="divide-y text-left align-top">
+    <table className="mt-2 w-full border text-sm text-gray-900 dark:text-gray-300 ">
+      <tbody className="divide-y text-left align-top  ">
         <TableRowHeader>Profile</TableRowHeader>
         <TableRow label="Name" value={resume.profile.name} />
         <TableRow label="Email" value={resume.profile.email} />
@@ -119,12 +119,12 @@ export const ResumeTable = ({ resume }: { resume: Resume }) => {
             />
           </Fragment>
         ))}
-                {resume.awards.length > 0 && (
+        {resume.awards.length > 0 && (
           <TableRowHeader>Awards</TableRowHeader>
         )}
         {resume.awards.map((award, idx) => (
           <Fragment key={idx}>
-            <TableRow label="award" value={award.award} />
+            <TableRow label="Award" value={award.award} />
             <TableRow label="Date" value={award.date} />
             <TableRow
               label="Descriptions"

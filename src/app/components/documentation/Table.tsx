@@ -17,13 +17,13 @@ export const Table = ({
   const tableBody = table.slice(1);
   return (
     <table
-      className={cx("w-full divide-y border text-sm text-gray-900", className)}
+      className={cx("w-full divide-y border text-sm text-gray-900 dark:text-gray-300", className)}
     >
-      <thead className="divide-y bg-gray-50 text-left align-top">
+      <thead className="divide-y bg-gray-50 text-left align-top ">
         {title && (
-          <tr className="divide-x bg-gray-50">
+          <tr className="divide-x bg-gray-50 ">
             <th
-              className="px-2 py-1.5 font-bold"
+              className="px-2 py-1.5 font-bold "
               scope="colSpan"
               colSpan={tableHeader.length}
             >
@@ -31,7 +31,7 @@ export const Table = ({
             </th>
           </tr>
         )}
-        <tr className="divide-x bg-gray-50">
+        <tr className="divide-x bg-primary">
           {tableHeader.map((item, idx) => (
             <th className="px-2 py-1.5 font-semibold" scope="col" key={idx}>
               {item}

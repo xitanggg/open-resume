@@ -3,59 +3,138 @@ import { Provider } from "react-redux";
 import { store } from "lib/redux/store";
 import { ResumeForm } from "components/ResumeForm";
 import { Resume } from "components/Resume";
-import ChatPage from "home/ChatPage";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaWandMagicSparkles } from "react-icons/fa6";
+import { Send, X } from 'lucide-react';
 
-// Floating Chat Button Component
-interface FloatingChatButtonProps {
-  toggleChat: () => void;
+interface Message {
+  type: 'user' | 'cohere';
+  text: string;
 }
 
-// Floating Chat Button Component
-interface FloatingChatButtonProps {
-  toggleChat: () => void;
+// Chat Sidebar Component
+interface ChatSidebarProps {
+  isOpen: boolean;
+  toggleSidebar: () => void;
 }
 
-const FloatingChatButton: React.FC<FloatingChatButtonProps> = ({ toggleChat }) => (
-  <button
-    className="fixed bottom-20 right-5 z-50 flex items-center rounded-full bg-blue-500 p-3 text-white shadow-lg hover:bg-blue-600 focus:outline-none"
-    onClick={toggleChat}
-  >
-    <FaWandMagicSparkles className="mr-2" /> {/* Margin to the right of the icon */}
-    <span>Chat</span> {/* Use a span for proper text alignment */}
-  </button>
-);
+const ChatSidebar: React.FC<ChatSidebarProps> = ({ isOpen, toggleSidebar }) => {
+  const [userMessage, setUserMessage] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-// Chat Window Component
-interface ChatWindowProps {
-  toggleChat: () => void;
-}
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ toggleChat }) => (
-  <div className="fixed bottom-16 right-5 z-50 w-80 h-96 bg-white shadow-lg rounded-lg overflow-hidden">
-    <div className="flex justify-between items-center p-2 bg-blue-500 text-white">
-      <h3>Chat</h3>
-      <button onClick={toggleChat} className="text-white">
-        ✖️
-      </button>
+  useEffect(scrollToBottom, [messages]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [userMessage]);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!userMessage.trim()) return;
+
+    const newMessages = [...messages, { type: 'user', text: userMessage }];
+    setMessages(newMessages);
+    setUserMessage('');
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: userMessage }),
+      });
+
+      const data = await response.json();
+      const cohereMessage = data.message;
+
+      setMessages([...newMessages, { type: 'cohere', text: cohereMessage }]);
+    } catch (error) {
+      console.error('Error sending request:', error);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSubmit(event);
+    }
+  };
+
+  return (
+    <div className={`fixed top-0 right-0 h-full w-96 bg-white shadow-lg transform transition-transform duration-300 ease-in-out dark:bg-gray-800 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className="flex flex-col h-full">
+        <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
+          <h2 className="text-xl font-semibold dark:text-white">Chat</h2>
+          <button onClick={toggleSidebar} className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200">
+            <X size={24} />
+          </button>
+        </div>
+        <div className="flex-grow overflow-y-auto p-4">
+          <div className="space-y-4">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`p-3 rounded-lg max-w-[80%] ${
+                    message.type === 'user'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                  }`}
+                >
+                  {message.text}
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+        <div className="border-t p-4 dark:border-gray-700">
+          <form onSubmit={handleSubmit} className="flex items-end">
+            <textarea
+              ref={textareaRef}
+              value={userMessage}
+              onChange={(e) => setUserMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your message here..."
+              className="flex-grow p-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden dark:bg-gray-600 dark:text-gray-200"
+              rows={1}
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 text-white p-2 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 h-[38px]"
+            >
+              <Send size={20} />
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
-    <div className="p-8 h-full">
-      <ChatPage />
-    </div>
-  </div>
-);
+  );
+};
 
 const Create: React.FC = () => {
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
     <Provider store={store}>
-      <main className="relative h-full w-full overflow-hidden bg-gray-50">
+      <main className="relative h-full w-full overflow-hidden bg-gray-50 dark:bg-gray-900">
         <div className="grid grid-cols-3 md:grid-cols-6">
           <div className="col-span-3">
             <ResumeForm />
@@ -65,11 +144,17 @@ const Create: React.FC = () => {
           </div>
         </div>
 
-        {/* Floating Chat Button */}
-        <FloatingChatButton toggleChat={toggleChat} />
+        {!isSidebarOpen && ( // Hide button when sidebar is open
+          <button
+            className="fixed bottom-10 right-5 z-50 flex items-center rounded-full bg-blue-500 p-3 text-white shadow-lg hover:bg-blue-600 focus:outline-none"
+            onClick={toggleSidebar}
+          >
+            <FaWandMagicSparkles className="mr-2" />
+            <span>Chat</span>
+          </button>
+        )}
 
-        {/* Conditionally render Chat Window with ChatPage */}
-        {isChatOpen && <ChatWindow toggleChat={toggleChat} />}
+        <ChatSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       </main>
     </Provider>
   );

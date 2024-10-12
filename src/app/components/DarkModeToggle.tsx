@@ -1,32 +1,8 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useTheme } from "../contexts/ThemeContext"; // Import the useTheme hook
 
 const DarkModeToggle = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // On initial load, set the theme based on user's preference
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme === "dark" || (!storedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      setIsDarkMode(true);
-      document.documentElement.classList.add("dark");
-    } else {
-      setIsDarkMode(false);
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    if (isDarkMode) {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    }
-    setIsDarkMode(!isDarkMode);
-  };
+  const { isDarkMode, toggleTheme } = useTheme(); // Get dark mode state and toggle function from context
 
   return (
     <button
@@ -35,11 +11,11 @@ const DarkModeToggle = () => {
     >
       {isDarkMode ? (
         <>
-          <span className="mr-2">🌞</span> 
+          <span className="mr-2">🌞</span>
         </>
       ) : (
         <>
-          <span className="mr-2">🌙</span> 
+          <span className="mr-2">🌙</span>
         </>
       )}
     </button>

@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   const { prompt }: { prompt: string } = await request.json();
 
   const cohere = new CohereClientV2({
-    token: 'exWH6pp1G5wT7tpZ6ryCoVgE0n9w7e6l2Wr4CMx0',
+    token: '',
   });
 
   try {

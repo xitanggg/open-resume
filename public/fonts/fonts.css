@@ -10,7 +10,8 @@
 @font-face {font-family: "OpenSans"; src: url("/fonts/OpenSans-Bold.ttf"); font-weight: bold;}
 @font-face {font-family: "Raleway"; src: url("/fonts/Raleway-Regular.ttf");}
 @font-face {font-family: "Raleway"; src: url("/fonts/Raleway-Bold.ttf"); font-weight: bold;}
-
+@font-face {font-family: "Helevetica"; src: url("/fonts/Helevetica.ttf");}
+@font-face {font-family: "Helevetica"; src: url("/fonts/Helevetica-Bold.ttf"); font-weight: bold;}
 /* Serif Fonts */
 @font-face {font-family: "Caladea"; src: url("/fonts/Caladea-Regular.ttf");}
 @font-face {font-family: "Caladea"; src: url("/fonts/Caladea-Bold.ttf"); font-weight: bold;}
@@ -22,3 +23,6 @@
 @font-face {font-family: "PlayfairDisplay"; src: url("/fonts/PlayfairDisplay-Bold.ttf"); font-weight: bold;}
 @font-face {font-family: "Merriweather"; src: url("/fonts/Merriweather-Regular.ttf");}
 @font-face {font-family: "Merriweather"; src: url("/fonts/Merriweather-Bold.ttf"); font-weight: bold;}
+@font-face {font-family: "Garamond"; src: url("/fonts/Garamond-Regular.ttf");}
+@font-face {font-family: "Garamond"; src: url("/fonts/Garamond-Bold.ttf"); font-weight: bold;}
+

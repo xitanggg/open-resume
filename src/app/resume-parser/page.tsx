@@ -62,13 +62,13 @@ export default function ResumeParser() {
           </section>
           <FlexboxSpacer maxWidth={45} className="hidden md:block" />
         </div>
-        <div className="flex px-6 text-gray-900 md:col-span-3 md:h-[calc(100vh-var(--top-nav-bar-height))] md:overflow-y-scroll">
+        <div className="flex px-6 text-gray-900 md:col-span-3 md:h-[calc(100vh-var(--top-nav-bar-height))] md:overflow-y-scroll dark:text-gray-300 ">
           <FlexboxSpacer maxWidth={45} className="hidden md:block" />
           <section className="max-w-[600px] grow">
             <Heading className="text-primary !mt-4">
               Resume Parser Playground
             </Heading>
-            <Paragraph smallMarginTop={true}>
+            <Paragraph smallMarginTop={true} className="dark:text-gray-300">
               This playground showcases the OpenResume resume parser and its
               ability to parse information from a resume PDF. Click around the
               PDF examples below to observe different parsing results.
@@ -118,7 +118,7 @@ export default function ResumeParser() {
               Resume Parsing Results
             </Heading>
             <ResumeTable resume={resume} />
-            <ResumeParserAlgorithmArticle
+            <ResumeParserAlgorithmArticle 
               textItems={textItems}
               lines={lines}
               sections={sections}

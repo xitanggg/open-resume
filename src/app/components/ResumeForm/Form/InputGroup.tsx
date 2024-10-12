@@ -28,7 +28,7 @@ export const InputGroupWrapper = ({
   children?: React.ReactNode;
   wordCount?: number;
 }) => (
-  <label className={`text-base font-medium text-gray-700 ${className}`}>
+  <label className={`text-base font-medium text-gray-700 ${className} dark:bg-white`}>
     {label}
     {wordCount !== undefined && (
       <span className="ml-2 text-sm text-gray-500">{wordCount} words</span>
