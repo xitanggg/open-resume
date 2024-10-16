@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import {
   useAppSelector,
   useSaveStateToLocalStorageOnChange,
@@ -29,17 +28,17 @@ export const ResumeForm = () => {
   useSaveStateToLocalStorageOnChange();
 
   const formsOrder = useAppSelector(selectFormsOrder);
-  const [isHover, setIsHover] = useState(false);
 
   return (
-    <div
-      className={cx(
-        "flex justify-center scrollbar scrollbar-track-gray-100 scrollbar-w-3 md:h-[calc(100vh-var(--top-nav-bar-height))] md:justify-end md:overflow-y-scroll",
-        isHover && "scrollbar-thumb-gray-200"
+      <div
+        className={cx(
+          "flex justify-center md:h-[calc(100vh-var(--top-nav-bar-height))] md:justify-end md:overflow-y-scroll",
+          "scrollbar-thumb-gray-200",
       )}
-      onMouseOver={() => setIsHover(true)}
-      onMouseLeave={() => setIsHover(false)}
     >
+      <div className="absolute top-0 bottom-0 right-0 w-3 bg-gray-200">
+      </div>
+      
       <section className="flex max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
         <ProfileForm />
         {formsOrder.map((form) => {
