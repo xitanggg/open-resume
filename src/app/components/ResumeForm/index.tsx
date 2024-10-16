@@ -36,7 +36,7 @@ export const ResumeForm = () => {
           "scrollbar-thumb-gray-200",
       )}
     >
-      <div className="absolute top-0 bottom-0 right-0 w-3 bg-gray-200">
+      <div className="absolute top-0 bottom-0 right-0 w-3 bg-gray-100">
       </div>
       
       <section className="flex max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
