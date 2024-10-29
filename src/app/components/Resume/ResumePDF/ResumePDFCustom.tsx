@@ -20,7 +20,7 @@ export const ResumePDFCustom = ({
   const { descriptions } = custom;
 
   return (
-    <ResumePDFSection themeColor={themeColor} heading={heading}>
+    <ResumePDFSection themeColor={themeColor} heading={heading} wrap={false}>
       <View style={{ ...styles.flexCol }}>
         <ResumePDFBulletList
           items={descriptions}
