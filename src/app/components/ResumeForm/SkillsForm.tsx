@@ -36,7 +36,7 @@ export const SkillsForm = () => {
   };
 
   return (
-    <Form form={form}>
+    <Form form={form} addButtonText="Add Skill">
       <div className="col-span-full grid grid-cols-6 gap-3">
         <div className="relative col-span-full">
           <BulletListTextarea
@@ -77,6 +77,7 @@ export const SkillsForm = () => {
             }}
             placeholder={`Featured Skill ${idx + 1}`}
             circleColor={themeColor}
+            idx={idx}
           />
         ))}
       </div>

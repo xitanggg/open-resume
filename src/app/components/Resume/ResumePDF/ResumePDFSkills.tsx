@@ -5,7 +5,7 @@ import {
   ResumeFeaturedSkill,
 } from "components/Resume/ResumePDF/common";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
-import type { ResumeSkills } from "lib/redux/types";
+import type { ResumeSkills, FeaturedSkill } from "lib/redux/types";
 
 export const ResumePDFSkills = ({
   heading,
@@ -20,11 +20,15 @@ export const ResumePDFSkills = ({
 }) => {
   const { descriptions, featuredSkills } = skills;
   const featuredSkillsWithText = featuredSkills.filter((item) => item.skill);
-  const featuredSkillsPair = [
-    [featuredSkillsWithText[0], featuredSkillsWithText[3]],
-    [featuredSkillsWithText[1], featuredSkillsWithText[4]],
-    [featuredSkillsWithText[2], featuredSkillsWithText[5]],
-  ];
+  const featuredSkillsPair: FeaturedSkill[][] = [];
+  
+  for (let i = 0; i < 3; i++) {
+    const pair = [];
+    for (let j = 0; j < Math.ceil(featuredSkillsWithText.length / 3); j++) {
+      pair.push(featuredSkillsWithText[i + j * 3]);
+    }
+    featuredSkillsPair.push(pair);
+  }
 
   return (
     <ResumePDFSection themeColor={themeColor} heading={heading}>

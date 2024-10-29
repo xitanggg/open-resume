@@ -134,6 +134,13 @@ export const resumeSlice = createSlice({
         featuredSkill.rating = rating;
       }
     },
+    deleteFeaturedSkill: (
+      draft,
+      action: PayloadAction<{ idx: number }>
+    ) => {
+      const { idx } = action.payload;
+      draft.skills.featuredSkills.splice(idx, 1);
+    },
     changeCustom: (
       draft,
       action: PayloadAction<{ field: "descriptions"; value: string[] }>
@@ -154,6 +161,10 @@ export const resumeSlice = createSlice({
         }
         case "projects": {
           draft.projects.push(structuredClone(initialProject));
+          return draft;
+        }
+        case "skills": {
+          draft.skills.featuredSkills.push(structuredClone(initialFeaturedSkill));
           return draft;
         }
       }
@@ -206,6 +217,7 @@ export const {
   changeEducations,
   changeProjects,
   changeSkills,
+  deleteFeaturedSkill,
   changeCustom,
   addSectionInForm,
   moveSectionInForm,

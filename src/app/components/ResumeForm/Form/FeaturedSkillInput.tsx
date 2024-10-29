@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { INPUT_CLASS_NAME } from "components/ResumeForm/Form/InputGroup";
+import { DeleteIconButton } from "components/ResumeForm/Form/IconButton";
+import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
+import { deleteFeaturedSkill } from "lib/redux/resumeSlice";
 
 export const FeaturedSkillInput = ({
   skill,
@@ -8,6 +11,7 @@ export const FeaturedSkillInput = ({
   placeholder,
   className,
   circleColor,
+  idx
 }: {
   skill: string;
   rating: number;
@@ -15,9 +19,14 @@ export const FeaturedSkillInput = ({
   placeholder: string;
   className?: string;
   circleColor?: string;
+  idx: number;
 }) => {
+  const dispatch = useAppDispatch();
+  const handleDeleteClick = () => {
+    dispatch(deleteFeaturedSkill({ idx }));
+  };
   return (
-    <div className={`flex ${className}`}>
+    <div className={`flex items-center ${className}`}>
       <input
         type="text"
         value={skill}
@@ -29,6 +38,10 @@ export const FeaturedSkillInput = ({
         rating={rating}
         setRating={(newRating) => setSkillRating(skill, newRating)}
         circleColor={circleColor}
+      />
+      <DeleteIconButton
+        onClick={handleDeleteClick}
+        tooltipText={"Delete skill"}
       />
     </div>
   );
