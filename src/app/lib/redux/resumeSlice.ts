@@ -197,6 +197,7 @@ export const resumeSlice = createSlice({
     setResume: (draft, action: PayloadAction<Resume>) => {
       return action.payload;
     },
+    resetResume: () => initialResumeState,
   },
 });
 
@@ -211,6 +212,7 @@ export const {
   moveSectionInForm,
   deleteSectionInFormByIdx,
   setResume,
+  resetResume,
 } = resumeSlice.actions;
 
 export const selectResume = (state: RootState) => state.resume;
