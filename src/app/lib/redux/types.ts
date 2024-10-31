@@ -28,6 +28,12 @@ export interface ResumeProject {
   descriptions: string[];
 }
 
+export interface ResumeAward {
+  award: string;
+  date: string;
+  descriptions: string[];
+}
+
 export interface FeaturedSkill {
   skill: string;
   rating: number;
@@ -47,6 +53,7 @@ export interface Resume {
   workExperiences: ResumeWorkExperience[];
   educations: ResumeEducation[];
   projects: ResumeProject[];
+  awards:ResumeAward[];
   skills: ResumeSkills;
   custom: ResumeCustom;
 }

@@ -3,6 +3,7 @@ import {
   initialProfile,
   initialProject,
   initialWorkExperience,
+  initialAward
 } from "lib/redux/resumeSlice";
 import type { Resume } from "lib/redux/types";
 import { deepClone } from "lib/deep-clone";
@@ -70,6 +71,15 @@ export const END_HOME_RESUME: Resume = {
       ],
     },
   ],
+  awards: [
+    {
+      award: "Best Student",
+      date: "Spring 2023",
+      descriptions: [
+        "Secured 1st rank in class with 100% attendance",
+      ],
+    },
+  ],
   skills: {
     featuredSkills: [
       { skill: "HTML", rating: 4 },
@@ -96,6 +106,7 @@ export const START_HOME_RESUME: Resume = {
   ),
   educations: [deepClone(initialEducation)],
   projects: [deepClone(initialProject)],
+  awards:[deepClone(initialAward)],
   skills: {
     featuredSkills: END_HOME_RESUME.skills.featuredSkills.map((item) => ({
       skill: "",

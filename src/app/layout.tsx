@@ -1,12 +1,7 @@
 import "globals.css";
 import { TopNavBar } from "components/TopNavBar";
 import { Analytics } from "@vercel/analytics/react";
-
-export const metadata = {
-  title: "OpenResume - Free Open-source Resume Builder and Parser",
-  description:
-    "OpenResume is a free, open-source, and powerful resume builder that allows anyone to create a modern professional resume in 3 simple steps. For those who have an existing resume, OpenResume also provides a resume parser to help test and confirm its ATS readability.",
-};
+import { ThemeProvider } from "contexts/ThemeContext"; // Import ThemeProvider
 
 export default function RootLayout({
   children,
@@ -15,10 +10,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <TopNavBar />
-        {children}
-        <Analytics />
+      <body className="bg-white dark:bg-gray-900 text-black dark:text-white">
+        <ThemeProvider>
+          <TopNavBar />
+          {children}
+          <Analytics />
+        </ThemeProvider>
       </body>
     </html>
   );

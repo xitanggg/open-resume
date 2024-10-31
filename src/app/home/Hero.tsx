@@ -12,8 +12,8 @@ export const Hero = () => {
           <br />
           resume easily
         </h1>
-        <p className="mt-3 text-lg lg:mt-5 lg:text-xl">
-          With this free, open-source, and powerful resume builder
+        <p className="mt-3 text-lg lg:mt-5 lg:text-xl dark:text-gray-300">
+          With this free, open-source, and powerful resume 
         </p>
         <Link href="/resume-import" className="btn-primary mt-6 lg:mt-14">
           Create Resume <span aria-hidden="true">→</span>

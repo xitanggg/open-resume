@@ -5,7 +5,7 @@ import { extractEducation } from "lib/parse-resume-from-pdf/extract-resume-from-
 import { extractWorkExperience } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-work-experience";
 import { extractProject } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-project";
 import { extractSkills } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-skills";
-
+import { extractAward } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-award";
 /**
  * Step 4. Extract resume from sections.
  *
@@ -27,6 +27,7 @@ export const extractResumeFromSections = (
   const { educations } = extractEducation(sections);
   const { workExperiences } = extractWorkExperience(sections);
   const { projects } = extractProject(sections);
+  const {awards} = extractAward(sections);
   const { skills } = extractSkills(sections);
 
   return {
@@ -34,6 +35,7 @@ export const extractResumeFromSections = (
     educations,
     workExperiences,
     projects,
+    awards,
     skills,
     custom: {
       descriptions: [],

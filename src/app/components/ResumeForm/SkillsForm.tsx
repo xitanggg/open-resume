@@ -12,6 +12,7 @@ import {
   changeShowBulletPoints,
   selectThemeColor,
 } from "lib/redux/settingsSlice";
+import ChatPage from "home/ChatPage";
 
 export const SkillsForm = () => {
   const skills = useAppSelector(selectSkills);

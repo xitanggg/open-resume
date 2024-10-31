@@ -27,6 +27,7 @@ import {
   deleteSectionInFormByIdx,
   moveSectionInForm,
 } from "lib/redux/resumeSlice";
+import React from "react";
 
 /**
  * BaseForm is the bare bone form, i.e. just the outline with no title and no control buttons.
@@ -50,6 +51,7 @@ const FORM_TO_ICON: { [section in ShowForm]: typeof BuildingOfficeIcon } = {
   workExperiences: BuildingOfficeIcon,
   educations: AcademicCapIcon,
   projects: LightBulbIcon,
+  awards: WrenchIcon,
   skills: WrenchIcon,
   custom: WrenchIcon,
 };

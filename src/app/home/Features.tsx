@@ -44,7 +44,7 @@ export const Features = () => {
           {FEATURES.map(({ src, title, text }) => (
             <div className="px-2" key={title}>
               <div className="relative w-96 self-center pl-16">
-                <dt className="text-2xl font-bold">
+                <dt className="text-2xl font-bold dark:text-gray-300">
                   <Image
                     src={src}
                     className="absolute left-0 top-1 h-12 w-12"
@@ -52,7 +52,7 @@ export const Features = () => {
                   />
                   {title}
                 </dt>
-                <dd className="mt-2">{text}</dd>
+                <dd className="mt-2 dark:text-gray-300">{text}</dd>
               </div>
             </div>
           ))}

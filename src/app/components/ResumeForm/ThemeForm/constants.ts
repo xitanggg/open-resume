@@ -11,4 +11,12 @@ export const THEME_COLORS = [
   "#0ea5e9", // Sky-500
   "#818cf8", // Indigo-400
   "#6366f1", // Indigo-500
+  "#964B00", //brwon
+  "#D3D3D3", //gray
+  "#F3CFC6", //pink
+  "#9370DB", //medium purple
+  "#6A5ACD", //stale blue
+  "#008080", //teal
+  "#001F3F", //navy blue
+  "#228B22", //forest green
 ];

@@ -4,46 +4,45 @@ import {
   BulletListTextarea,
 } from "components/ResumeForm/Form/InputGroup";
 import type { CreateHandleChangeArgsWithDescriptions } from "components/ResumeForm/types";
-import ChatPage from "home/ChatPage";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
-import { selectProjects, changeProjects } from "lib/redux/resumeSlice";
-import type { ResumeProject } from "lib/redux/types";
+import { selectAwards, changeAwards } from "lib/redux/resumeSlice";
+import type { ResumeAward } from "lib/redux/types";
 
-export const ProjectsForm = () => {
-  const projects = useAppSelector(selectProjects);
+export const AwardsForm = () => {
+  const awards = useAppSelector(selectAwards);
   const dispatch = useAppDispatch();
-  const showDelete = projects.length > 1;
+  const showDelete = awards.length > 1;
 
   return (
-    <Form form="projects" addButtonText="Add Project">
-      {projects.map(({ project, date, descriptions }, idx) => {
-        const handleProjectChange = (
+    <Form form="awards" addButtonText="Add Awards">
+      {awards.map(({ award, date, descriptions }, idx) => {
+        const handleAwardChange = (
           ...[
             field,
             value,
-          ]: CreateHandleChangeArgsWithDescriptions<ResumeProject>
+          ]: CreateHandleChangeArgsWithDescriptions<ResumeAward>
         ) => {
-          dispatch(changeProjects({ idx, field, value } as any));
+          dispatch(changeAwards({ idx, field, value } as any));
         };
         const showMoveUp = idx !== 0;
-        const showMoveDown = idx !== projects.length - 1;
+        const showMoveDown = idx !== awards.length - 1;
 
         return (
           <FormSection
             key={idx}
-            form="projects"
+            form="awards"
             idx={idx}
             showMoveUp={showMoveUp}
             showMoveDown={showMoveDown}
             showDelete={showDelete}
-            deleteButtonTooltipText={"Delete project"}
+            deleteButtonTooltipText={"Delete awards"}
           >
             <Input
-              name="project"
-              label="Project Name"
+              name="award"
+              label="Award Name"
               placeholder="OpenResume"
-              value={project}
-              onChange={handleProjectChange}
+              value={award}
+              onChange={handleAwardChange}
               labelClassName="col-span-4"
             />
             <Input
@@ -51,7 +50,7 @@ export const ProjectsForm = () => {
               label="Date"
               placeholder="Winter 2022"
               value={date}
-              onChange={handleProjectChange}
+              onChange={handleAwardChange}
               labelClassName="col-span-2"
             />
             <BulletListTextarea
@@ -59,7 +58,7 @@ export const ProjectsForm = () => {
               label="Description"
               placeholder="Bullet points"
               value={descriptions}
-              onChange={handleProjectChange}
+              onChange={handleAwardChange}
               labelClassName="col-span-full"
             />
           </FormSection>

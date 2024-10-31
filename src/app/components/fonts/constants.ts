@@ -33,6 +33,7 @@ const SANS_SERIF_ENGLISH_FONT_FAMILIES = [
   "Montserrat",
   "OpenSans",
   "Raleway",
+  "Helevetica"
 ] as const;
 
 const SERIF_ENGLISH_FONT_FAMILIES = [
@@ -41,6 +42,7 @@ const SERIF_ENGLISH_FONT_FAMILIES = [
   "RobotoSlab",
   "PlayfairDisplay",
   "Merriweather",
+  "Garamond"
 ] as const;
 
 export const ENGLISH_FONT_FAMILIES = [
@@ -67,12 +69,14 @@ export const FONT_FAMILY_TO_STANDARD_SIZE_IN_PT: Record<FontFamily, number> = {
   Montserrat: 10,
   OpenSans: 10,
   Raleway: 10,
+  Helevetica:12,
   // Serif Fonts
   Caladea: 11,
   Lora: 11,
   RobotoSlab: 10,
   PlayfairDisplay: 10,
   Merriweather: 10,
+  Garamond:12,
   // Non-English Fonts
   NotoSansSC: 11,
 };
@@ -84,12 +88,14 @@ export const FONT_FAMILY_TO_DISPLAY_NAME: Record<FontFamily, string> = {
   Montserrat: "Montserrat",
   OpenSans: "Open Sans",
   Raleway: "Raleway",
+  Helevetica:"Helevetica",
   // Serif Fonts
   Caladea: "Caladea",
   Lora: "Lora",
   RobotoSlab: "Roboto Slab",
   PlayfairDisplay: "Playfair Display",
   Merriweather: "Merriweather",
+  Garamond:"Garamond",
   // Non-English Fonts
   NotoSansSC: "思源黑体(简体)",
 };

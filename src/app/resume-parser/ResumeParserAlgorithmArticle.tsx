@@ -103,7 +103,7 @@ export const ResumeParserAlgorithmArticle = ({
 
   return (
     <article className="mt-10">
-      <Heading className="text-primary !mt-0 border-t-2 pt-8">
+      <Heading className="text-primary !mt-0 border-t-2 pt-8 ">
         Resume Parser Algorithm Deep Dive
       </Heading>
       <Paragraph smallMarginTop={true}>
@@ -113,7 +113,7 @@ export const ResumeParserAlgorithmArticle = ({
         language)
       </Paragraph>
       {/* Step 1. Read the text items from a PDF file */}
-      <Heading level={2}>Step 1. Read the text items from a PDF file</Heading>
+      <Heading className="dark:text-gray-300" level={2}>Step 1. Read the text items from a PDF file</Heading>
       <Paragraph smallMarginTop={true}>
         A PDF file is a standardized file format defined by the{" "}
         <Link href="https://www.iso.org/standard/51502.html">
@@ -140,7 +140,7 @@ export const ResumeParserAlgorithmArticle = ({
         (Note that x,y position is relative to the bottom left corner of the
         page, which is the origin 0,0)
       </Paragraph>
-      <div className="mt-4 max-h-72 overflow-y-scroll border scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-200 scrollbar-w-3">
+      <div className="mt-4 max-h-72 overflow-y-scroll border scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-200 scrollbar-w-3 dark:text-gray-300">
         <Table
           table={step1TextItemsTable}
           className="!border-none"
@@ -148,7 +148,7 @@ export const ResumeParserAlgorithmArticle = ({
         />
       </div>
       {/* Step 2. Group text items into lines */}
-      <Heading level={2}>Step 2. Group text items into lines</Heading>
+      <Heading className="dark:text-gray-300" level={2}>Step 2. Group text items into lines</Heading>
       <Paragraph smallMarginTop={true}>
         The extracted text items aren't ready to use yet and have 2 main issues:
       </Paragraph>
@@ -215,7 +215,7 @@ export const ResumeParserAlgorithmArticle = ({
         <Table table={step2LinesTable} className="!border-none" />
       </div>
       {/* Step 3. Group lines into sections */}
-      <Heading level={2}>Step 3. Group lines into sections</Heading>
+      <Heading className="dark:text-gray-300" level={2}>Step 3. Group lines into sections</Heading>
       <Paragraph smallMarginTop={true}>
         At step 2, the resume parser starts building contexts and associations
         to text items by first grouping them into lines. Step 3 continues the
@@ -262,13 +262,13 @@ export const ResumeParserAlgorithmArticle = ({
       </Paragraph>
       <Step3SectionsTable sections={sections} />
       {/* Step 4. Extract resume from sections */}
-      <Heading level={2}>Step 4. Extract resume from sections</Heading>
+      <Heading className="dark:text-gray-300" level={2}>Step 4. Extract resume from sections</Heading>
       <Paragraph smallMarginTop={true}>
         Step 4 is the last step of the resume parsing process and is also the
         core of the resume parser, where it extracts resume information from the
         sections.
       </Paragraph>
-      <Heading level={3}>Feature Scoring System</Heading>
+      <Heading className="dark:text-gray-300" level={3}>Feature Scoring System</Heading>
       <Paragraph smallMarginTop={true}>
         The gist of the extraction engine is a feature scoring system. Each
         resume attribute to be extracted has a custom feature sets, where each
@@ -297,7 +297,7 @@ export const ResumeParserAlgorithmArticle = ({
           indicating they are very unlikely to be the targeted attribute)
         </Paragraph>
       )}
-      <Heading level={3}>Feature Sets</Heading>
+      <Heading className="dark:text-gray-300" level={3}>Feature Sets</Heading>
       <Paragraph smallMarginTop={true}>
         Having explained the feature scoring system, we can dive more into how
         feature sets are constructed for a resume attribute. It follows 2
@@ -318,7 +318,7 @@ export const ResumeParserAlgorithmArticle = ({
         title="Name Feature Sets"
         className="mt-4"
       />
-      <Heading level={3}>Core Feature Function</Heading>
+      <Heading className="dark:text-gray-300" level={3}>Core Feature Function</Heading>
       <Paragraph smallMarginTop={true}>
         Each resume attribute has multiple feature sets. They can be found in
         the source code under the extract-resume-from-sections folder and we
@@ -327,7 +327,7 @@ export const ResumeParserAlgorithmArticle = ({
         core feature function below.
       </Paragraph>
       <Table table={step4CoreFeatureFunctionTable} className="mt-4" />
-      <Heading level={3}>Special Case: Subsections</Heading>
+      <Heading className="dark:text-gray-300" level={3}>Special Case: Subsections</Heading>
       <Paragraph smallMarginTop={true}>
         The last thing that is worth mentioning is subsections. For profile
         section, we can directly pass all the text items to the feature scoring
@@ -461,7 +461,7 @@ const Step3SectionsTable = ({
   }
 
   return (
-    <div className="mt-4 max-h-96 overflow-y-scroll border scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-200 scrollbar-w-3">
+    <div className="mt-4 max-h-96 overflow-y-scroll border scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-200 scrollbar-w-3 dark:text-gray-300">
       <Table
         table={table}
         className="!border-none"
