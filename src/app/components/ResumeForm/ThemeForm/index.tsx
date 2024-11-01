@@ -6,6 +6,7 @@ import {
   DocumentSizeSelections,
   FontFamilySelectionsCSR,
   FontSizeSelections,
+  ResetLocal,
 } from "components/ResumeForm/ThemeForm/Selection";
 import {
   changeSettings,
@@ -93,6 +94,9 @@ export const ThemeForm = () => {
             selectedDocumentSize={documentSize}
             handleSettingsChange={handleSettingsChange}
           />
+        </div>
+        <div className="mt-2 flex justify-end">
+          <ResetLocal/>
         </div>
       </div>
     </BaseForm>

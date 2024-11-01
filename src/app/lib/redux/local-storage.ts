@@ -23,4 +23,17 @@ export const saveStateToLocalStorage = (state: RootState) => {
   }
 };
 
+export const deleteStateFromLocalStorage = () => {
+  try {
+    // Removing the serialized state from local storage
+
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (!data) return undefined;
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    location.reload();
+  } catch (e) {
+    // If an error occurs during the process, ignore it
+  }
+};
+
 export const getHasUsedAppBefore = () => Boolean(loadStateFromLocalStorage());
