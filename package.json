@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
-    "@react-pdf/renderer": "^3.1.10",
+    "@react-pdf/renderer": "^3.1.17",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "20.2.5",
     "@types/react": "18.2.7",

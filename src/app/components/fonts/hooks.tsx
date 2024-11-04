@@ -34,13 +34,29 @@ export const useRegisterReactPDFHyphenationCallback = (fontFamily: string) => {
       Font.registerHyphenationCallback((word) => [word]);
     } else {
       // React PDF doesn't understand how to wrap non-english word on line break
-      // A workaround is to add an empty character after each word
+      // A workaround is to add an empty character after each non-english word
       // Reference https://github.com/diegomura/react-pdf/issues/1568
-      Font.registerHyphenationCallback((word) =>
-        word
-          .split("")
-          .map((char) => [char, ""])
-          .flat()
+      Font.registerHyphenationCallback((word) => {
+          const ans: string[] = []
+          let s = ""
+          for (let c of word.split("")) {
+            const code = c.charCodeAt(0);
+            if (code < 128) {
+              s += c
+            } else {
+              ans.push(s)
+              ans.push("")
+              s = ""
+              ans.push(c)
+              ans.push("")
+            }
+          }
+          if (s != "") {
+            ans.push(s)
+            ans.push("")
+          }
+          return ans
+        }
       );
     }
   }, [fontFamily]);
