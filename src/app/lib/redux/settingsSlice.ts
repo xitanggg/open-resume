@@ -7,6 +7,7 @@ export interface Settings {
   fontSize: string;
   documentSize: string;
   formToShow: {
+    profile: boolean;
     workExperiences: boolean;
     educations: boolean;
     projects: boolean;
@@ -14,6 +15,7 @@ export interface Settings {
     custom: boolean;
   };
   formToHeading: {
+    profile: string;
     workExperiences: string;
     educations: string;
     projects: string;
@@ -47,6 +49,7 @@ export const initialSettings: Settings = {
   fontSize: DEFAULT_FONT_SIZE,
   documentSize: "Letter",
   formToShow: {
+    profile: true,
     workExperiences: true,
     educations: true,
     projects: true,
@@ -54,13 +57,14 @@ export const initialSettings: Settings = {
     custom: false,
   },
   formToHeading: {
+    profile: "PROFILE",
     workExperiences: "WORK EXPERIENCE",
     educations: "EDUCATION",
     projects: "PROJECT",
     skills: "SKILLS",
     custom: "CUSTOM SECTION",
   },
-  formsOrder: ["workExperiences", "educations", "projects", "skills", "custom"],
+  formsOrder: ["profile", "workExperiences", "educations", "projects", "skills", "custom"],
   showBulletPoints: {
     educations: true,
     projects: true,
