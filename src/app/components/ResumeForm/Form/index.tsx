@@ -47,6 +47,7 @@ export const BaseForm = ({
 );
 
 const FORM_TO_ICON: { [section in ShowForm]: typeof BuildingOfficeIcon } = {
+  profile: WrenchIcon,
   workExperiences: BuildingOfficeIcon,
   educations: AcademicCapIcon,
   projects: LightBulbIcon,

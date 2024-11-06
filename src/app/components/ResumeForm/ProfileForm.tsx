@@ -1,4 +1,4 @@
-import { BaseForm } from "components/ResumeForm/Form";
+import { Form, FormSection } from "components/ResumeForm/Form";
 import { Input, Textarea } from "components/ResumeForm/Form/InputGroup";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { changeProfile, selectProfile } from "lib/redux/resumeSlice";
@@ -14,8 +14,15 @@ export const ProfileForm = () => {
   };
 
   return (
-    <BaseForm>
-      <div className="grid grid-cols-6 gap-3">
+    <Form form="profile" >
+      <FormSection
+        form="educations"
+        idx={0}
+        showMoveUp={false}
+        showMoveDown={false}
+        showDelete={false}
+        deleteButtonTooltipText="Delete"
+      >
         <Input
           label="Name"
           labelClassName="col-span-full"
@@ -64,7 +71,7 @@ export const ProfileForm = () => {
           value={location}
           onChange={handleProfileChange}
         />
-      </div>
-    </BaseForm>
+      </FormSection>
+    </Form>
   );
 };
