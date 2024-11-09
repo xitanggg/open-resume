@@ -37,7 +37,7 @@ export const FeaturedSkillInput = ({
 const CircleRating = ({
   rating,
   setRating,
-  circleColor = "#38bdf8",
+  circleColor = "#E4EB1CFF",
 }: {
   rating: number;
   setRating: (rating: number) => void;

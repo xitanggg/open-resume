@@ -130,34 +130,45 @@ export const FontSizeSelections = ({
   );
 };
 
-export const DocumentSizeSelections = ({
-  selectedDocumentSize,
-  themeColor,
-  handleSettingsChange,
-}: {
-  themeColor: string;
-  selectedDocumentSize: string;
-  handleSettingsChange: (field: GeneralSetting, value: string) => void;
-}) => {
-  return (
-    <SelectionsWrapper>
-      {["Letter", "A4"].map((type, idx) => {
-        return (
-          <Selection
-            key={idx}
-            selectedColor={themeColor}
-            isSelected={type === selectedDocumentSize}
-            onClick={() => handleSettingsChange("documentSize", type)}
-          >
-            <div className="flex flex-col items-center">
-              <div>{type}</div>
-              <div className="text-xs">
-                {type === "Letter" ? "(US, Canada)" : "(other countries)"}
-              </div>
-            </div>
-          </Selection>
-        );
-      })}
-    </SelectionsWrapper>
-  );
-};
+// The following code is commented out to hide the document size selection.
+//       The default document size is set to "A4", so we will not provide an option 
+//       for the user to change it. This ensures that the document size remains 
+//       consistent and avoids any potential confusion for the user.
+
+// export const DocumentSizeSelections = ({
+//   selectedDocumentSize,
+//   themeColor,
+//   handleSettingsChange,
+// }: {
+//   themeColor: string;
+//   selectedDocumentSize: string;
+//   handleSettingsChange: (field: GeneralSetting, value: string) => void;
+// }) => {
+//   return (
+//     <SelectionsWrapper>
+//       {/* 
+//       The following code is commented out to hide the document size selection.
+//       The default document size is set to "A4", so we will not provide an option 
+//       for the user to change it. This ensures that the document size remains 
+//       consistent and avoids any potential confusion for the user.
+//       */}
+//       {/* {["Letter", "A4"].map((type, idx) => {
+//         return (
+//           <Selection
+//             key={idx}
+//             selectedColor={themeColor}
+//             isSelected={type === selectedDocumentSize}
+//             onClick={() => handleSettingsChange("documentSize", type)}
+//           >
+//             <div className="flex flex-col items-center">
+//               <div>{type}</div>
+//               <div className="text-xs">
+//                 {type === "A4" ? "Default)" : "Alternative"}
+//               </div>
+//             </div>
+//           </Selection>
+//         );
+//       })} */}
+//     </SelectionsWrapper>
+//   );
+// };

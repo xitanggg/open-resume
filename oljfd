@@ -1,0 +1,330 @@
+[1mdiff --git a/package-lock.json b/package-lock.json[m
+[1mindex 4cb0ec1..334eb86 100644[m
+[1m--- a/package-lock.json[m
+[1m+++ b/package-lock.json[m
+[36m@@ -18,7 +18,9 @@[m
+         "autoprefixer": "10.4.14",[m
+         "eslint": "8.41.0",[m
+         "eslint-config-next": "13.4.4",[m
+[31m-        "next": "13.4.4",[m
+[32m+[m[32m        "framer-motion": "^11.11.11",[m
+[32m+[m[32m        "lucide-react": "^0.454.0",[m
+[32m+[m[32m        "next": "^13.4.4",[m
+         "pdfjs": "^2.5.0",[m
+         "pdfjs-dist": "^3.7.107",[m
+         "postcss": "8.4.24",[m
+[36m@@ -27,6 +29,7 @@[m
+         "react-dom": "18.2.0",[m
+         "react-frame-component": "^5.2.6",[m
+         "react-redux": "^8.0.7",[m
+[32m+[m[32m        "react-router-dom": "^6.27.0",[m
+         "tailwind-scrollbar": "^3.0.4",[m
+         "tailwindcss": "3.3.2",[m
+         "typescript": "5.0.4"[m
+[36m@@ -35,6 +38,7 @@[m
+         "@tailwindcss/aspect-ratio": "^0.4.2",[m
+         "@testing-library/jest-dom": "^5.16.5",[m
+         "@testing-library/react": "^14.0.0",[m
+[32m+[m[32m        "@types/react-router-dom": "^5.3.3",[m
+         "jest": "^29.5.0",[m
+         "jest-environment-jsdom": "^29.5.0",[m
+         "prettier-plugin-tailwindcss": "^0.2.1"[m
+[36m@@ -1658,6 +1662,15 @@[m
+         }[m
+       }[m
+     },[m
+[32m+[m[32m    "node_modules/@remix-run/router": {[m
+[32m+[m[32m      "version": "1.20.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@remix-run/router/-/router-1.20.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-mUnk8rPJBI9loFDZ+YzPGdeniYK+FTmRD1TMCz7ev2SNIozyKKpnGgsxO34u6Z4z/t0ITuu7voi/AshfsGsgFg==",[m
+[32m+[m[32m      "license": "MIT",[m
+[32m+[m[32m      "engines": {[m
+[32m+[m[32m        "node": ">=14.0.0"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+     "node_modules/@rkusa/linebreak": {[m
+       "version": "1.0.0",[m
+       "resolved": "https://registry.npmjs.org/@rkusa/linebreak/-/linebreak-1.0.0.tgz",[m
+[36m@@ -1863,6 +1876,13 @@[m
+         "@types/node": "*"[m
+       }[m
+     },[m
+[32m+[m[32m    "node_modules/@types/history": {[m
+[32m+[m[32m      "version": "4.7.11",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@types/history/-/history-4.7.11.tgz",[m
+[32m+[m[32m      "integrity": "sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==",[m
+[32m+[m[32m      "dev": true,[m
+[32m+[m[32m      "license": "MIT"[m
+[32m+[m[32m    },[m
+     "node_modules/@types/hoist-non-react-statics": {[m
+       "version": "3.3.1",[m
+       "resolved": "https://registry.npmjs.org/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz",[m
+[36m@@ -1988,6 +2008,29 @@[m
+         "@types/react": "*"[m
+       }[m
+     },[m
+[32m+[m[32m    "node_modules/@types/react-router": {[m
+[32m+[m[32m      "version": "5.1.20",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@types/react-router/-/react-router-5.1.20.tgz",[m
+[32m+[m[32m      "integrity": "sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==",[m
+[32m+[m[32m      "dev": true,[m
+[32m+[m[32m      "license": "MIT",[m
+[32m+[m[32m      "dependencies": {[m
+[32m+[m[32m        "@types/history": "^4.7.11",[m
+[32m+[m[32m        "@types/react": "*"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+[32m+[m[32m    "node_modules/@types/react-router-dom": {[m
+[32m+[m[32m      "version": "5.3.3",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@types/react-router-dom/-/react-router-dom-5.3.3.tgz",[m
+[32m+[m[32m      "integrity": "sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==",[m
+[32m+[m[32m      "dev": true,[m
+[32m+[m[32m      "license": "MIT",[m
+[32m+[m[32m      "dependencies": {[m
+[32m+[m[32m        "@types/history": "^4.7.11",[m
+[32m+[m[32m        "@types/react": "*",[m
+[32m+[m[32m        "@types/react-router": "*"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+     "node_modules/@types/scheduler": {[m
+       "version": "0.16.3",[m
+       "resolved": "https://registry.npmjs.org/@types/scheduler/-/scheduler-0.16.3.tgz",[m
+[36m@@ -4286,6 +4329,31 @@[m
+         "url": "https://www.patreon.com/infusion"[m
+       }[m
+     },[m
+[32m+[m[32m    "node_modules/framer-motion": {[m
+[32m+[m[32m      "version": "11.11.11",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/framer-motion/-/framer-motion-11.11.11.tgz",[m
+[32m+[m[32m      "integrity": "sha512-tuDH23ptJAKUHGydJQII9PhABNJBpB+z0P1bmgKK9QFIssHGlfPd6kxMq00LSKwE27WFsb2z0ovY0bpUyMvfRw==",[m
+[32m+[m[32m      "license": "MIT",[m
+[32m+[m[32m      "dependencies": {[m
+[32m+[m[32m        "tslib": "^2.4.0"[m
+[32m+[m[32m      },[m
+[32m+[m[32m      "peerDependencies": {[m
+[32m+[m[32m        "@emotion/is-prop-valid": "*",[m
+[32m+[m[32m        "react": "^18.0.0",[m
+[32m+[m[32m        "react-dom": "^18.0.0"[m
+[32m+[m[32m      },[m
+[32m+[m[32m      "peerDependenciesMeta": {[m
+[32m+[m[32m        "@emotion/is-prop-valid": {[m
+[32m+[m[32m          "optional": true[m
+[32m+[m[32m        },[m
+[32m+[m[32m        "react": {[m
+[32m+[m[32m          "optional": true[m
+[32m+[m[32m        },[m
+[32m+[m[32m        "react-dom": {[m
+[32m+[m[32m          "optional": true[m
+[32m+[m[32m        }[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+     "node_modules/fs-minipass": {[m
+       "version": "2.1.0",[m
+       "resolved": "https://registry.npmjs.org/fs-minipass/-/fs-minipass-2.1.0.tgz",[m
+[36m@@ -6514,6 +6582,15 @@[m
+         "node": ">=10"[m
+       }[m
+     },[m
+[32m+[m[32m    "node_modules/lucide-react": {[m
+[32m+[m[32m      "version": "0.454.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/lucide-react/-/lucide-react-0.454.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-hw7zMDwykCLnEzgncEEjHeA6+45aeEzRYuKHuyRSOPkhko+J3ySGjGIzu+mmMfDFG1vazHepMaYFYHbTFAZAAQ==",[m
+[32m+[m[32m      "license": "ISC",[m
+[32m+[m[32m      "peerDependencies": {[m
+[32m+[m[32m        "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+     "node_modules/lz-string": {[m
+       "version": "1.5.0",[m
+       "resolved": "https://registry.npmjs.org/lz-string/-/lz-string-1.5.0.tgz",[m
+[36m@@ -6751,6 +6828,7 @@[m
+       "version": "13.4.4",[m
+       "resolved": "https://registry.npmjs.org/next/-/next-13.4.4.tgz",[m
+       "integrity": "sha512-C5S0ysM0Ily9McL4Jb48nOQHT1BukOWI59uC3X/xCMlYIh9rJZCv7nzG92J6e1cOBqQbKovlpgvHWFmz4eKKEA==",[m
+[32m+[m[32m      "license": "MIT",[m
+       "dependencies": {[m
+         "@next/env": "13.4.4",[m
+         "@swc/helpers": "0.5.1",[m
+[36m@@ -7760,6 +7838,38 @@[m
+       "resolved": "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz",[m
+       "integrity": "sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w=="[m
+     },[m
+[32m+[m[32m    "node_modules/react-router": {[m
+[32m+[m[32m      "version": "6.27.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/react-router/-/react-router-6.27.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-YA+HGZXz4jaAkVoYBE98VQl+nVzI+cVI2Oj/06F5ZM+0u3TgedN9Y9kmMRo2mnkSK2nCpNQn0DVob4HCsY/WLw==",[m
+[32m+[m[32m      "license": "MIT",[m
+[32m+[m[32m      "dependencies": {[m
+[32m+[m[32m        "@remix-run/router": "1.20.0"[m
+[32m+[m[32m      },[m
+[32m+[m[32m      "engines": {[m
+[32m+[m[32m        "node": ">=14.0.0"[m
+[32m+[m[32m      },[m
+[32m+[m[32m      "peerDependencies": {[m
+[32m+[m[32m        "react": ">=16.8"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+[32m+[m[32m    "node_modules/react-router-dom": {[m
+[32m+[m[32m      "version": "6.27.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.27.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-+bvtFWMC0DgAFrfKXKG9Fc+BcXWRUO1aJIihbB79xaeq0v5UzfvnM5houGUm1Y461WVRcgAQ+Clh5rdb1eCx4g==",[m
+[32m+[m[32m      "license": "MIT",[m
+[32m+[m[32m      "dependencies": {[m
+[32m+[m[32m        "@remix-run/router": "1.20.0",[m
+[32m+[m[32m        "react-router": "6.27.0"[m
+[32m+[m[32m      },[m
+[32m+[m[32m      "engines": {[m
+[32m+[m[32m        "node": ">=14.0.0"[m
+[32m+[m[32m      },[m
+[32m+[m[32m      "peerDependencies": {[m
+[32m+[m[32m        "react": ">=16.8",[m
+[32m+[m[32m        "react-dom": ">=16.8"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+     "node_modules/read-cache": {[m
+       "version": "1.0.0",[m
+       "resolved": "https://registry.npmjs.org/read-cache/-/read-cache-1.0.0.tgz",[m
+[36m@@ -10508,6 +10618,11 @@[m
+         "reselect": "^4.1.8"[m
+       }[m
+     },[m
+[32m+[m[32m    "@remix-run/router": {[m
+[32m+[m[32m      "version": "1.20.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@remix-run/router/-/router-1.20.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-mUnk8rPJBI9loFDZ+YzPGdeniYK+FTmRD1TMCz7ev2SNIozyKKpnGgsxO34u6Z4z/t0ITuu7voi/AshfsGsgFg=="[m
+[32m+[m[32m    },[m
+     "@rkusa/linebreak": {[m
+       "version": "1.0.0",[m
+       "resolved": "https://registry.npmjs.org/@rkusa/linebreak/-/linebreak-1.0.0.tgz",[m
+[36m@@ -10694,6 +10809,12 @@[m
+         "@types/node": "*"[m
+       }[m
+     },[m
+[32m+[m[32m    "@types/history": {[m
+[32m+[m[32m      "version": "4.7.11",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@types/history/-/history-4.7.11.tgz",[m
+[32m+[m[32m      "integrity": "sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==",[m
+[32m+[m[32m      "dev": true[m
+[32m+[m[32m    },[m
+     "@types/hoist-non-react-statics": {[m
+       "version": "3.3.1",[m
+       "resolved": "https://registry.npmjs.org/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz",[m
+[36m@@ -10812,6 +10933,27 @@[m
+         "@types/react": "*"[m
+       }[m
+     },[m
+[32m+[m[32m    "@types/react-router": {[m
+[32m+[m[32m      "version": "5.1.20",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@types/react-router/-/react-router-5.1.20.tgz",[m
+[32m+[m[32m      "integrity": "sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==",[m
+[32m+[m[32m      "dev": true,[m
+[32m+[m[32m      "requires": {[m
+[32m+[m[32m        "@types/history": "^4.7.11",[m
+[32m+[m[32m        "@types/react": "*"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+[32m+[m[32m    "@types/react-router-dom": {[m
+[32m+[m[32m      "version": "5.3.3",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@types/react-router-dom/-/react-router-dom-5.3.3.tgz",[m
+[32m+[m[32m      "integrity": "sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==",[m
+[32m+[m[32m      "dev": true,[m
+[32m+[m[32m      "requires": {[m
+[32m+[m[32m        "@types/history": "^4.7.11",[m
+[32m+[m[32m        "@types/react": "*",[m
+[32m+[m[32m        "@types/react-router": "*"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+     "@types/scheduler": {[m
+       "version": "0.16.3",[m
+       "resolved": "https://registry.npmjs.org/@types/scheduler/-/scheduler-0.16.3.tgz",[m
+[36m@@ -12505,6 +12647,14 @@[m
+       "resolved": "https://registry.npmjs.org/fraction.js/-/fraction.js-4.2.0.tgz",[m
+       "integrity": "sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA=="[m
+     },[m
+[32m+[m[32m    "framer-motion": {[m
+[32m+[m[32m      "version": "11.11.11",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/framer-motion/-/framer-motion-11.11.11.tgz",[m
+[32m+[m[32m      "integrity": "sha512-tuDH23ptJAKUHGydJQII9PhABNJBpB+z0P1bmgKK9QFIssHGlfPd6kxMq00LSKwE27WFsb2z0ovY0bpUyMvfRw==",[m
+[32m+[m[32m      "requires": {[m
+[32m+[m[32m        "tslib": "^2.4.0"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+     "fs-minipass": {[m
+       "version": "2.1.0",[m
+       "resolved": "https://registry.npmjs.org/fs-minipass/-/fs-minipass-2.1.0.tgz",[m
+[36m@@ -14125,6 +14275,12 @@[m
+         "yallist": "^4.0.0"[m
+       }[m
+     },[m
+[32m+[m[32m    "lucide-react": {[m
+[32m+[m[32m      "version": "0.454.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/lucide-react/-/lucide-react-0.454.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-hw7zMDwykCLnEzgncEEjHeA6+45aeEzRYuKHuyRSOPkhko+J3ySGjGIzu+mmMfDFG1vazHepMaYFYHbTFAZAAQ==",[m
+[32m+[m[32m      "requires": {}[m
+[32m+[m[32m    },[m
+     "lz-string": {[m
+       "version": "1.5.0",[m
+       "resolved": "https://registry.npmjs.org/lz-string/-/lz-string-1.5.0.tgz",[m
+[36m@@ -14937,6 +15093,23 @@[m
+         }[m
+       }[m
+     },[m
+[32m+[m[32m    "react-router": {[m
+[32m+[m[32m      "version": "6.27.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/react-router/-/react-router-6.27.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-YA+HGZXz4jaAkVoYBE98VQl+nVzI+cVI2Oj/06F5ZM+0u3TgedN9Y9kmMRo2mnkSK2nCpNQn0DVob4HCsY/WLw==",[m
+[32m+[m[32m      "requires": {[m
+[32m+[m[32m        "@remix-run/router": "1.20.0"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+[32m+[m[32m    "react-router-dom": {[m
+[32m+[m[32m      "version": "6.27.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.27.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-+bvtFWMC0DgAFrfKXKG9Fc+BcXWRUO1aJIihbB79xaeq0v5UzfvnM5houGUm1Y461WVRcgAQ+Clh5rdb1eCx4g==",[m
+[32m+[m[32m      "requires": {[m
+[32m+[m[32m        "@remix-run/router": "1.20.0",[m
+[32m+[m[32m        "react-router": "6.27.0"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+     "read-cache": {[m
+       "version": "1.0.0",[m
+       "resolved": "https://registry.npmjs.org/read-cache/-/read-cache-1.0.0.tgz",[m
+[1mdiff --git a/package.json b/package.json[m
+[1mindex 49258b9..8fe4502 100644[m
+[1m--- a/package.json[m
+[1m+++ b/package.json[m
+[36m@@ -21,7 +21,9 @@[m
+     "autoprefixer": "10.4.14",[m
+     "eslint": "8.41.0",[m
+     "eslint-config-next": "13.4.4",[m
+[31m-    "next": "13.4.4",[m
+[32m+[m[32m    "framer-motion": "^11.11.11",[m
+[32m+[m[32m    "lucide-react": "^0.454.0",[m
+[32m+[m[32m    "next": "^13.4.4",[m
+     "pdfjs": "^2.5.0",[m
+     "pdfjs-dist": "^3.7.107",[m
+     "postcss": "8.4.24",[m
+[36m@@ -30,6 +32,7 @@[m
+     "react-dom": "18.2.0",[m
+     "react-frame-component": "^5.2.6",[m
+     "react-redux": "^8.0.7",[m
+[32m+[m[32m    "react-router-dom": "^6.27.0",[m
+     "tailwind-scrollbar": "^3.0.4",[m
+     "tailwindcss": "3.3.2",[m
+     "typescript": "5.0.4"[m
+[36m@@ -38,6 +41,7 @@[m
+     "@tailwindcss/aspect-ratio": "^0.4.2",[m
+     "@testing-library/jest-dom": "^5.16.5",[m
+     "@testing-library/react": "^14.0.0",[m
+[32m+[m[32m    "@types/react-router-dom": "^5.3.3",[m
+     "jest": "^29.5.0",[m
+     "jest-environment-jsdom": "^29.5.0",[m
+     "prettier-plugin-tailwindcss": "^0.2.1"[m
+[1mdiff --git a/public/logo.svg b/public/logo.svg[m
+[1mdeleted file mode 100644[m
+[1mindex a7fb180..0000000[m
+[1m--- a/public/logo.svg[m
+[1m+++ /dev/null[m
+[36m@@ -1,10 +0,0 @@[m
+[31m-<svg width="257" height="54" viewBox="0 0 257 54" fill="none" xmlns="http://www.w3.org/2000/svg">[m
+[31m-<path d="M59.672 38.384C57.432 38.384 55.4693 37.8933 53.784 36.912C52.12 35.9307 50.808 34.576 49.848 32.848C48.9093 31.0987 48.44 29.0827 48.44 26.8C48.44 24.5173 48.9093 22.512 49.848 20.784C50.808 19.0347 52.12 17.6693 53.784 16.688C55.4693 15.7067 57.432 15.216 59.672 15.216C61.8907 15.216 63.8427 15.7067 65.528 16.688C67.2133 17.6693 68.5253 19.0347 69.464 20.784C70.4027 22.512 70.872 24.5173 70.872 26.8C70.872 29.0827 70.4027 31.0987 69.464 32.848C68.5253 34.576 67.2133 35.9307 65.528 36.912C63.8427 37.8933 61.8907 38.384 59.672 38.384ZM59.672 34.704C61.8053 34.704 63.5013 34 64.76 32.592C66.04 31.184 66.68 29.2533 66.68 26.8C66.68 24.3467 66.04 22.416 64.76 21.008C63.5013 19.6 61.8053 18.896 59.672 18.896C57.5387 18.896 55.832 19.6 54.552 21.008C53.272 22.416 52.632 24.3467 52.632 26.8C52.632 29.2533 53.272 31.184 54.552 32.592C55.832 34 57.5387 34.704 59.672 34.704ZM74.3925 45.04V22.128H78.0405L78.4885 24.4C79.0005 23.696 79.6725 23.0773 80.5045 22.544C81.3578 22.0107 82.4565 21.744 83.8005 21.744C85.2938 21.744 86.6272 22.1067 87.8005 22.832C88.9738 23.5573 89.9018 24.5493 90.5845 25.808C91.2672 27.0667 91.6085 28.496 91.6085 30.096C91.6085 31.696 91.2672 33.1253 90.5845 34.384C89.9018 35.6213 88.9738 36.6027 87.8005 37.328C86.6272 38.032 85.2938 38.384 83.8005 38.384C82.6058 38.384 81.5605 38.16 80.6645 37.712C79.7685 37.264 79.0432 36.6347 78.4885 35.824V45.04H74.3925ZM82.9365 34.8C84.2378 34.8 85.3152 34.3627 86.1685 33.488C87.0218 32.6133 87.4485 31.4827 87.4485 30.096C87.4485 28.7093 87.0218 27.568 86.1685 26.672C85.3152 25.776 84.2378 25.328 82.9365 25.328C81.6138 25.328 80.5258 25.776 79.6725 26.672C78.8405 27.5467 78.4245 28.6773 78.4245 30.064C78.4245 31.4507 78.8405 32.592 79.6725 33.488C80.5258 34.3627 81.6138 34.8 82.9365 34.8ZM102.98 38.384C101.38 38.384 99.9608 38.0427 98.7235 37.36C97.4862 36.6773 96.5155 35.7173 95.8115 34.48C95.1075 33.2427 94.7555 31.8133 94.7555 30.192C94.7555 28.5493 95.0968 27.088 95.7795 25.808C96.4835 24.528 97.4435 23.536 98.6595 22.832C99.8968 22.1067 101.348 21.744 103.012 21.744C104.569 21.744 105.945 22.0853 107.14 22.768C108.334 23.4507 109.262 24.3893 109.924 25.584C110.606 26.7573 110.948 28.0693 110.948 29.52C110.948 29.7547 110.937 30 110.916 30.256C110.916 30.512 110.905 30.7787 110.884 31.056H98.8195C98.9048 32.2933 99.3315 33.264 100.1 33.968C100.889 34.672 101.838 35.024 102.948 35.024C103.78 35.024 104.473 34.8427 105.028 34.48C105.604 34.096 106.03 33.6053 106.308 33.008H110.468C110.169 34.0107 109.668 34.928 108.964 35.76C108.281 36.5707 107.428 37.2107 106.404 37.68C105.401 38.1493 104.26 38.384 102.98 38.384ZM103.012 25.072C102.009 25.072 101.124 25.36 100.356 25.936C99.5875 26.4907 99.0968 27.344 98.8835 28.496H106.788C106.724 27.4507 106.34 26.6187 105.636 26C104.932 25.3813 104.057 25.072 103.012 25.072ZM114.393 38V22.128H118.009L118.329 24.816C118.819 23.8773 119.523 23.1307 120.441 22.576C121.379 22.0213 122.478 21.744 123.737 21.744C125.699 21.744 127.225 22.3627 128.312 23.6C129.4 24.8373 129.944 26.6507 129.944 29.04V38H125.849V29.424C125.849 28.0587 125.571 27.0133 125.017 26.288C124.462 25.5627 123.598 25.2 122.425 25.2C121.273 25.2 120.323 25.6053 119.577 26.416C118.851 27.2267 118.489 28.3573 118.489 29.808V38H114.393ZM133.957 38V15.6H142.181C143.973 15.6 145.445 15.9093 146.597 16.528C147.771 17.1253 148.645 17.9467 149.221 18.992C149.797 20.016 150.085 21.1573 150.085 22.416C150.085 23.7813 149.723 25.0293 148.997 26.16C148.293 27.2907 147.184 28.112 145.669 28.624L150.309 38H145.605L141.445 29.168H138.053V38H133.957ZM138.053 26.16H141.925C143.291 26.16 144.293 25.8293 144.933 25.168C145.573 24.5067 145.893 23.632 145.893 22.544C145.893 21.4773 145.573 20.624 144.933 19.984C144.315 19.344 143.301 19.024 141.893 19.024H138.053V26.16ZM160.542 38.384C158.942 38.384 157.523 38.0427 156.286 37.36C155.049 36.6773 154.078 35.7173 153.374 34.48C152.67 33.2427 152.318 31.8133 152.318 30.192C152.318 28.5493 152.659 27.088 153.342 25.808C154.046 24.528 155.006 23.536 156.222 22.832C157.459 22.1067 158.91 21.744 160.574 21.744C162.131 21.744 163.507 22.0853 164.702 22.768C165.897 23.4507 166.825 24.3893 167.486 25.584C168.169 26.7573 168.51 28.0693 168.51 29.52C168.51 29.7547 168.499 30 168.478 30.256C168.478 30.512 168.467 30.7787 168.446 31.056H156.382C156.467 32.2933 156.894 33.264 157.662 33.968C158.451 34.672 159.401 35.024 160.51 35.024C161.342 35.024 162.035 34.8427 162.59 34.48C163.166 34.096 163.593 33.6053 163.87 33.008H168.03C167.731 34.0107 167.23 34.928 166.526 35.76C165.843 36.5707 164.99 37.2107 163.966 37.68C162.963 38.1493 161.822 38.384 160.542 38.384ZM160.574 25.072C159.571 25.072 158.686 25.36 157.918 25.936C157.15 26.4907 156.659 27.344 156.446 28.496H164.35C164.286 27.4507 163.902 26.6187 163.198 26C162.494 25.3813 161.619 25.07

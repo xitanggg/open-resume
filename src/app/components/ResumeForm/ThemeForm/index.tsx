@@ -3,7 +3,8 @@ import { InputGroupWrapper } from "components/ResumeForm/Form/InputGroup";
 import { THEME_COLORS } from "components/ResumeForm/ThemeForm/constants";
 import { InlineInput } from "components/ResumeForm/ThemeForm/InlineInput";
 import {
-  DocumentSizeSelections,
+  // this has been commented out under 
+  // DocumentSizeSelections,
   FontFamilySelectionsCSR,
   FontSizeSelections,
 } from "components/ResumeForm/ThemeForm/Selection";
@@ -48,7 +49,7 @@ export const ThemeForm = () => {
           <div className="mt-2 flex flex-wrap gap-2">
             {THEME_COLORS.map((color, idx) => (
               <div
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-sm text-white"
+                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-sm text-white"
                 style={{ backgroundColor: color }}
                 key={idx}
                 onClick={() => handleSettingsChange("themeColor", color)}
@@ -87,12 +88,12 @@ export const ThemeForm = () => {
           />
         </div>
         <div>
-          <InputGroupWrapper label="Document Size" />
-          <DocumentSizeSelections
+          {/* <InputGroupWrapper label="Document Size" /> */}
+          {/* <DocumentSizeSelections
             themeColor={themeColor}
             selectedDocumentSize={documentSize}
             handleSettingsChange={handleSettingsChange}
-          />
+          /> */}
         </div>
       </div>
     </BaseForm>

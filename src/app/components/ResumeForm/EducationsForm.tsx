@@ -21,8 +21,8 @@ export const EducationsForm = () => {
   const showBulletPoints = useAppSelector(selectShowBulletPoints(form));
 
   return (
-    <Form form={form} addButtonText="Add School">
-      {educations.map(({ school, degree, gpa, date, descriptions }, idx) => {
+    <Form form={form} addButtonText="Add Qualification">
+      {educations.map(({ school, degree, date, descriptions }, idx) => {
         const handleEducationChange = (
           ...[
             field,
@@ -50,10 +50,10 @@ export const EducationsForm = () => {
             deleteButtonTooltipText="Delete school"
           >
             <Input
-              label="School"
+              label="School (Tertiary)"
               labelClassName="col-span-4"
               name="school"
-              placeholder="Cornell University"
+              placeholder="Wits University"
               value={school}
               onChange={handleEducationChange}
             />
@@ -61,26 +61,28 @@ export const EducationsForm = () => {
               label="Date"
               labelClassName="col-span-2"
               name="date"
-              placeholder="May 2018"
+              placeholder="May 2021"
               value={date}
               onChange={handleEducationChange}
             />
             <Input
-              label="Degree & Major"
+              label="Qualification"
               labelClassName="col-span-4"
               name="degree"
               placeholder="Bachelor of Science in Computer Engineering"
               value={degree}
               onChange={handleEducationChange}
             />
-            <Input
+            {/* Hiding the GPA field on the form*/}
+
+            {/* <Input
               label="GPA"
               labelClassName="col-span-2"
               name="gpa"
               placeholder="3.81"
               value={gpa}
               onChange={handleEducationChange}
-            />
+            /> */}
             <div className="relative col-span-full">
               <BulletListTextarea
                 label="Additional Information (Optional)"

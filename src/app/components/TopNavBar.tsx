@@ -1,59 +1,103 @@
 "use client";
+
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import logoSrc from "public/logo.svg";
+import logoSrc from "public/logo.jpg";
 import { cx } from "lib/cx";
+import { FileText, Search, Menu, X } from "lucide-react";
 
 export const TopNavBar = () => {
-  const pathName = usePathname();
-  const isHomePage = pathName === "/";
+  const pathname = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navItems = [
+    {
+      href: "/resume-builder",
+      text: "Resume Builder",
+      icon: <FileText className="h-5 w-5" />,
+    },
+    {
+      href: "/resume-parser",
+      text: "Resume Parser",
+      icon: <Search className="h-5 w-5" />,
+    },
+  ];
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 640) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <header
       aria-label="Site Header"
       className={cx(
-        "flex h-[var(--top-nav-bar-height)] items-center border-b-2 border-gray-100 px-3 lg:px-12",
-        isHomePage && "bg-dot"
+        "sticky top-0 z-50 backdrop-blur-lg transition-all duration-200",
+        "bg-white/80 shadow-sm"
       )}
     >
-      <div className="flex h-10 w-full items-center justify-between">
-        <Link href="/">
-          <span className="sr-only">OpenResume</span>
+      <div className="flex h-[var(--top-nav-bar-height)] items-center justify-between px-4 lg:px-8">
+        <Link href="/" className="flex items-center">
+          <span className="sr-only">Logo</span>
           <Image
             src={logoSrc}
-            alt="OpenResume Logo"
-            className="h-8 w-full"
+            alt="Logo"
+            className="h-12 w-[13rem] object-contain"
+            width={208}
+            height={48}
             priority
+            unoptimized
           />
         </Link>
+        <button
+          className="sm:hidden"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
         <nav
           aria-label="Site Nav Bar"
-          className="flex items-center gap-2 text-sm font-medium"
+          className={cx(
+            "fixed top-[var(--top-nav-bar-height)] left-0 bottom-0 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out sm:static sm:w-auto sm:shadow-none sm:translate-x-0",
+            isMenuOpen ? "translate-x-0" : "-translate-x-full",
+            "sm:flex sm:items-center sm:space-x-1"
+          )}
         >
-          {[
-            ["/resume-builder", "Builder"],
-            ["/resume-parser", "Parser"],
-          ].map(([href, text]) => (
+          {navItems.map(({ href, text, icon }) => (
             <Link
               key={text}
-              className="rounded-md px-1.5 py-2 text-gray-500 hover:bg-gray-100 focus-visible:bg-gray-100 lg:px-4"
+              className={cx(
+                "flex items-center space-x-2 px-4 py-2 sm:rounded-full sm:px-3 sm:py-1.5 text-sm font-medium transition-all duration-200",
+                pathname === href
+                  ? "bg-gray-200 text-gray-900"
+                  : "text-gray-600 hover:bg-gray-100"
+              )}
               href={href}
+              onClick={() => setIsMenuOpen(false)}
             >
-              {text}
+              <span className={cx(
+                pathname === href 
+                  ? "text-gray-900" 
+                  : "text-gray-400"
+              )}>
+                {icon}
+              </span>
+              <span className="sm:hidden md:inline">{text}</span>
             </Link>
           ))}
-          <div className="ml-1 mt-1">
-            <iframe
-              src="https://ghbtns.com/github-btn.html?user=xitanggg&repo=open-resume&type=star&count=true"
-              width="100"
-              height="20"
-              className="overflow-hidden border-none"
-              title="GitHub"
-            />
-          </div>
         </nav>
       </div>
     </header>
   );
 };
+
+export default TopNavBar;

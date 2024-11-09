@@ -40,7 +40,7 @@ export const SkillsForm = () => {
       <div className="col-span-full grid grid-cols-6 gap-3">
         <div className="relative col-span-full">
           <BulletListTextarea
-            label="Skills List"
+            label="Skills"
             labelClassName="col-span-full"
             name="descriptions"
             placeholder="Bullet points"
