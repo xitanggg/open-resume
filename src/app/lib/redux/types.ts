@@ -26,6 +26,7 @@ export interface ResumeProject {
   project: string;
   date: string;
   descriptions: string[];
+  projectLink: string;
 }
 
 export interface FeaturedSkill {

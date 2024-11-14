@@ -68,6 +68,7 @@ export const END_HOME_RESUME: Resume = {
       descriptions: [
         "Created and launched a free resume builder web app that allows thousands of users to create professional resume easily and land their dream jobs",
       ],
+      projectLink: "https://www.openresume.com",
     },
   ],
   skills: {
