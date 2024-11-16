@@ -2,9 +2,11 @@ export interface ResumeProfile {
   name: string;
   email: string;
   phone: string;
-  url: string;
   summary: string;
   location: string;
+  portfolioLink: string;
+  linkedinLink: string;
+  githubLink: string;
 }
 
 export interface ResumeWorkExperience {

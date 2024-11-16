@@ -20,8 +20,8 @@ export const ResumePDFProfile = ({
   themeColor: string;
   isPDF: boolean;
 }) => {
-  const { name, email, phone, url, summary, location } = profile;
-  const iconProps = { email, phone, location, url };
+  const { name, email, phone, portfolioLink, linkedinLink, githubLink, summary, location } = profile;
+  const iconProps = { email, phone, location,portfolioLink, linkedinLink, githubLink };
 
   return (
     <ResumePDFSection style={{ marginTop: spacing["4"] }}>
@@ -38,21 +38,28 @@ export const ResumePDFProfile = ({
           ...styles.flexRowBetween,
           flexWrap: "wrap",
           marginTop: spacing["0.5"],
+          justifyContent: "center",
+          alignContent: "center",
+          gap:spacing["2.5"],
         }}
       >
         {Object.entries(iconProps).map(([key, value]) => {
           if (!value) return null;
 
           let iconType = key as IconType;
-          if (key === "url") {
-            if (value.includes("github")) {
-              iconType = "url_github";
-            } else if (value.includes("linkedin")) {
+          switch (key) {
+            case "portfolioLink":
+              iconType = "url";
+              break;
+            case "linkedinLink":
               iconType = "url_linkedin";
-            }
+              break;
+            case "githubLink":
+              iconType = "url_github";
+              break;
           }
 
-          const shouldUseLinkWrapper = ["email", "url", "phone"].includes(key);
+          const shouldUseLinkWrapper = ["email", "phone", "portfolioLink", "linkedinLink", "githubLink"].includes(key);
           const Wrapper = ({ children }: { children: React.ReactNode }) => {
             if (!shouldUseLinkWrapper) return <>{children}</>;
 
@@ -64,6 +71,14 @@ export const ResumePDFProfile = ({
               }
               case "phone": {
                 src = `tel:${value.replace(/[^\d+]/g, "")}`; // Keep only + and digits
+                break;
+              }
+              case "linkedinLink": {
+                src = value.startsWith("http") ? value : `https://www.linkedin.com/in/${value}`;
+                break;
+              }
+              case "githubLink": {
+                src = value.startsWith("http") ? value : `https://github.com/${value}`;
                 break;
               }
               default: {
@@ -83,8 +98,8 @@ export const ResumePDFProfile = ({
               key={key}
               style={{
                 ...styles.flexRow,
-                alignItems: "center",
-                gap: spacing["1"],
+                gap: spacing["2"],
+                flex: "0 1 calc(33.333% - 10px)",
               }}
             >
               <ResumePDFIcon type={iconType} isPDF={isPDF} />
