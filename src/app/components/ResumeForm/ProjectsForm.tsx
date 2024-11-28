@@ -15,7 +15,7 @@ export const ProjectsForm = () => {
 
   return (
     <Form form="projects" addButtonText="Add Project">
-      {projects.map(({ project, date, descriptions }, idx) => {
+      {projects.map(({ project, date, descriptions, url }, idx) => {
         const handleProjectChange = (
           ...[
             field,
@@ -52,6 +52,14 @@ export const ProjectsForm = () => {
               value={date}
               onChange={handleProjectChange}
               labelClassName="col-span-2"
+            />
+            <Input
+              name="url"
+              label="Project URL"
+              placeholder="Enter a valid URL"
+              value={url}
+              onChange={handleProjectChange}
+              labelClassName="col-span-full"
             />
             <BulletListTextarea
               name="descriptions"
