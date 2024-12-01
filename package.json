@@ -35,11 +35,18 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "@codedependant/semantic-release-docker": "^4.4.0",
+    "@semantic-release/commit-analyzer": "^11.0.0",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/github": "^9.0.6",
+    "@semantic-release/npm": "^11.0.0",
+    "@semantic-release/release-notes-generator": "^12.0.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
-    "prettier-plugin-tailwindcss": "^0.2.1"
+    "prettier-plugin-tailwindcss": "^0.2.1",
+    "semantic-release": "^22.0.0"
   }
 }
