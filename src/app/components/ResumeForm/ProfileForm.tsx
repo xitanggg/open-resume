@@ -31,6 +31,15 @@ export const ProfileForm = () => {
 
   return (
     <BaseForm>
+    <div className="flex items-center justify-end gap-0.5">
+          {!isFirstForm && (
+            <MoveIconButton type="up" onClick={handleMoveClick} />
+          )}
+          {!isLastForm && (
+            <MoveIconButton type="down" onClick={handleMoveClick} />
+          )}
+          <ShowIconButton show={showForm} setShow={setShowForm} />
+        </div>
       <div className="grid grid-cols-6 gap-3">
         <Input
           label="Name"
@@ -81,15 +90,7 @@ export const ProfileForm = () => {
           onChange={handleProfileChange}
         />
       </div>
-      <div className="flex items-center gap-0.5">
-          {!isFirstForm && (
-            <MoveIconButton type="up" onClick={handleMoveClick} />
-          )}
-          {!isLastForm && (
-            <MoveIconButton type="down" onClick={handleMoveClick} />
-          )}
-          <ShowIconButton show={showForm} setShow={setShowForm} />
-        </div>
+      
     </BaseForm>
   );
 };
