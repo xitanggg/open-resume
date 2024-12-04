@@ -17,6 +17,7 @@ import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { cx } from "lib/cx";
 
 const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
+  profile : ProfileForm,
   workExperiences: WorkExperiencesForm,
   educations: EducationsForm,
   projects: ProjectsForm,

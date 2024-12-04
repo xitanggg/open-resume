@@ -2,12 +2,28 @@ import { BaseForm } from "components/ResumeForm/Form";
 import { Input, Textarea } from "components/ResumeForm/Form/InputGroup";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { changeProfile, selectProfile } from "lib/redux/resumeSlice";
+import { changeFormOrder, changeShowForm, selectIsFirstForm, selectIsLastForm, selectShowByForm, ShowForm } from "lib/redux/settingsSlice";
 import { ResumeProfile } from "lib/redux/types";
+import { MoveIconButton, ShowIconButton } from "./Form/IconButton";
 
 export const ProfileForm = () => {
+  const form = "profile";
+
   const profile = useAppSelector(selectProfile);
+  const showForm = useAppSelector(selectShowByForm(form));
   const dispatch = useAppDispatch();
   const { name, email, phone, url, summary, location } = profile;
+
+  const isFirstForm = useAppSelector(selectIsFirstForm(form));
+  const isLastForm = useAppSelector(selectIsLastForm(form));
+
+  const setShowForm = (showForm: boolean) => {
+    dispatch(changeShowForm({ field: form, value: showForm }));
+  };
+
+  const handleMoveClick = (type: "up" | "down") => {
+    dispatch(changeFormOrder({ form, type }));
+  };
 
   const handleProfileChange = (field: keyof ResumeProfile, value: string) => {
     dispatch(changeProfile({ field, value }));
@@ -65,6 +81,15 @@ export const ProfileForm = () => {
           onChange={handleProfileChange}
         />
       </div>
+      <div className="flex items-center gap-0.5">
+          {!isFirstForm && (
+            <MoveIconButton type="up" onClick={handleMoveClick} />
+          )}
+          {!isLastForm && (
+            <MoveIconButton type="down" onClick={handleMoveClick} />
+          )}
+          <ShowIconButton show={showForm} setShow={setShowForm} />
+        </div>
     </BaseForm>
   );
 };
