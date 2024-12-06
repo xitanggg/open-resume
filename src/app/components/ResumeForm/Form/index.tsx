@@ -46,12 +46,13 @@ export const BaseForm = ({
   </section>
 );
 
-const FORM_TO_ICON: { [section in ShowForm]: typeof BuildingOfficeIcon } = {
+export const FORM_TO_ICON: { [section in ShowForm]: typeof BuildingOfficeIcon } = {
   workExperiences: BuildingOfficeIcon,
   educations: AcademicCapIcon,
   projects: LightBulbIcon,
   skills: WrenchIcon,
   custom: WrenchIcon,
+  profile: LightBulbIcon
 };
 
 export const Form = ({
