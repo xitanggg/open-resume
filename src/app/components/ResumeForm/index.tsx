@@ -6,7 +6,7 @@ import {
   useSetInitialStore,
 } from "lib/redux/hooks";
 import { ShowForm, selectFormsOrder } from "lib/redux/settingsSlice";
-import { ProfileForm } from "components/ResumeForm/ProfileForm";
+import { ProfileForm } from "./ProfileForm";
 import { WorkExperiencesForm } from "components/ResumeForm/WorkExperiencesForm";
 import { EducationsForm } from "components/ResumeForm/EducationsForm";
 import { ProjectsForm } from "components/ResumeForm/ProjectsForm";
@@ -22,6 +22,7 @@ const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
   projects: ProjectsForm,
   skills: SkillsForm,
   custom: CustomForm,
+  profile: ProfileForm
 };
 
 export const ResumeForm = () => {
@@ -41,7 +42,6 @@ export const ResumeForm = () => {
       onMouseLeave={() => setIsHover(false)}
     >
       <section className="flex max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
-        <ProfileForm />
         {formsOrder.map((form) => {
           const Component = formTypeToComponent[form];
           return <Component key={form} />;
