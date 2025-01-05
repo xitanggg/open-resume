@@ -1,12 +1,13 @@
 "use client";
 import { useEffect } from "react";
-import { useSetDefaultScale } from "components/Resume/hooks";
+import { useJSON, useSetDefaultScale } from "components/Resume/hooks";
 import {
   MagnifyingGlassIcon,
   ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
 import { usePDF } from "@react-pdf/renderer";
 import dynamic from "next/dynamic";
+import { loadStateFromLocalStorage } from "lib/redux/local-storage";
 
 const ResumeControlBar = ({
   scale,
@@ -28,10 +29,17 @@ const ResumeControlBar = ({
 
   const [instance, update] = usePDF({ document });
 
+  const { url, update: updateUrl } = useJSON();
+
   // Hook to update pdf when document changes
   useEffect(() => {
     update();
   }, [update, document]);
+
+  // Hook to update json download when document changes
+  useEffect(() => {
+    updateUrl();
+  }, [updateUrl, document]);
 
   return (
     <div className="sticky bottom-0 left-0 right-0 flex h-[var(--resume-control-bar-height)] items-center justify-center px-[var(--resume-padding)] text-gray-600 lg:justify-between">
@@ -59,14 +67,24 @@ const ResumeControlBar = ({
           <span className="select-none">Autoscale</span>
         </label>
       </div>
-      <a
-        className="ml-1 flex items-center gap-1 rounded-md border border-gray-300 px-3 py-0.5 hover:bg-gray-100 lg:ml-8"
-        href={instance.url!}
-        download={fileName}
-      >
-        <ArrowDownTrayIcon className="h-4 w-4" />
-        <span className="whitespace-nowrap">Download Resume</span>
-      </a>
+      <div className="flex items-center gap-2">
+        <a
+          className="flex items-center gap-1 rounded-md border border-gray-300 px-3 py-0.5 hover:bg-gray-100"
+          href={url!}
+          download="my-open-resume.json"
+        >
+          <ArrowDownTrayIcon className="h-4 w-4" />
+          <span className="whitespace-nowrap">Save</span>
+        </a>
+        <a
+          className="flex items-center gap-1 rounded-md border border-gray-300 px-3 py-0.5 hover:bg-gray-100"
+          href={instance.url!}
+          download={fileName}
+        >
+          <ArrowDownTrayIcon className="h-4 w-4" />
+          <span className="whitespace-nowrap">Download Resume</span>
+        </a>
+      </div>
     </div>
   );
 };

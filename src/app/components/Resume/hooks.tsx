@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { A4_HEIGHT_PX, LETTER_HEIGHT_PX } from "lib/constants";
 import { getPxPerRem } from "lib/get-px-per-rem";
 import { CSS_VARIABLES } from "globals-css";
+import { loadStateFromLocalStorage } from "lib/redux/local-storage";
 
 /**
  * useSetDefaultScale sets the default scale of the resume on load.
@@ -59,4 +60,33 @@ export const useSetDefaultScale = ({
   }, [setScale, scaleOnResize, documentSize]);
 
   return { scaleOnResize, setScaleOnResize };
+};
+
+/**
+ * useJSON is a hook to retrieve the document data from local storage
+ * as a URL.
+ *
+ * It retrieves the document data from local storage and creates a URL to
+ * download the document.
+ */
+export const useJSON = () => {
+    const [url, setUrl] = useState<string | null>(null);
+
+    const update = useCallback(() => {
+        const state = loadStateFromLocalStorage();
+        if (state) {
+          const newBlob = new Blob([JSON.stringify(state)], {
+            type: "application/pdf",
+          });
+          setUrl((prevUrl) => {
+            // Revoke the previous URL to avoid memory leaks
+            if (prevUrl) {
+              URL.revokeObjectURL(prevUrl);
+            }
+            return URL.createObjectURL(newBlob);
+          });
+        }
+      }, []);
+  
+    return { url, update };
 };

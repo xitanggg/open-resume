@@ -1,8 +1,8 @@
 import { Text, View, Link } from "@react-pdf/renderer";
 import type { Style } from "@react-pdf/types";
-import { styles, spacing } from "components/Resume/ResumePDF/styles";
+import { styles, spacing } from "components/themes/styles";
 import { DEBUG_RESUME_PDF_FLAG } from "lib/constants";
-import { DEFAULT_FONT_COLOR } from "lib/redux/settingsSlice";
+import { DEFAULT_FONT_COLOR, DEFAULT_ALT_COLOR } from "./constants";
 
 export const ResumePDFSection = ({
   themeColor,
@@ -25,21 +25,11 @@ export const ResumePDFSection = ({
   >
     {heading && (
       <View style={{ ...styles.flexRow, alignItems: "center" }}>
-        {themeColor && (
-          <View
-            style={{
-              height: "3.75pt",
-              width: "30pt",
-              backgroundColor: themeColor,
-              marginRight: spacing["3.5"],
-            }}
-            debug={DEBUG_RESUME_PDF_FLAG}
-          />
-        )}
         <Text
           style={{
             fontWeight: "bold",
             letterSpacing: "0.3pt", // tracking-wide -> 0.025em * 12 pt = 0.3pt
+            color: DEFAULT_ALT_COLOR
           }}
           debug={DEBUG_RESUME_PDF_FLAG}
         >
@@ -53,19 +43,21 @@ export const ResumePDFSection = ({
 
 export const ResumePDFText = ({
   bold = false,
-  themeColor,
+  color,
+  type,
   style = {},
   children,
 }: {
   bold?: boolean;
-  themeColor?: string;
+  color?: string;
+  type?: "title" | "subtitle";
   style?: Style;
   children: React.ReactNode;
 }) => {
   return (
     <Text
       style={{
-        color: themeColor || DEFAULT_FONT_COLOR,
+        color: color || DEFAULT_FONT_COLOR,
         fontWeight: bold ? "bold" : "normal",
         ...style,
       }}

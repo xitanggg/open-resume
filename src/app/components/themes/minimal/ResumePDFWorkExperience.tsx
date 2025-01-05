@@ -3,9 +3,10 @@ import {
   ResumePDFSection,
   ResumePDFBulletList,
   ResumePDFText,
-} from "components/Resume/ResumePDF/common";
-import { styles, spacing } from "components/Resume/ResumePDF/styles";
+} from "./common";
+import { styles, spacing } from "components/themes/styles";
 import type { ResumeWorkExperience } from "lib/redux/types";
+import { DEFAULT_ALT_COLOR, DEFAULT_SUBTITLE_COLOR } from "./common/constants";
 
 export const ResumePDFWorkExperience = ({
   heading,
@@ -26,7 +27,7 @@ export const ResumePDFWorkExperience = ({
         return (
           <View key={idx} style={idx !== 0 ? { marginTop: spacing["2"] } : {}}>
             {!hideCompanyName && (
-              <ResumePDFText bold={true}>{company}</ResumePDFText>
+              <ResumePDFText bold={true} color={DEFAULT_SUBTITLE_COLOR}>{company}</ResumePDFText>
             )}
             <View
               style={{
@@ -37,7 +38,7 @@ export const ResumePDFWorkExperience = ({
               }}
             >
               <ResumePDFText>{jobTitle}</ResumePDFText>
-              <ResumePDFText>{date}</ResumePDFText>
+              <ResumePDFText color={DEFAULT_ALT_COLOR}>{date}</ResumePDFText>
             </View>
             <View style={{ ...styles.flexCol, marginTop: spacing["1.5"] }}>
               <ResumePDFBulletList items={descriptions} />

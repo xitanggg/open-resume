@@ -1,5 +1,5 @@
 import { Svg, Path } from "@react-pdf/renderer";
-import { styles } from "components/Resume/ResumePDF/styles";
+import { styles } from "components/themes/styles";
 
 /**
  * Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License
