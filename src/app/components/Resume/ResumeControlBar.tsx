@@ -36,7 +36,7 @@ const ResumeControlBar = ({
   return (
     <div className="sticky bottom-0 left-0 right-0 flex h-[var(--resume-control-bar-height)] items-center justify-center px-[var(--resume-padding)] text-gray-600 lg:justify-between">
       <div className="flex items-center gap-2">
-        <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
+        <MagnifyingGlassIcon className="size-5" aria-hidden="true" />
         <input
           type="range"
           min={0.5}
@@ -52,7 +52,7 @@ const ResumeControlBar = ({
         <label className="hidden items-center gap-1 lg:flex">
           <input
             type="checkbox"
-            className="mt-0.5 h-4 w-4"
+            className="size-4 mt-0.5"
             checked={scaleOnResize}
             onChange={() => setScaleOnResize((prev) => !prev)}
           />
@@ -64,7 +64,7 @@ const ResumeControlBar = ({
         href={instance.url!}
         download={fileName}
       >
-        <ArrowDownTrayIcon className="h-4 w-4" />
+        <ArrowDownTrayIcon className="size-4" />
         <span className="whitespace-nowrap">Download Resume</span>
       </a>
     </div>

@@ -73,24 +73,26 @@ export const Testimonials = ({ children }: { children?: React.ReactNode }) => {
         <div className="relative lg:ml-[-50px]">
           {TESTIMONIALS.map(({ src, quote, name, title }, idx) => {
             const className = testimonialsClassNames[idx];
+            const isTop = className === "z-10";
+
             return (
               <div
                 key={idx}
                 className={`bg-primary absolute max-w-lg rounded-[1.7rem] bg-opacity-30 shadow-md transition-all duration-1000 ease-linear ${className}`}
                 onMouseEnter={() => {
-                  if (className === "z-10") {
+                  if (isTop) {
                     isHoveredOnTestimonial.current = true;
                   }
                 }}
                 onMouseLeave={() => {
-                  if (className === "z-10") {
+                  if (isTop) {
                     isHoveredOnTestimonial.current = false;
                   }
                 }}
               >
                 <figure className="m-1 flex gap-5 rounded-3xl bg-white p-5 text-gray-900 lg:p-7">
                   <Image
-                    className="hidden h-24 w-24 select-none rounded-full lg:block"
+                    className="size-24 hidden select-none rounded-full lg:block"
                     src={src}
                     alt="profile"
                   />
@@ -113,7 +115,7 @@ export const Testimonials = ({ children }: { children?: React.ReactNode }) => {
                       </div>
                       <div className="flex gap-4 lg:hidden">
                         <Image
-                          className=" block h-12 w-12 select-none rounded-full"
+                          className=" size-12 block select-none rounded-full"
                           src={src}
                           alt="profile"
                         />

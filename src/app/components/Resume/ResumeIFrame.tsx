@@ -71,7 +71,7 @@ const ResumeIframe = ({
 
   if (enablePDFViewer) {
     return (
-      <DynamicPDFViewer className="h-full w-full">
+      <DynamicPDFViewer className="size-full">
         {children as any}
       </DynamicPDFViewer>
     );
