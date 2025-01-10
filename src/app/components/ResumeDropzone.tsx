@@ -118,7 +118,7 @@ export const ResumeDropzone = ({
         {!playgroundView && (
           <Image
             src={addPdfSrc}
-            className="mx-auto h-14 w-14"
+            className="size-14 mx-auto"
             alt="Add pdf"
             aria-hidden="true"
             priority
@@ -135,7 +135,7 @@ export const ResumeDropzone = ({
               Browse a pdf file or drop it here
             </p>
             <p className="flex text-sm text-gray-500">
-              <LockClosedIcon className="mr-1 mt-1 h-3 w-3 text-gray-400" />
+              <LockClosedIcon className="size-3 mr-1 mt-1 text-gray-400" />
               File data is used locally and never leaves your browser
             </p>
           </>
@@ -150,7 +150,7 @@ export const ResumeDropzone = ({
               title="Remove file"
               onClick={onRemove}
             >
-              <XMarkIcon className="h-6 w-6" />
+              <XMarkIcon className="size-6" />
             </button>
           </div>
         )}

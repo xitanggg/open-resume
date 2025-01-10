@@ -47,7 +47,7 @@ export const Features = () => {
                 <dt className="text-2xl font-bold">
                   <Image
                     src={src}
-                    className="absolute left-0 top-1 h-12 w-12"
+                    className="size-12 absolute left-0 top-1"
                     alt="Feature icon"
                   />
                   {title}
