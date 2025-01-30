@@ -15,14 +15,14 @@ export const ProjectsForm = () => {
 
   return (
     <Form form="projects" addButtonText="Add Project">
-      {projects.map(({ project, date, descriptions }, idx) => {
+      {projects.map(({ project, url, date, descriptions }, idx) => {
         const handleProjectChange = (
           ...[
             field,
             value,
           ]: CreateHandleChangeArgsWithDescriptions<ResumeProject>
         ) => {
-          dispatch(changeProjects({ idx, field, value } as any));
+          dispatch(changeProjects({ idx, field, url, value } as any));
         };
         const showMoveUp = idx !== 0;
         const showMoveDown = idx !== projects.length - 1;
@@ -43,7 +43,7 @@ export const ProjectsForm = () => {
               placeholder="OpenResume"
               value={project}
               onChange={handleProjectChange}
-              labelClassName="col-span-4"
+              labelClassName="col-span-full"
             />
             <Input
               name="date"
@@ -52,6 +52,14 @@ export const ProjectsForm = () => {
               value={date}
               onChange={handleProjectChange}
               labelClassName="col-span-2"
+            />
+            <Input
+              label="Website"
+              labelClassName="col-span-4"
+              name="url"
+              placeholder="github.com/xitanggg/open-resume"
+              value={url}
+              onChange={handleProjectChange}
             />
             <BulletListTextarea
               name="descriptions"
