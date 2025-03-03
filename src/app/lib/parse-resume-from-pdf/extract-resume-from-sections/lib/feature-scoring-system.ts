@@ -6,7 +6,8 @@ import type {
 
 const computeFeatureScores = (
   textItems: TextItems,
-  featureSets: FeatureSet[]
+  featureSets: FeatureSet[],
+  cache: Map<string, number>
 ): TextScores => {
   const textScores = textItems.map((item) => ({
     text: item.text,
@@ -19,6 +20,11 @@ const computeFeatureScores = (
 
     for (const featureSet of featureSets) {
       const [hasFeature, score, returnMatchingText] = featureSet;
+      const cacheKey = `${textItem.text}-${featureSet.toString()}`;
+      if (cache.has(cacheKey)) {
+        textScores[i].score += cache.get(cacheKey)!;
+        continue;
+      }
       const result = hasFeature(textItem);
       if (result) {
         let text = textItem.text;
@@ -35,6 +41,7 @@ const computeFeatureScores = (
         } else {
           textScores.push({ text, score, match: true });
         }
+        cache.set(cacheKey, score);
       }
     }
   }
@@ -53,7 +60,8 @@ export const getTextWithHighestFeatureScore = (
   returnEmptyStringIfHighestScoreIsNotPositive = true,
   returnConcatenatedStringForTextsWithSameHighestScore = false
 ) => {
-  const textScores = computeFeatureScores(textItems, featureSets);
+  const cache = new Map<string, number>();
+  const textScores = computeFeatureScores(textItems, featureSets, cache);
 
   let textsWithHighestFeatureScore: string[] = [];
   let highestScore = -Infinity;
