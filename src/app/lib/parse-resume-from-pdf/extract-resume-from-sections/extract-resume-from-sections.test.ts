@@ -28,6 +28,10 @@ describe("extract-profile tests - ", () => {
     expect(matchPhone(makeTextItem("  (123)456-7890  "))![0]).toBe(
       "(123)456-7890"
     );
+    expect(matchPhone(makeTextItem("+1 123-456-7890"))![0]).toBe("+1 123-456-7890");
+    expect(matchPhone(makeTextItem("+44 20 7946 0958"))![0]).toBe("+44 20 7946 0958");
+    expect(matchPhone(makeTextItem("+91-98765-43210"))![0]).toBe("+91-98765-43210");
+    expect(matchPhone(makeTextItem("0049 30 123456"))![0]).toBe("0049 30 123456");
   });
 
   it("Url", () => {
