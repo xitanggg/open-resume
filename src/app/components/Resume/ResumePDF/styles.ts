@@ -59,4 +59,13 @@ export const styles = StyleSheet.create({
     height: "13pt",
     fill: "#525252", // text-neutral-600
   },
+  featuredSkillsColumn: {
+    minWidth: "70pt", // Reduced for better space utilization
+    maxWidth: "90pt", // Reduced for better space utilization
+    width: "80pt", // Reduced for better space utilization
+    flexGrow: 0,
+    flexShrink: 0,
+    alignItems: "flex-start",
+    wordBreak: "break-word",
+  },
 });
