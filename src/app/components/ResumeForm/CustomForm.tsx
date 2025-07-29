@@ -6,6 +6,8 @@ import { changeCustom, selectCustom } from "lib/redux/resumeSlice";
 import {
   selectShowBulletPoints,
   changeShowBulletPoints,
+  selectHeadingByForm,
+  changeFormHeading,
 } from "lib/redux/settingsSlice";
 
 export const CustomForm = () => {
@@ -14,9 +16,15 @@ export const CustomForm = () => {
   const { descriptions } = custom;
   const form = "custom";
   const showBulletPoints = useAppSelector(selectShowBulletPoints(form));
+  const settingsHeading = useAppSelector(selectHeadingByForm(form));
 
-  const handleCustomChange = (field: "descriptions", value: string[]) => {
+  const handleCustomChange = (field: "descriptions" | "title", value: string[] | string) => {
     dispatch(changeCustom({ field, value }));
+    
+    // Sync title changes to settings as well
+    if (field === "title" && typeof value === "string") {
+      dispatch(changeFormHeading({ field: form, value }));
+    }
   };
 
   const handleShowBulletPoints = (value: boolean) => {

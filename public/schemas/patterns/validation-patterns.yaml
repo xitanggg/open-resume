@@ -1,0 +1,34 @@
+# Validation Patterns for OpenResume Schema
+# All patterns discovered through parser reverse engineering
+
+name_pattern: "^[a-zA-Z\\s\\.]*$"
+email_pattern: "\\S+@\\S+\\.\\S+"
+phone_pattern: "\\(?\\d{3}\\)?[\\s-]?\\d{3}[\\s-]?\\d{4}"
+location_pattern: "[A-Z][a-zA-Z\\s]+, [A-Z]{2}"
+school_pattern: ".*(College|University|Institute|School|Academy|BASIS|Magnet).*"
+degree_pattern: ".*(Associate|Bachelor|Master|PhD|Ph\\.|[ABM][A-Z\\.]*).*"
+gpa_pattern: "([0-4]\\.[0-9]{1,2}|[0-9]{1,3})"
+
+# Date patterns (universal across all sections)
+year_pattern: "(?:19|20)\\d{2}"
+month_keywords: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+season_keywords: ["Summer", "Fall", "Spring", "Winter"]
+present_keyword: "Present"
+
+# URL patterns (3-tier fallback system)
+url_standard: "\\S+\\.[a-z]+\\/\\S+"
+url_http: "https?:\\/\\/\\S+\\.\\S+"
+url_www: "www\\.\\S+\\.\\S+"
+
+# Bullet point Unicode characters
+bullet_points: ["⋅", "∙", "🞄", "•", "⦁", "⚫︎", "●", "⬤", "⚬", "○"]
+
+# School keywords for institution detection
+school_keywords: ["College", "University", "Institute", "School", "Academy", "BASIS", "Magnet"]
+
+# Degree keywords for education detection
+degree_keywords: ["Associate", "Bachelor", "Master", "PhD", "Ph."]
+
+# Section title keywords
+primary_section_keywords: ["experience", "education", "project", "skill"]
+secondary_section_keywords: ["job", "course", "extracurricular", "objective", "summary", "award", "honor"]

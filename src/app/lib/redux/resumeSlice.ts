@@ -136,10 +136,14 @@ export const resumeSlice = createSlice({
     },
     changeCustom: (
       draft,
-      action: PayloadAction<{ field: "descriptions"; value: string[] }>
+      action: PayloadAction<{ field: "descriptions" | "title"; value: string | string[] }>
     ) => {
-      const { value } = action.payload;
-      draft.custom.descriptions = value;
+      const { field, value } = action.payload;
+      if (field === "descriptions") {
+        draft.custom.descriptions = value as string[];
+      } else if (field === "title") {
+        draft.custom.title = value as string;
+      }
     },
     addSectionInForm: (draft, action: PayloadAction<{ form: ShowForm }>) => {
       const { form } = action.payload;

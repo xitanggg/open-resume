@@ -1,0 +1,82 @@
+# Default Values for OpenResume Schema
+# All default values discovered through parser analysis
+
+# String defaults
+string_default: ""
+
+# Array defaults
+array_default: []
+
+# Number defaults
+skill_rating_default: 4
+
+# Complete Resume object with defaults
+resume_defaults:
+  profile:
+    name: ""
+    email: ""
+    phone: ""
+    url: ""
+    summary: ""
+    location: ""
+  workExperiences: []
+  educations: []
+  projects: []
+  skills:
+    featuredSkills: [
+      { skill: "", rating: 4 },
+      { skill: "", rating: 4 },
+      { skill: "", rating: 4 },
+      { skill: "", rating: 4 },
+      { skill: "", rating: 4 },
+      { skill: "", rating: 4 }
+    ]
+    descriptions: []
+  custom:
+    descriptions: []
+
+# Individual section defaults
+profile_defaults:
+  name: ""
+  email: ""
+  phone: ""
+  url: ""
+  summary: ""
+  location: ""
+
+work_experience_defaults:
+  company: ""
+  jobTitle: ""
+  date: ""
+  descriptions: []
+
+education_defaults:
+  school: ""
+  degree: ""
+  date: ""
+  gpa: ""
+  descriptions: []
+
+project_defaults:
+  project: ""
+  date: ""
+  descriptions: []
+
+featured_skill_defaults:
+  skill: ""
+  rating: 4
+
+skills_defaults:
+  featuredSkills: []
+  descriptions: []
+
+custom_defaults:
+  descriptions: []
+
+# Parser processing constants
+max_featured_skills: 6
+feature_score_range:
+  min: -4
+  max: 4
+line_gap_threshold_multiplier: 1.4
+description_word_threshold: 8

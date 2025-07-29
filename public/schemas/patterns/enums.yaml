@@ -1,0 +1,97 @@
+# Enumerated Values for OpenResume Schema
+# All predefined lists discovered through parser analysis
+
+# Job titles (65 recognized titles)
+# NOTE: These titles are used for DETECTION and FEATURE SCORING during PDF parsing only.
+# The actual jobTitle field in the schema accepts ANY string value as extracted from resumes.
+# These keywords help the parser identify and score potential job titles but do not constrain storage.
+job_titles:
+  - "Accountant"
+  - "Administrator"
+  - "Advisor"
+  - "Agent"
+  - "Analyst"
+  - "Apprentice"
+  - "Architect"
+  - "Assistant"
+  - "Associate"
+  - "Auditor"
+  - "Bartender"
+  - "Biologist"
+  - "Bookkeeper"
+  - "Buyer"
+  - "Carpenter"
+  - "Cashier"
+  - "CEO"
+  - "Clerk"
+  - "Co-op"
+  - "Co-Founder"
+  - "Consultant"
+  - "Coordinator"
+  - "CTO"
+  - "Developer"
+  - "Designer"
+  - "Director"
+  - "Driver"
+  - "Editor"
+  - "Electrician"
+  - "Engineer"
+  - "Extern"
+  - "Founder"
+  - "Freelancer"
+  - "Head"
+  - "Intern"
+  - "Janitor"
+  - "Journalist"
+  - "Laborer"
+  - "Lawyer"
+  - "Lead"
+  - "Manager"
+  - "Mechanic"
+  - "Member"
+  - "Nurse"
+  - "Officer"
+  - "Operator"
+  - "Operation"
+  - "Photographer"
+  - "President"
+  - "Producer"
+  - "Recruiter"
+  - "Representative"
+  - "Researcher"
+  - "Sales"
+  - "Server"
+  - "Scientist"
+  - "Specialist"
+  - "Supervisor"
+  - "Teacher"
+  - "Technician"
+  - "Trader"
+  - "Trainee"
+  - "Treasurer"
+  - "Tutor"
+  - "Vice"
+  - "VP"
+  - "Volunteer"
+  - "Webmaster"
+  - "Worker"
+
+# Skill rating range (1-5 scale)
+skill_ratings:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+
+# Feature scoring range (-4 to +4)
+feature_scores:
+  - -4
+  - -3
+  - -2
+  - -1
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4

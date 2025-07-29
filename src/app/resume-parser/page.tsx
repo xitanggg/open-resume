@@ -51,6 +51,35 @@ export default function ResumeParser() {
     test();
   }, [fileUrl]);
 
+  // Add logging to capture parser output data
+  useEffect(() => {
+    if (textItems.length > 0) {
+      console.log('\n' + '='.repeat(80));
+      console.log(`🔍 PARSER OUTPUT ANALYSIS FOR: ${fileUrl}`);
+      console.log('='.repeat(80));
+      
+      console.log('\n📊 COMPLETE RESUME DATA STRUCTURE:');
+      console.log(JSON.stringify(resume, null, 2));
+      
+      console.log('\n📋 SECTIONS IDENTIFIED:');
+      console.log(JSON.stringify(sections, null, 2));
+      
+      console.log('\n📄 RAW TEXT ITEMS COUNT:', textItems.length);
+      console.log('\n📝 LINES COUNT:', lines.length);
+      
+      // Log data types and structure details
+      console.log('\n🏗️ DATA STRUCTURE ANALYSIS:');
+      console.log('Profile fields:', Object.keys(resume.profile));
+      console.log('Work experiences count:', resume.workExperiences.length);
+      console.log('Education entries count:', resume.educations.length);
+      console.log('Projects count:', resume.projects.length);
+      console.log('Skills structure:', Object.keys(resume.skills));
+      console.log('Custom fields:', Object.keys(resume.custom));
+      
+      console.log('\n' + '='.repeat(80));
+    }
+  }, [textItems, resume, sections, lines, fileUrl]);
+
   return (
     <main className="h-full w-full overflow-hidden">
       <div className="grid md:grid-cols-6">
