@@ -1,0 +1,86 @@
+{
+  "profile": {
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "phone": "(555) 123-4567",
+    "url": "linkedin.com/in/janesmith",
+    "summary": "Experienced software engineer with 5+ years of full-stack development experience",
+    "location": "San Francisco, CA"
+  },
+  "workExperiences": [
+    {
+      "company": "Google Inc.",
+      "jobTitle": "Senior Software Engineer",
+      "date": "Jan 2020 - Present",
+      "descriptions": [
+        "Developed web applications using React and Node.js",
+        "Led team of 5 engineers in agile development process",
+        "Improved system performance by 40% through optimization"
+      ]
+    },
+    {
+      "company": "Microsoft Corporation",
+      "jobTitle": "Software Development Engineer II",
+      "date": "2018 - Dec 2019",
+      "descriptions": [
+        "Built cloud-native applications on Azure platform",
+        "Collaborated with cross-functional teams on product features"
+      ]
+    }
+  ],
+  "educations": [
+    {
+      "school": "Stanford University",
+      "degree": "Bachelor of Science in Computer Science",
+      "date": "2014-2018",
+      "gpa": "3.85",
+      "descriptions": [
+        "Magna Cum Laude",
+        "Dean's List",
+        "Computer Science Club President"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "project": "E-commerce Platform",
+      "date": "2023",
+      "descriptions": [
+        "Built full-stack web application using MERN stack",
+        "Implemented user authentication and payment processing",
+        "Deployed on AWS with 99.9% uptime"
+      ]
+    },
+    {
+      "project": "Machine Learning Model",
+      "date": "Jan-Mar 2023",
+      "descriptions": [
+        "Developed predictive model using Python and TensorFlow",
+        "Achieved 95% accuracy on test dataset"
+      ]
+    }
+  ],
+  "skills": {
+    "featuredSkills": [
+      { "skill": "JavaScript", "rating": 5 },
+      { "skill": "Python", "rating": 4 },
+      { "skill": "React", "rating": 5 },
+      { "skill": "Node.js", "rating": 4 },
+      { "skill": "AWS", "rating": 3 },
+      { "skill": "Docker", "rating": 3 }
+    ],
+    "descriptions": [
+      "JavaScript, Python, React, Node.js",
+      "AWS, Docker, Kubernetes, Git",
+      "Machine Learning, Data Analysis"
+    ]
+  },
+  "custom": {
+    "title": "Key Achievements",
+    "descriptions": [
+      "Led cross-functional team of 12 engineers in agile development process",
+      "Delivered project 2 weeks ahead of schedule, saving $50K in costs",
+      "Received Employee of the Year award for outstanding performance"
+    ]
+  }
+}

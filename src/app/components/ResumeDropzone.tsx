@@ -2,6 +2,7 @@ import { useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { parseResumeFromPdf } from "lib/parse-resume-from-pdf";
+import { parseResumeFromJson } from "lib/parse-resume-from-json";
 import {
   getHasUsedAppBefore,
   saveStateToLocalStorage,
@@ -17,6 +18,7 @@ const defaultFileState = {
   name: "",
   size: 0,
   fileUrl: "",
+  file: null as File | null,
 };
 
 export const ResumeDropzone = ({
@@ -30,10 +32,21 @@ export const ResumeDropzone = ({
 }) => {
   const [file, setFile] = useState(defaultFileState);
   const [isHoveredOnDropzone, setIsHoveredOnDropzone] = useState(false);
-  const [hasNonPdfFile, setHasNonPdfFile] = useState(false);
+  const [hasUnsupportedFile, setHasUnsupportedFile] = useState(false);
+  const [jsonParsingErrors, setJsonParsingErrors] = useState<string[]>([]);
   const router = useRouter();
 
   const hasFile = Boolean(file.name);
+
+  const isFileSupported = (fileName: string) => {
+    return fileName.endsWith(".pdf") || fileName.endsWith(".json");
+  };
+
+  const getFileType = (fileName: string): "pdf" | "json" | "unsupported" => {
+    if (fileName.endsWith(".pdf")) return "pdf";
+    if (fileName.endsWith(".json")) return "json";
+    return "unsupported";
+  };
 
   const setNewFile = (newFile: File) => {
     if (file.fileUrl) {
@@ -42,18 +55,19 @@ export const ResumeDropzone = ({
 
     const { name, size } = newFile;
     const fileUrl = URL.createObjectURL(newFile);
-    setFile({ name, size, fileUrl });
+    setFile({ name, size, fileUrl, file: newFile });
     onFileUrlChange(fileUrl);
   };
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const newFile = event.dataTransfer.files[0];
-    if (newFile.name.endsWith(".pdf")) {
-      setHasNonPdfFile(false);
+    if (isFileSupported(newFile.name)) {
+      setHasUnsupportedFile(false);
+      setJsonParsingErrors([]);
       setNewFile(newFile);
     } else {
-      setHasNonPdfFile(true);
+      setHasUnsupportedFile(true);
     }
     setIsHoveredOnDropzone(false);
   };
@@ -63,35 +77,73 @@ export const ResumeDropzone = ({
     if (!files) return;
 
     const newFile = files[0];
-    setNewFile(newFile);
+    if (isFileSupported(newFile.name)) {
+      setHasUnsupportedFile(false);
+      setJsonParsingErrors([]);
+      setNewFile(newFile);
+    } else {
+      setHasUnsupportedFile(true);
+    }
   };
 
   const onRemove = () => {
     setFile(defaultFileState);
+    setJsonParsingErrors([]);
     onFileUrlChange("");
   };
 
   const onImportClick = async () => {
-    const resume = await parseResumeFromPdf(file.fileUrl);
-    const settings = deepClone(initialSettings);
+    if (!file.file) return;
 
-    // Set formToShow settings based on uploaded resume if users have used the app before
-    if (getHasUsedAppBefore()) {
-      const sections = Object.keys(settings.formToShow) as ShowForm[];
-      const sectionToFormToShow: Record<ShowForm, boolean> = {
-        workExperiences: resume.workExperiences.length > 0,
-        educations: resume.educations.length > 0,
-        projects: resume.projects.length > 0,
-        skills: resume.skills.descriptions.length > 0,
-        custom: resume.custom.descriptions.length > 0,
-      };
-      for (const section of sections) {
-        settings.formToShow[section] = sectionToFormToShow[section];
+    const fileType = getFileType(file.name);
+    let resume;
+    
+    try {
+      if (fileType === "pdf") {
+        resume = await parseResumeFromPdf(file.fileUrl);
+      } else if (fileType === "json") {
+        const result = await parseResumeFromJson(file.file);
+        if (result.errors.length > 0) {
+          setJsonParsingErrors(result.errors);
+          return;
+        }
+        resume = result.resume;
+        if (!resume) {
+          setJsonParsingErrors(["Failed to parse JSON resume"]);
+          return;
+        }
+        
+      } else {
+        return; // Unsupported file type
       }
-    }
 
-    saveStateToLocalStorage({ resume, settings });
-    router.push("/resume-builder");
+      const settings = deepClone(initialSettings);
+      
+      // Sync custom title from JSON to settings if present (for JSON imports)
+      if (fileType === "json" && resume?.custom?.title) {
+        settings.formToHeading.custom = resume.custom.title;
+      }
+
+      // Set formToShow settings based on uploaded resume if users have used the app before
+      if (getHasUsedAppBefore()) {
+        const sections = Object.keys(settings.formToShow) as ShowForm[];
+        const sectionToFormToShow: Record<ShowForm, boolean> = {
+          workExperiences: resume.workExperiences.length > 0,
+          educations: resume.educations.length > 0,
+          projects: resume.projects.length > 0,
+          skills: resume.skills.descriptions.length > 0,
+          custom: resume.custom.descriptions.length > 0,
+        };
+        for (const section of sections) {
+          settings.formToShow[section] = sectionToFormToShow[section];
+        }
+      }
+
+      saveStateToLocalStorage({ resume, settings });
+      router.push("/resume-builder");
+    } catch (error) {
+      setJsonParsingErrors([`Failed to import resume: ${error instanceof Error ? error.message : 'Unknown error'}`]);
+    }
   };
 
   return (
@@ -132,7 +184,7 @@ export const ResumeDropzone = ({
                 !playgroundView && "text-lg font-semibold"
               )}
             >
-              Browse a pdf file or drop it here
+              Browse a PDF or JSON file or drop it here
             </p>
             <p className="flex text-sm text-gray-500">
               <LockClosedIcon className="mr-1 mt-1 h-3 w-3 text-gray-400" />
@@ -167,12 +219,12 @@ export const ResumeDropzone = ({
                 <input
                   type="file"
                   className="sr-only"
-                  accept=".pdf"
+                  accept=".pdf,.json"
                   onChange={onInputChange}
                 />
               </label>
-              {hasNonPdfFile && (
-                <p className="mt-6 text-red-400">Only pdf file is supported</p>
+              {hasUnsupportedFile && (
+                <p className="mt-6 text-red-400">Only PDF and JSON files are supported</p>
               )}
             </>
           ) : (
@@ -185,6 +237,18 @@ export const ResumeDropzone = ({
                 >
                   Import and Continue <span aria-hidden="true">→</span>
                 </button>
+              )}
+              {jsonParsingErrors.length > 0 && (
+                <div className="mt-4 rounded-md bg-red-50 p-4">
+                  <div className="text-sm text-red-700">
+                    <p className="font-medium">JSON parsing errors:</p>
+                    <ul className="mt-2 list-disc list-inside">
+                      {jsonParsingErrors.map((error, index) => (
+                        <li key={index}>{error}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               )}
               <p className={cx(" text-gray-500", !playgroundView && "mt-6")}>
                 Note: {!playgroundView ? "Import" : "Parser"} works best on

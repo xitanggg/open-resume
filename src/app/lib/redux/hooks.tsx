@@ -13,6 +13,7 @@ import { initialResumeState, setResume } from "lib/redux/resumeSlice";
 import {
   initialSettings,
   setSettings,
+  changeFormHeading,
   type Settings,
 } from "lib/redux/settingsSlice";
 import { deepMerge } from "lib/deep-merge";
@@ -47,6 +48,14 @@ export const useSetInitialStore = () => {
         state.resume
       ) as Resume;
       dispatch(setResume(mergedResumeState));
+      
+      // Sync custom section title from resume data to settings if present
+      if (mergedResumeState.custom?.title) {
+        dispatch(changeFormHeading({ 
+          field: "custom", 
+          value: mergedResumeState.custom.title 
+        }));
+      }
     }
     if (state.settings) {
       const mergedSettingsState = deepMerge(

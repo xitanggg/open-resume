@@ -1,0 +1,6 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+Ignore the _archive folder completely.  Do not read or alter the files in the directory structure under any circumstance. 

@@ -39,6 +39,7 @@ export interface ResumeSkills {
 }
 
 export interface ResumeCustom {
+  title?: string;
   descriptions: string[];
 }
 

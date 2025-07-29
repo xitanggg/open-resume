@@ -83,31 +83,67 @@ export const ResumePDFBulletList = ({
   items: string[];
   showBulletPoints?: boolean;
 }) => {
+  // Function to detect and parse category patterns like "Category Name: items..."
+  const parseSkillCategory = (item: string) => {
+    // Look for pattern: "Word(s):" at the start of the line
+    const categoryMatch = item.match(/^([^:]+):\s*(.*)$/);
+    
+    if (categoryMatch) {
+      const [, category, content] = categoryMatch;
+      return {
+        hasCategory: true,
+        category: category.trim(),
+        content: content.trim(),
+      };
+    }
+    
+    return {
+      hasCategory: false,
+      category: '',
+      content: item,
+    };
+  };
+
   return (
     <>
-      {items.map((item, idx) => (
-        <View style={{ ...styles.flexRow }} key={idx}>
-          {showBulletPoints && (
-            <ResumePDFText
-              style={{
-                paddingLeft: spacing["2"],
-                paddingRight: spacing["2"],
-                lineHeight: "1.3",
-              }}
-              bold={true}
-            >
-              {"•"}
-            </ResumePDFText>
-          )}
-          {/* A breaking change was introduced causing text layout to be wider than node's width
-              https://github.com/diegomura/react-pdf/issues/2182. flexGrow & flexBasis fixes it */}
-          <ResumePDFText
-            style={{ lineHeight: "1.3", flexGrow: 1, flexBasis: 0 }}
-          >
-            {item}
-          </ResumePDFText>
-        </View>
-      ))}
+      {items.map((item, idx) => {
+        const parsed = parseSkillCategory(item);
+        
+        return (
+          <View style={{ ...styles.flexRow }} key={idx}>
+            {showBulletPoints && (
+              <ResumePDFText
+                style={{
+                  paddingLeft: spacing["2"],
+                  paddingRight: spacing["2"],
+                  lineHeight: "1.3",
+                }}
+                bold={true}
+              >
+                {"•"}
+              </ResumePDFText>
+            )}
+            {/* A breaking change was introduced causing text layout to be wider than node's width
+                https://github.com/diegomura/react-pdf/issues/2182. flexGrow & flexBasis fixes it */}
+            <View style={{ lineHeight: "1.3", flexGrow: 1, flexBasis: 0, flexDirection: "row", flexWrap: "wrap" }}>
+              {parsed.hasCategory ? (
+                <>
+                  <ResumePDFText bold={true}>
+                    {parsed.category}:
+                  </ResumePDFText>
+                  <ResumePDFText style={{ marginLeft: spacing["1"] }}>
+                    {parsed.content}
+                  </ResumePDFText>
+                </>
+              ) : (
+                <ResumePDFText>
+                  {parsed.content}
+                </ResumePDFText>
+              )}
+            </View>
+          </View>
+        );
+      })}
     </>
   );
 };
