@@ -56,6 +56,8 @@ export const EducationsForm = () => {
               placeholder="Cornell University"
               value={school}
               onChange={handleEducationChange}
+              maxLength={45}
+              showCharCount={true}
             />
             <Input
               label="Date"
@@ -64,6 +66,8 @@ export const EducationsForm = () => {
               placeholder="May 2018"
               value={date}
               onChange={handleEducationChange}
+              maxLength={20}
+              showCharCount={true}
             />
             <Input
               label="Degree & Major"
@@ -72,6 +76,8 @@ export const EducationsForm = () => {
               placeholder="Bachelor of Science in Computer Engineering"
               value={degree}
               onChange={handleEducationChange}
+              maxLength={80}
+              showCharCount={true}
             />
             <Input
               label="GPA"
@@ -80,6 +86,8 @@ export const EducationsForm = () => {
               placeholder="3.81"
               value={gpa}
               onChange={handleEducationChange}
+              maxLength={10}
+              showCharCount={true}
             />
             <div className="relative col-span-full">
               <BulletListTextarea

@@ -36,8 +36,12 @@ export const ResumePDFWorkExperience = ({
                   : spacing["1.5"],
               }}
             >
-              <ResumePDFText>{jobTitle}</ResumePDFText>
-              <ResumePDFText>{date}</ResumePDFText>
+              <View style={{ flex: 1, marginRight: spacing["2"] }}>
+                <ResumePDFText>{jobTitle}</ResumePDFText>
+              </View>
+              <View style={{ minWidth: "fit-content" }}>
+                <ResumePDFText>{date}</ResumePDFText>
+              </View>
             </View>
             <View style={{ ...styles.flexCol, marginTop: spacing["1.5"] }}>
               <ResumePDFBulletList items={descriptions} />
