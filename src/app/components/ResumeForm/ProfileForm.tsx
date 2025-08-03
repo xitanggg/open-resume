@@ -23,6 +23,8 @@ export const ProfileForm = () => {
           placeholder="Sal Khan"
           value={name}
           onChange={handleProfileChange}
+          maxLength={50}
+          showCharCount={true}
         />
         <Textarea
           label="Objective"
@@ -31,6 +33,8 @@ export const ProfileForm = () => {
           placeholder="Entrepreneur and educator obsessed with making education free for anyone"
           value={summary}
           onChange={handleProfileChange}
+          maxLength={600}
+          showCharCount={true}
         />
         <Input
           label="Email"
@@ -39,6 +43,8 @@ export const ProfileForm = () => {
           placeholder="hello@khanacademy.org"
           value={email}
           onChange={handleProfileChange}
+          maxLength={50}
+          showCharCount={true}
         />
         <Input
           label="Phone"
@@ -47,6 +53,8 @@ export const ProfileForm = () => {
           placeholder="(123)456-7890"
           value={phone}
           onChange={handleProfileChange}
+          maxLength={20}
+          showCharCount={true}
         />
         <Input
           label="Website"
@@ -55,6 +63,8 @@ export const ProfileForm = () => {
           placeholder="linkedin.com/in/khanacademy"
           value={url}
           onChange={handleProfileChange}
+          maxLength={60}
+          showCharCount={true}
         />
         <Input
           label="Location"
@@ -63,6 +73,8 @@ export const ProfileForm = () => {
           placeholder="NYC, NY"
           value={location}
           onChange={handleProfileChange}
+          maxLength={30}
+          showCharCount={true}
         />
       </div>
     </BaseForm>

@@ -11,6 +11,8 @@ interface InputProps<K extends string, V extends string | string[]> {
   value?: V;
   placeholder: string;
   onChange: (name: K, value: V) => void;
+  maxLength?: number;
+  showCharCount?: boolean;
 }
 
 /**
@@ -42,17 +44,48 @@ export const Input = <K extends string>({
   onChange,
   label,
   labelClassName,
+  maxLength,
+  showCharCount = false,
 }: InputProps<K, string>) => {
+  const currentLength = value.length;
+  const isNearLimit = maxLength && currentLength > maxLength * 0.8;
+  const isOverLimit = maxLength && currentLength > maxLength;
+
+  const handleChange = (newValue: string) => {
+    if (maxLength && newValue.length > maxLength) {
+      return; // Don't allow input beyond max length
+    }
+    onChange(name, newValue);
+  };
+
   return (
     <InputGroupWrapper label={label} className={labelClassName}>
-      <input
-        type="text"
-        name={name}
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => onChange(name, e.target.value)}
-        className={INPUT_CLASS_NAME}
-      />
+      <div className="relative">
+        <input
+          type="text"
+          name={name}
+          value={value}
+          placeholder={placeholder}
+          onChange={(e) => handleChange(e.target.value)}
+          className={`${INPUT_CLASS_NAME} ${
+            isOverLimit ? "border-red-400 focus:border-red-500" : ""
+          }`}
+          maxLength={maxLength}
+        />
+        {(showCharCount || isNearLimit) && maxLength && (
+          <div
+            className={`absolute right-2 top-1/2 -translate-y-1/2 text-xs ${
+              isOverLimit
+                ? "text-red-500"
+                : isNearLimit
+                ? "text-yellow-600"
+                : "text-gray-400"
+            }`}
+          >
+            {currentLength}/{maxLength}
+          </div>
+        )}
+      </div>
     </InputGroupWrapper>
   );
 };
@@ -64,19 +97,54 @@ export const Textarea = <T extends string>({
   value = "",
   placeholder,
   onChange,
+  maxLength,
+  showCharCount = false,
 }: InputProps<T, string>) => {
   const textareaRef = useAutosizeTextareaHeight({ value });
+  const currentLength = value.length;
+  const isNearLimit = maxLength && currentLength > maxLength * 0.8;
+  const isOverLimit = maxLength && currentLength > maxLength;
+
+  const handleChange = (newValue: string) => {
+    if (maxLength && newValue.length > maxLength) {
+      return; // Don't allow input beyond max length
+    }
+    // Additional validation: warn about very long words that might break layout
+    const hasVeryLongWord = newValue.split(/\s+/).some(word => word.length > 25);
+    if (hasVeryLongWord) {
+      // Still allow the input but could show warning in the future
+    }
+    onChange(name, newValue);
+  };
 
   return (
     <InputGroupWrapper label={label} className={wrapperClassName}>
-      <textarea
-        ref={textareaRef}
-        name={name}
-        className={`${INPUT_CLASS_NAME} resize-none overflow-hidden`}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(name, e.target.value)}
-      />
+      <div className="relative">
+        <textarea
+          ref={textareaRef}
+          name={name}
+          className={`${INPUT_CLASS_NAME} resize-none overflow-hidden ${
+            isOverLimit ? "border-red-400 focus:border-red-500" : ""
+          }`}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => handleChange(e.target.value)}
+          maxLength={maxLength}
+        />
+        {(showCharCount || isNearLimit) && maxLength && (
+          <div
+            className={`absolute bottom-2 right-2 text-xs ${
+              isOverLimit
+                ? "text-red-500"
+                : isNearLimit
+                ? "text-yellow-600"
+                : "text-gray-400"
+            }`}
+          >
+            {currentLength}/{maxLength}
+          </div>
+        )}
+      </div>
     </InputGroupWrapper>
   );
 };
@@ -120,27 +188,55 @@ const BulletListTextareaGeneral = <T extends string>({
   placeholder,
   onChange,
   showBulletPoints = true,
+  maxLength,
+  showCharCount = false,
 }: InputProps<T, string[]> & { showBulletPoints?: boolean }) => {
   const html = getHTMLFromBulletListStrings(bulletListStrings);
+  const currentLength = bulletListStrings.join('\n').length;
+  const isNearLimit = maxLength && currentLength > maxLength * 0.8;
+  const isOverLimit = maxLength && currentLength > maxLength;
+
   return (
     <InputGroupWrapper label={label} className={wrapperClassName}>
-      <ContentEditable
-        contentEditable={true}
-        className={`${INPUT_CLASS_NAME} cursor-text [&>div]:list-item ${
-          showBulletPoints ? "pl-7" : "[&>div]:list-['']"
-        }`}
-        // Note: placeholder currently doesn't work
-        placeholder={placeholder}
-        onChange={(e) => {
-          if (e.type === "input") {
-            const { innerText } = e.currentTarget as HTMLDivElement;
-            const newBulletListStrings =
-              getBulletListStringsFromInnerText(innerText);
-            onChange(name, newBulletListStrings);
-          }
-        }}
-        html={html}
-      />
+      <div className="relative">
+        <ContentEditable
+          contentEditable={true}
+          className={`${INPUT_CLASS_NAME} cursor-text [&>div]:list-item ${
+            showBulletPoints ? "pl-7" : "[&>div]:list-['']"
+          } ${isOverLimit ? "border-red-400 focus:border-red-500" : ""}`}
+          // Note: placeholder currently doesn't work
+          placeholder={placeholder}
+          onChange={(e) => {
+            if (e.type === "input") {
+              const { innerText } = e.currentTarget as HTMLDivElement;
+              const newBulletListStrings =
+                getBulletListStringsFromInnerText(innerText);
+              
+              // Check length limit
+              const newLength = newBulletListStrings.join('\n').length;
+              if (maxLength && newLength > maxLength) {
+                return; // Don't allow input beyond max length
+              }
+              
+              onChange(name, newBulletListStrings);
+            }
+          }}
+          html={html}
+        />
+        {(showCharCount || isNearLimit) && maxLength && (
+          <div
+            className={`absolute bottom-2 right-2 text-xs ${
+              isOverLimit
+                ? "text-red-500"
+                : isNearLimit
+                ? "text-yellow-600"
+                : "text-gray-400"
+            }`}
+          >
+            {currentLength}/{maxLength}
+          </div>
+        )}
+      </div>
     </InputGroupWrapper>
   );
 };
@@ -196,6 +292,8 @@ const BulletListTextareaFallback = <T extends string>({
   placeholder,
   onChange,
   showBulletPoints = true,
+  maxLength,
+  showCharCount = false,
 }: InputProps<T, string[]> & { showBulletPoints?: boolean }) => {
   const textareaValue = getTextareaValueFromBulletListStrings(
     bulletListStrings,
@@ -209,6 +307,8 @@ const BulletListTextareaFallback = <T extends string>({
       name={name}
       value={textareaValue}
       placeholder={placeholder}
+      maxLength={maxLength}
+      showCharCount={showCharCount}
       onChange={(name, value) => {
         onChange(
           name,

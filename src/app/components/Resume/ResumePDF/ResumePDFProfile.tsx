@@ -11,6 +11,18 @@ import {
 } from "components/Resume/ResumePDF/common";
 import type { ResumeProfile } from "lib/redux/types";
 
+// Utility function to intelligently break text for PDF rendering
+const formatTextForPDF = (text: string): string => {
+  // Break very long words (>15 chars) with spaces to prevent overflow
+  return text.replace(/\S{16,}/g, (match) => {
+    const chunks = [];
+    for (let i = 0; i < match.length; i += 15) {
+      chunks.push(match.slice(i, i + 15));
+    }
+    return chunks.join(' ');
+  });
+};
+
 export const ResumePDFProfile = ({
   profile,
   themeColor,
@@ -32,7 +44,25 @@ export const ResumePDFProfile = ({
       >
         {name}
       </ResumePDFText>
-      {summary && <ResumePDFText>{summary}</ResumePDFText>}
+      {summary && (
+        <View style={{
+          marginTop: spacing["1"],
+          width: "100%",
+          maxWidth: "100%",
+        }}>
+          <ResumePDFText
+            style={{
+              lineHeight: "1.3",
+              textAlign: "justify",
+              width: "100%",
+              maxWidth: "100%",
+              flexShrink: 1,
+            }}
+          >
+            {formatTextForPDF(summary)}
+          </ResumePDFText>
+        </View>
+      )}
       <View
         style={{
           ...styles.flexRowBetween,

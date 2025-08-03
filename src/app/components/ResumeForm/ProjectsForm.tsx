@@ -44,6 +44,8 @@ export const ProjectsForm = () => {
               value={project}
               onChange={handleProjectChange}
               labelClassName="col-span-4"
+              maxLength={50}
+              showCharCount={true}
             />
             <Input
               name="date"
@@ -52,6 +54,8 @@ export const ProjectsForm = () => {
               value={date}
               onChange={handleProjectChange}
               labelClassName="col-span-2"
+              maxLength={25}
+              showCharCount={true}
             />
             <BulletListTextarea
               name="descriptions"
