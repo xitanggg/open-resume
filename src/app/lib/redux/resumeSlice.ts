@@ -39,6 +39,8 @@ export const initialProject: ResumeProject = {
   project: "",
   date: "",
   descriptions: [],
+  github: "",
+  demo: "",
 };
 
 export const initialFeaturedSkill: FeaturedSkill = { skill: "", rating: 4 };

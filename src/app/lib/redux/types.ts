@@ -26,6 +26,8 @@ export interface ResumeProject {
   project: string;
   date: string;
   descriptions: string[];
+  github?: string;
+  demo?: string;
 }
 
 export interface FeaturedSkill {
