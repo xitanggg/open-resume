@@ -6,6 +6,7 @@ import {
 } from "components/Resume/ResumePDF/common";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import type { ResumeWorkExperience } from "lib/redux/types";
+import { wrap } from "module";
 
 export const ResumePDFWorkExperience = ({
   heading,
@@ -34,6 +35,7 @@ export const ResumePDFWorkExperience = ({
                 marginTop: hideCompanyName
                   ? "-" + spacing["1"]
                   : spacing["1.5"],
+                gap: spacing["2"],
               }}
             >
               <ResumePDFText>{jobTitle}</ResumePDFText>

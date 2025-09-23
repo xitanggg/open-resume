@@ -62,6 +62,22 @@ export const ResumePDFText = ({
   style?: Style;
   children: React.ReactNode;
 }) => {
+
+  // Funtion to Break text by words.
+  const breakTextByWords = (text: string, wordsPerLine = 8) => {
+    if (!text) return "";
+
+    const words = text.split(" ");
+    const lines = [];
+
+    for (let i = 0; i < words.length; i += wordsPerLine) {
+      const lineWords = words.slice(i, i + wordsPerLine);
+      lines.push(lineWords.join(" "));
+    }
+
+    return lines.join("\n");
+  };
+  
   return (
     <Text
       style={{
@@ -71,7 +87,7 @@ export const ResumePDFText = ({
       }}
       debug={DEBUG_RESUME_PDF_FLAG}
     >
-      {children}
+      {breakTextByWords(children)}
     </Text>
   );
 };
