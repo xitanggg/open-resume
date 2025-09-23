@@ -117,6 +117,7 @@ export const ResumePDF = ({
             style={{
               ...styles.flexCol,
               padding: `${spacing[0]} ${spacing[20]}`,
+              
             }}
           >
             <ResumePDFProfile
