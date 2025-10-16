@@ -1,7 +1,7 @@
 import { Form, FormSection } from "components/ResumeForm/Form";
 import {
   Input,
-  BulletListTextarea,
+  Textarea,
 } from "components/ResumeForm/Form/InputGroup";
 import type { CreateHandleChangeArgsWithDescriptions } from "components/ResumeForm/types";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
@@ -21,18 +21,23 @@ export const WorkExperiencesForm = () => {
     <Form form="workExperiences" addButtonText="Add Job">
       {workExperiences.map(({ company, jobTitle, date, descriptions }, idx) => {
         const handleWorkExperienceChange = (
-          ...[
-            field,
-            value,
-          ]: CreateHandleChangeArgsWithDescriptions<ResumeWorkExperience>
+          field: keyof ResumeWorkExperience,
+          value: string | string[]
         ) => {
-          // TS doesn't support passing union type to single call signature
-          // https://github.com/microsoft/TypeScript/issues/54027
-          // any is used here as a workaround
           dispatch(changeWorkExperiences({ idx, field, value } as any));
         };
+
+        const handleDescriptionChange = (name: string, value: string) => {
+          // Split by newline to convert to string array
+          const descriptionsArray = value.split('\n');
+          handleWorkExperienceChange('descriptions', descriptionsArray);
+        };
+
         const showMoveUp = idx !== 0;
         const showMoveDown = idx !== workExperiences.length - 1;
+
+        // Join descriptions array back to string for textarea
+        const descriptionText = descriptions.join('\n');
 
         return (
           <FormSection
@@ -68,13 +73,13 @@ export const WorkExperiencesForm = () => {
               value={date}
               onChange={handleWorkExperienceChange}
             />
-            <BulletListTextarea
+            <Textarea
               label="Description"
               labelClassName="col-span-full"
               name="descriptions"
-              placeholder="Bullet points"
-              value={descriptions}
-              onChange={handleWorkExperienceChange}
+              placeholder="[Project Name]&#10;- Main achievement&#10;  - Sub detail"
+              value={descriptionText}
+              onChange={handleDescriptionChange}
             />
           </FormSection>
         );

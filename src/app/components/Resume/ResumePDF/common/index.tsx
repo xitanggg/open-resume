@@ -85,29 +85,45 @@ export const ResumePDFBulletList = ({
 }) => {
   return (
     <>
-      {items.map((item, idx) => (
-        <View style={{ ...styles.flexRow }} key={idx}>
-          {showBulletPoints && (
-            <ResumePDFText
-              style={{
-                paddingLeft: spacing["2"],
-                paddingRight: spacing["2"],
-                lineHeight: "1.3",
-              }}
-              bold={true}
-            >
-              {"•"}
-            </ResumePDFText>
-          )}
-          {/* A breaking change was introduced causing text layout to be wider than node's width
-              https://github.com/diegomura/react-pdf/issues/2182. flexGrow & flexBasis fixes it */}
-          <ResumePDFText
-            style={{ lineHeight: "1.3", flexGrow: 1, flexBasis: 0 }}
+      {items.map((item, idx) => {
+        // Check if item starts with tab character(s) for indentation
+        const tabMatch = item.match(/^(\t+)/);
+        const indentLevel = tabMatch ? tabMatch[1].length : 0;
+        const textContent = indentLevel > 0 ? item.substring(indentLevel) : item;
+        const additionalIndent = indentLevel * 12; // 12pt per indent level
+        const showBullet = showBulletPoints && indentLevel === 0; // Only show bullet if not indented
+
+        return (
+          <View
+            style={{
+              ...styles.flexRow,
+              paddingLeft: showBullet ? `${12 + additionalIndent}pt` : `${additionalIndent}pt`,
+              marginTop: idx > 0 ? spacing["1"] : "0"
+            }}
+            key={idx}
           >
-            {item}
-          </ResumePDFText>
-        </View>
-      ))}
+            {showBullet && (
+              <ResumePDFText
+                style={{
+                  position: "absolute",
+                  left: `${6 + additionalIndent}pt`,
+                  lineHeight: "1.3",
+                }}
+                bold={true}
+              >
+                {"•"}
+              </ResumePDFText>
+            )}
+            {/* A breaking change was introduced causing text layout to be wider than node's width
+                https://github.com/diegomura/react-pdf/issues/2182. flexGrow & flexBasis fixes it */}
+            <ResumePDFText
+              style={{ lineHeight: "1.3", flexGrow: 1, flexBasis: 0 }}
+            >
+              {textContent}
+            </ResumePDFText>
+          </View>
+        );
+      })}
     </>
   );
 };

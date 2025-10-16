@@ -5,7 +5,6 @@ import type {
   Resume,
   ResumeEducation,
   ResumeProfile,
-  ResumeProject,
   ResumeSkills,
   ResumeWorkExperience,
 } from "lib/redux/types";
@@ -35,12 +34,6 @@ export const initialEducation: ResumeEducation = {
   descriptions: [],
 };
 
-export const initialProject: ResumeProject = {
-  project: "",
-  date: "",
-  descriptions: [],
-};
-
 export const initialFeaturedSkill: FeaturedSkill = { skill: "", rating: 4 };
 export const initialFeaturedSkills: FeaturedSkill[] = Array(6).fill({
   ...initialFeaturedSkill,
@@ -58,7 +51,6 @@ export const initialResumeState: Resume = {
   profile: initialProfile,
   workExperiences: [initialWorkExperience],
   educations: [initialEducation],
-  projects: [initialProject],
   skills: initialSkills,
   custom: initialCustom,
 };
@@ -103,14 +95,6 @@ export const resumeSlice = createSlice({
       const education = draft.educations[idx];
       education[field] = value as any;
     },
-    changeProjects: (
-      draft,
-      action: PayloadAction<CreateChangeActionWithDescriptions<ResumeProject>>
-    ) => {
-      const { idx, field, value } = action.payload;
-      const project = draft.projects[idx];
-      project[field] = value as any;
-    },
     changeSkills: (
       draft,
       action: PayloadAction<
@@ -150,10 +134,6 @@ export const resumeSlice = createSlice({
         }
         case "educations": {
           draft.educations.push(structuredClone(initialEducation));
-          return draft;
-        }
-        case "projects": {
-          draft.projects.push(structuredClone(initialProject));
           return draft;
         }
       }
@@ -204,7 +184,6 @@ export const {
   changeProfile,
   changeWorkExperiences,
   changeEducations,
-  changeProjects,
   changeSkills,
   changeCustom,
   addSectionInForm,
@@ -218,7 +197,6 @@ export const selectProfile = (state: RootState) => state.resume.profile;
 export const selectWorkExperiences = (state: RootState) =>
   state.resume.workExperiences;
 export const selectEducations = (state: RootState) => state.resume.educations;
-export const selectProjects = (state: RootState) => state.resume.projects;
 export const selectSkills = (state: RootState) => state.resume.skills;
 export const selectCustom = (state: RootState) => state.resume.custom;
 
