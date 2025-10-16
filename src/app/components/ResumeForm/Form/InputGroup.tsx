@@ -67,15 +67,38 @@ export const Textarea = <T extends string>({
 }: InputProps<T, string>) => {
   const textareaRef = useAutosizeTextareaHeight({ value });
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Tab") {
+      e.preventDefault();
+
+      const textarea = e.currentTarget;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const currentValue = textarea.value;
+
+      // Insert tab character at cursor position
+      const newValue = currentValue.substring(0, start) + "\t" + currentValue.substring(end);
+
+      // Update the value
+      onChange(name, newValue);
+
+      // Set cursor position after the inserted tab
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd = start + 1;
+      }, 0);
+    }
+  };
+
   return (
     <InputGroupWrapper label={label} className={wrapperClassName}>
       <textarea
         ref={textareaRef}
         name={name}
-        className={`${INPUT_CLASS_NAME} resize-none overflow-hidden`}
+        className={`${INPUT_CLASS_NAME} resize-none overflow-hidden whitespace-pre-wrap`}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(name, e.target.value)}
+        onKeyDown={handleKeyDown}
       />
     </InputGroupWrapper>
   );
@@ -122,13 +145,75 @@ const BulletListTextareaGeneral = <T extends string>({
   showBulletPoints = true,
 }: InputProps<T, string[]> & { showBulletPoints?: boolean }) => {
   const html = getHTMLFromBulletListStrings(bulletListStrings);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Tab") {
+      e.preventDefault();
+
+      const selection = window.getSelection();
+      if (!selection || !selection.rangeCount) return;
+
+      const range = selection.getRangeAt(0);
+
+      // Get the current line/div element
+      let currentNode = range.startContainer;
+      if (currentNode.nodeType === Node.TEXT_NODE) {
+        currentNode = currentNode.parentNode as Node;
+      }
+
+      const listItem = (currentNode as HTMLElement).closest('div[contenteditable] > div');
+      if (!listItem) return;
+
+      const isShiftTab = e.shiftKey;
+      const textContent = listItem.textContent || "";
+
+      if (isShiftTab) {
+        // Remove indent
+        if (textContent.startsWith("\t")) {
+          // Remove one tab from the start
+          const newText = textContent.substring(1);
+          listItem.textContent = newText || "";
+          // Update class based on whether still indented
+          if (newText.startsWith("\t")) {
+            listItem.className = "no-bullet";
+          } else {
+            listItem.className = "bullet-item";
+          }
+        }
+      } else {
+        // Add indent - insert tab at the beginning
+        const newText = "\t" + textContent;
+        listItem.textContent = newText;
+        // Update class to no-bullet
+        listItem.className = "no-bullet";
+      }
+
+      // Trigger onChange event manually
+      const event = new Event('input', { bubbles: true });
+      (listItem.parentElement as HTMLElement)?.dispatchEvent(event);
+
+      // Set cursor at the end of the line
+      setTimeout(() => {
+        const newRange = document.createRange();
+        const textNode = listItem.firstChild;
+        if (textNode) {
+          const offset = textNode.textContent?.length || 0;
+          newRange.setStart(textNode, offset);
+          newRange.collapse(true);
+          selection.removeAllRanges();
+          selection.addRange(newRange);
+        }
+      }, 0);
+    }
+  };
+
   return (
     <InputGroupWrapper label={label} className={wrapperClassName}>
       <ContentEditable
         contentEditable={true}
-        className={`${INPUT_CLASS_NAME} cursor-text [&>div]:list-item ${
-          showBulletPoints ? "pl-7" : "[&>div]:list-['']"
-        }`}
+        className={`${INPUT_CLASS_NAME} cursor-text ${
+          showBulletPoints ? "pl-7 [&>div.bullet-item]:list-item [&>div.no-bullet]:list-none" : "[&>div]:list-['']"
+        } whitespace-pre-wrap`}
         // Note: placeholder currently doesn't work
         placeholder={placeholder}
         onChange={(e) => {
@@ -139,6 +224,7 @@ const BulletListTextareaGeneral = <T extends string>({
             onChange(name, newBulletListStrings);
           }
         }}
+        onKeyDown={handleKeyDown}
         html={html}
       />
     </InputGroupWrapper>
@@ -176,10 +262,15 @@ const getBulletListStringsFromInnerText = (innerText: string) => {
 const getHTMLFromBulletListStrings = (bulletListStrings: string[]) => {
   // If bulletListStrings is an empty array, make it an empty div
   if (bulletListStrings.length === 0) {
-    return "<div></div>";
+    return "<div class='bullet-item'></div>";
   }
 
-  return bulletListStrings.map((text) => `<div>${text}</div>`).join("");
+  return bulletListStrings.map((text) => {
+    // Check if text starts with tab - if so, don't show bullet point
+    const isIndented = text.startsWith("\t");
+    const className = isIndented ? "no-bullet" : "bullet-item";
+    return `<div class="${className}">${text}</div>`;
+  }).join("");
 };
 
 /**
@@ -201,21 +292,60 @@ const BulletListTextareaFallback = <T extends string>({
     bulletListStrings,
     showBulletPoints
   );
+  const textareaRef = useAutosizeTextareaHeight({ value: textareaValue });
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Tab") {
+      e.preventDefault();
+
+      const textarea = e.currentTarget;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const value = textarea.value;
+
+      if (e.shiftKey) {
+        // Shift+Tab: Remove indent
+        const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+        const lineText = value.substring(lineStart, start);
+
+        if (lineText.endsWith('\t')) {
+          const newValue = value.substring(0, start - 1) + value.substring(end);
+          textarea.value = newValue;
+          textarea.selectionStart = textarea.selectionEnd = start - 1;
+        } else if (lineText.endsWith('  ')) {
+          const newValue = value.substring(0, start - 2) + value.substring(end);
+          textarea.value = newValue;
+          textarea.selectionStart = textarea.selectionEnd = start - 2;
+        }
+      } else {
+        // Tab: Add indent
+        const newValue = value.substring(0, start) + '\t' + value.substring(end);
+        textarea.value = newValue;
+        textarea.selectionStart = textarea.selectionEnd = start + 1;
+      }
+
+      onChange(
+        name,
+        getBulletListStringsFromTextareaValue(textarea.value, showBulletPoints)
+      );
+    }
+  };
 
   return (
-    <Textarea
-      label={label}
-      labelClassName={labelClassName}
-      name={name}
-      value={textareaValue}
-      placeholder={placeholder}
-      onChange={(name, value) => {
-        onChange(
+    <InputGroupWrapper label={label} className={labelClassName}>
+      <textarea
+        ref={textareaRef}
+        name={name}
+        className={`${INPUT_CLASS_NAME} resize-none overflow-hidden whitespace-pre-wrap`}
+        placeholder={placeholder}
+        value={textareaValue}
+        onChange={(e) => onChange(
           name,
-          getBulletListStringsFromTextareaValue(value, showBulletPoints)
-        );
-      }}
-    />
+          getBulletListStringsFromTextareaValue(e.target.value, showBulletPoints)
+        )}
+        onKeyDown={handleKeyDown}
+      />
+    </InputGroupWrapper>
   );
 };
 
@@ -223,16 +353,16 @@ const getTextareaValueFromBulletListStrings = (
   bulletListStrings: string[],
   showBulletPoints: boolean
 ) => {
-  const prefix = showBulletPoints ? "• " : "";
-
   if (bulletListStrings.length === 0) {
-    return prefix;
+    return showBulletPoints ? "• " : "";
   }
 
   let value = "";
   for (let i = 0; i < bulletListStrings.length; i++) {
     const string = bulletListStrings[i];
     const isLastItem = i === bulletListStrings.length - 1;
+    // Don't add bullet point if line starts with tab (indented)
+    const prefix = (showBulletPoints && !string.startsWith("\t")) ? "• " : "";
     value += `${prefix}${string}${isLastItem ? "" : "\r\n"}`;
   }
   return value;

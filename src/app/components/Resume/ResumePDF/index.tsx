@@ -3,7 +3,6 @@ import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import { ResumePDFProfile } from "components/Resume/ResumePDF/ResumePDFProfile";
 import { ResumePDFWorkExperience } from "components/Resume/ResumePDF/ResumePDFWorkExperience";
 import { ResumePDFEducation } from "components/Resume/ResumePDF/ResumePDFEducation";
-import { ResumePDFProject } from "components/Resume/ResumePDF/ResumePDFProject";
 import { ResumePDFSkills } from "components/Resume/ResumePDF/ResumePDFSkills";
 import { ResumePDFCustom } from "components/Resume/ResumePDF/ResumePDFCustom";
 import { DEFAULT_FONT_COLOR } from "lib/redux/settingsSlice";
@@ -35,7 +34,7 @@ export const ResumePDF = ({
   settings: Settings;
   isPDF?: boolean;
 }) => {
-  const { profile, workExperiences, educations, projects, skills, custom } =
+  const { profile, workExperiences, educations, skills, custom } =
     resume;
   const { name } = profile;
   const {
@@ -65,13 +64,6 @@ export const ResumePDF = ({
         educations={educations}
         themeColor={themeColor}
         showBulletPoints={showBulletPoints["educations"]}
-      />
-    ),
-    projects: () => (
-      <ResumePDFProject
-        heading={formToHeading["projects"]}
-        projects={projects}
-        themeColor={themeColor}
       />
     ),
     skills: () => (
@@ -126,6 +118,7 @@ export const ResumePDF = ({
             />
             {showFormsOrder.map((form) => {
               const Component = formTypeToComponent[form];
+              if (!Component) return null;
               return <Component key={form} />;
             })}
           </View>

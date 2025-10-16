@@ -9,7 +9,6 @@ import { ShowForm, selectFormsOrder } from "lib/redux/settingsSlice";
 import { ProfileForm } from "components/ResumeForm/ProfileForm";
 import { WorkExperiencesForm } from "components/ResumeForm/WorkExperiencesForm";
 import { EducationsForm } from "components/ResumeForm/EducationsForm";
-import { ProjectsForm } from "components/ResumeForm/ProjectsForm";
 import { SkillsForm } from "components/ResumeForm/SkillsForm";
 import { ThemeForm } from "components/ResumeForm/ThemeForm";
 import { CustomForm } from "components/ResumeForm/CustomForm";
@@ -19,7 +18,6 @@ import { cx } from "lib/cx";
 const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
   workExperiences: WorkExperiencesForm,
   educations: EducationsForm,
-  projects: ProjectsForm,
   skills: SkillsForm,
   custom: CustomForm,
 };
@@ -44,6 +42,7 @@ export const ResumeForm = () => {
         <ProfileForm />
         {formsOrder.map((form) => {
           const Component = formTypeToComponent[form];
+          if (!Component) return null;
           return <Component key={form} />;
         })}
         <ThemeForm />

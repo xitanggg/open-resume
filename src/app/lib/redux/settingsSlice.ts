@@ -9,21 +9,18 @@ export interface Settings {
   formToShow: {
     workExperiences: boolean;
     educations: boolean;
-    projects: boolean;
     skills: boolean;
     custom: boolean;
   };
   formToHeading: {
     workExperiences: string;
     educations: string;
-    projects: string;
     skills: string;
     custom: string;
   };
   formsOrder: ShowForm[];
   showBulletPoints: {
     educations: boolean;
-    projects: boolean;
     skills: boolean;
     custom: boolean;
   };
@@ -49,21 +46,18 @@ export const initialSettings: Settings = {
   formToShow: {
     workExperiences: true,
     educations: true,
-    projects: true,
     skills: true,
     custom: false,
   },
   formToHeading: {
     workExperiences: "WORK EXPERIENCE",
     educations: "EDUCATION",
-    projects: "PROJECT",
     skills: "SKILLS",
     custom: "CUSTOM SECTION",
   },
-  formsOrder: ["workExperiences", "educations", "projects", "skills", "custom"],
+  formsOrder: ["workExperiences", "educations", "skills", "custom"],
   showBulletPoints: {
     educations: true,
-    projects: true,
     skills: true,
     custom: true,
   },

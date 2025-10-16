@@ -22,12 +22,6 @@ export interface ResumeEducation {
   descriptions: string[];
 }
 
-export interface ResumeProject {
-  project: string;
-  date: string;
-  descriptions: string[];
-}
-
 export interface FeaturedSkill {
   skill: string;
   rating: number;
@@ -46,7 +40,6 @@ export interface Resume {
   profile: ResumeProfile;
   workExperiences: ResumeWorkExperience[];
   educations: ResumeEducation[];
-  projects: ResumeProject[];
   skills: ResumeSkills;
   custom: ResumeCustom;
 }
