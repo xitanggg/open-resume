@@ -11,8 +11,8 @@ import type { Lines, TextItem } from "lib/parse-resume-from-pdf/types";
  * U+26AB   MEDIUM BLACK CIRCLE (⚫︎)
  * U+25CF   BLACK CIRCLE (●)
  * U+2B24   BLACK LARGE CIRCLE (⬤)
- * U+26AC   MEDIUM SMALL WHITE CIRCLE ⚬
- * U+25CB   WHITE CIRCLE ○
+ * U+26AC   MEDIUM SMALL WHITE CIRCLE ⚬
+ * U+25CB   WHITE CIRCLE ○
  */
 export const BULLET_POINTS = [
   "⋅",

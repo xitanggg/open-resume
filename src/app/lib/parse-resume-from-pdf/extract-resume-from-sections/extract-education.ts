@@ -69,11 +69,11 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
   const subsections = divideSectionIntoSubsections(lines);
   for (const subsectionLines of subsections) {
     const textItems = subsectionLines.flat();
-    const [school, schoolScores] = getTextWithHighestFeatureScore(
+    let [school, schoolScores] = getTextWithHighestFeatureScore(
       textItems,
       SCHOOL_FEATURE_SETS
     );
-    const [degree, degreeScores] = getTextWithHighestFeatureScore(
+    let [degree, degreeScores] = getTextWithHighestFeatureScore(
       textItems,
       DEGREE_FEATURE_SETS
     );
@@ -85,6 +85,21 @@ export const extractEducation = (sections: ResumeSectionToLines) => {
       textItems,
       DATE_FEATURE_SETS
     );
+
+    // Clean up school: remove location after comma (e.g., "Inha University, Incheon" -> "Inha University")
+    if (school.includes(",")) {
+      const commaIndex = school.indexOf(",");
+      school = school.substring(0, commaIndex).trim();
+    }
+
+    // Clean up degree: remove major/specialization after comma and remove GPA/date info
+    if (degree.includes(",")) {
+      const commaIndex = degree.indexOf(",");
+      degree = degree.substring(0, commaIndex).trim();
+    }
+    // Remove GPA and date information from degree if present
+    degree = degree.replace(/\s*-?\s*\d+\.\d+\s*GPA.*$/i, "").trim();
+    degree = degree.replace(/\s*(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d{4}).*$/i, "").trim();
 
     let descriptions: string[] = [];
     const descriptionsLineIdx = getDescriptionsLineIdx(subsectionLines);

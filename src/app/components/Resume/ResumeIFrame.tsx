@@ -87,7 +87,7 @@ const ResumeIframe = ({
       }}
     >
       {/* There is an outer div and an inner div here. The inner div sets the iframe width and uses transform scale to zoom in/out the resume iframe.
-        While zooming out or scaling down via transform, the element appears smaller but still occupies the same width/height. Therefore, we use the 
+        While zooming out or scaling down via transform, the element appears smaller but still occupies the same width/height. Therefore, we use the
         outer div to restrict the max width & height proportionally */}
       <div
         style={{

@@ -32,6 +32,9 @@ const hasParenthesis = (item: TextItem) => /\([0-9]+\)/.test(item.text);
 // Simple location regex that matches "<City>, <ST>"
 export const matchCityAndState = (item: TextItem) =>
   item.text.match(/[A-Z][a-zA-Z\s]+, [A-Z]{2}/);
+// Match international location format "<City>, <Country>" (e.g., "Gyunggido, South Korea")
+export const matchCityAndCountry = (item: TextItem) =>
+  item.text.match(/[A-Z][a-zA-Z\s]+, [A-Z][a-zA-Z\s]+/);
 
 // Url
 // Simple url regex that matches "xxx.xxx/xxx" (xxx = anything not space)
@@ -92,9 +95,10 @@ const PHONE_FEATURE_SETS: FeatureSet[] = [
   [hasLetter, -4], // Name, Email, Location, Url, Summary
 ];
 
-// Location -> match location regex <City>, <ST>
+// Location -> match location regex <City>, <ST> or <City>, <Country>
 const LOCATION_FEATURE_SETS: FeatureSet[] = [
   [matchCityAndState, 4, true],
+  [matchCityAndCountry, 3, true],
   [isBold, -1], // Name
   [hasAt, -4], // Email
   [hasParenthesis, -3], // Phone
@@ -120,6 +124,7 @@ const SUMMARY_FEATURE_SETS: FeatureSet[] = [
   [hasAt, -4], // Email
   [hasParenthesis, -3], // Phone
   [matchCityAndState, -4, false], // Location
+  [matchCityAndCountry, -3, false], // Location (International)
 ];
 
 export const extractProfile = (sections: ResumeSectionToLines) => {
