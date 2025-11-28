@@ -18,6 +18,8 @@ export const initialProfile: ResumeProfile = {
   phone: "",
   location: "",
   url: "",
+  portfolio: "",
+  github: "",
 };
 
 export const initialWorkExperience: ResumeWorkExperience = {
@@ -39,6 +41,7 @@ export const initialProject: ResumeProject = {
   project: "",
   date: "",
   descriptions: [],
+  url: "",
 };
 
 export const initialFeaturedSkill: FeaturedSkill = { skill: "", rating: 4 };

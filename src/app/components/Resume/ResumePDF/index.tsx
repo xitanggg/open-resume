@@ -72,6 +72,7 @@ export const ResumePDF = ({
         heading={formToHeading["projects"]}
         projects={projects}
         themeColor={themeColor}
+        isPDF={isPDF}
       />
     ),
     skills: () => (
@@ -116,7 +117,7 @@ export const ResumePDF = ({
           <View
             style={{
               ...styles.flexCol,
-              padding: `${spacing[0]} ${spacing[20]}`,
+              padding: `${spacing[0]} ${spacing[5]}`,
             }}
           >
             <ResumePDFProfile

@@ -1,8 +1,4 @@
 import { View } from "@react-pdf/renderer";
-import {
-  ResumePDFIcon,
-  type IconType,
-} from "components/Resume/ResumePDF/common/ResumePDFIcon";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import {
   ResumePDFLink,
@@ -20,8 +16,11 @@ export const ResumePDFProfile = ({
   themeColor: string;
   isPDF: boolean;
 }) => {
-  const { name, email, phone, url, summary, location } = profile;
-  const iconProps = { email, phone, location, url };
+  const { name, email, phone, url, summary, location, portfolio, github } = profile;
+
+  // 1. Filter out empty values so we can correctly place separators
+  const iconProps = { email, phone, location, url, portfolio, github };
+  const activeItems = Object.entries(iconProps).filter(([_, value]) => value);
 
   return (
     <ResumePDFSection style={{ marginTop: spacing["4"] }}>
@@ -35,24 +34,15 @@ export const ResumePDFProfile = ({
       {summary && <ResumePDFText>{summary}</ResumePDFText>}
       <View
         style={{
-          ...styles.flexRowBetween,
-          flexWrap: "wrap",
+          ...styles.flexRow,
           marginTop: spacing["0.5"],
+          alignItems: "center", // Align text and dots vertically
+          // Note: We removed 'gap' here to control spacing precisely via the separator margins below
         }}
       >
-        {Object.entries(iconProps).map(([key, value]) => {
-          if (!value) return null;
+        {activeItems.map(([key, value], index) => {
+          const shouldUseLinkWrapper = ["email", "url", "phone", "portfolio", "github"].includes(key);
 
-          let iconType = key as IconType;
-          if (key === "url") {
-            if (value.includes("github")) {
-              iconType = "url_github";
-            } else if (value.includes("linkedin")) {
-              iconType = "url_linkedin";
-            }
-          }
-
-          const shouldUseLinkWrapper = ["email", "url", "phone"].includes(key);
           const Wrapper = ({ children }: { children: React.ReactNode }) => {
             if (!shouldUseLinkWrapper) return <>{children}</>;
 
@@ -63,7 +53,7 @@ export const ResumePDFProfile = ({
                 break;
               }
               case "phone": {
-                src = `tel:${value.replace(/[^\d+]/g, "")}`; // Keep only + and digits
+                src = `tel:${value.replace(/[^\d+]/g, "")}`;
                 break;
               }
               default: {
@@ -84,10 +74,16 @@ export const ResumePDFProfile = ({
               style={{
                 ...styles.flexRow,
                 alignItems: "center",
-                gap: spacing["1"],
               }}
             >
-              <ResumePDFIcon type={iconType} isPDF={isPDF} />
+              {/* 2. Separator Logic: Add dot before item if it is NOT the first item */}
+              {index > 0 && (
+                <View style={{ marginLeft: spacing["2"], marginRight: spacing["2"] }}>
+                  <ResumePDFText>•</ResumePDFText>
+                </View>
+              )}
+
+              {/* 3. Render Value (No Icon) */}
               <Wrapper>
                 <ResumePDFText>{value}</ResumePDFText>
               </Wrapper>

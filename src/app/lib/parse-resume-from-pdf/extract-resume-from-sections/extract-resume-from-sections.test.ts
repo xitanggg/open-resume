@@ -3,13 +3,14 @@ import {
   matchEmail,
   matchPhone,
   matchUrl,
+  matchGithub,
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/extract-profile";
 import type { TextItem } from "lib/parse-resume-from-pdf/types";
 
 const makeTextItem = (text: string) =>
-  ({
-    text,
-  } as TextItem);
+({
+  text,
+} as TextItem);
 
 describe("extract-profile tests - ", () => {
   it("Name", () => {
@@ -35,5 +36,11 @@ describe("extract-profile tests - ", () => {
       "linkedin.com/in/open-resume"
     );
     expect(matchUrl(makeTextItem("hello@open-resume.org"))).toBeFalsy();
+  });
+
+  it("Github", () => {
+    expect(matchGithub(makeTextItem("  github.com/open-resume  "))![0]).toBe(
+      "github.com/open-resume"
+    );
   });
 });

@@ -44,6 +44,8 @@ const matchUrlWwwFallback = (item: TextItem) =>
   item.text.match(/www\.\S+\.\S+/);
 const hasSlash = (item: TextItem) => item.text.includes("/");
 
+export const matchGithub = (item: TextItem) => item.text.match(/github\.com\/\S+/);
+
 // Summary
 const has4OrMoreWords = (item: TextItem) => item.text.split(" ").length >= 4;
 
@@ -113,6 +115,17 @@ const URL_FEATURE_SETS: FeatureSet[] = [
   [has4OrMoreWords, -4], // Summary
 ];
 
+// Github -> match github regex
+const GITHUB_FEATURE_SETS: FeatureSet[] = [
+  [matchGithub, 4, true],
+  [(item) => !!matchUrl(item), 2],
+  [isBold, -1], // Name
+  [hasAt, -4], // Email
+  [hasParenthesis, -3], // Phone
+  [hasComma, -4], // Location
+  [has4OrMoreWords, -4], // Summary
+];
+
 // Summary -> has 4 or more words
 const SUMMARY_FEATURE_SETS: FeatureSet[] = [
   [has4OrMoreWords, 4],
@@ -146,6 +159,10 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
     textItems,
     URL_FEATURE_SETS
   );
+  const [github, githubScores] = getTextWithHighestFeatureScore(
+    textItems,
+    GITHUB_FEATURE_SETS
+  );
   const [summary, summaryScores] = getTextWithHighestFeatureScore(
     textItems,
     SUMMARY_FEATURE_SETS,
@@ -171,6 +188,8 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
       phone,
       location,
       url,
+      github,
+      portfolio: "",
       // Dedicated section takes higher precedence over profile summary
       summary: summarySection || objectiveSection || summary,
     },
@@ -181,6 +200,7 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
       phone: phoneScores,
       location: locationScores,
       url: urlScores,
+      github: githubScores,
       summary: summaryScores,
     },
   };

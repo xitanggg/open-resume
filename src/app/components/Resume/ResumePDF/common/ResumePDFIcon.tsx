@@ -24,6 +24,8 @@ const TYPE_TO_PATH_D = {
   url: URL_PATH_D,
   url_github: GITHUB_PATH_D,
   url_linkedin: LINKEDIN_PATH_D,
+  portfolio: URL_PATH_D,
+  github: GITHUB_PATH_D,
 } as const;
 
 export type IconType =
@@ -32,7 +34,9 @@ export type IconType =
   | "location"
   | "url"
   | "url_github"
-  | "url_linkedin";
+  | "url_linkedin"
+  | "portfolio"
+  | "github";
 
 export const ResumePDFIcon = ({
   type,

@@ -16,6 +16,8 @@ export const END_HOME_RESUME: Resume = {
     phone: "123-456-7890",
     location: "NYC, NY",
     url: "linkedin.com/in/john-doe",
+    portfolio: "portfolio.com",
+    github: "github.com/johndoe",
   },
   workExperiences: [
     {
@@ -68,6 +70,7 @@ export const END_HOME_RESUME: Resume = {
       descriptions: [
         "Created and launched a free resume builder web app that allows thousands of users to create professional resume easily and land their dream jobs",
       ],
+      url: "https://github.com",
     },
   ],
   skills: {
