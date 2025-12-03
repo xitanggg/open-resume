@@ -1,6 +1,6 @@
 "use client";
-import { useMemo } from "react";
-import Frame from "react-frame-component";
+import { useMemo, useState, useEffect, useCallback } from "react";
+import Frame, { FrameContextConsumer } from "react-frame-component";
 import {
   A4_HEIGHT_PX,
   A4_WIDTH_PX,
@@ -49,6 +49,37 @@ const getIframeInitialContent = (isA4: boolean) => {
 };
 
 /**
+ * Component to measure content height inside the iframe
+ */
+const ContentMeasurer = ({ 
+  onHeightChange, 
+  children 
+}: { 
+  onHeightChange: (height: number) => void;
+  children: React.ReactNode;
+}) => {
+  return (
+    <FrameContextConsumer>
+      {({ document }) => {
+        // Set up a mutation observer to detect content changes
+        if (document?.body) {
+          const checkHeight = () => {
+            const height = document.body.scrollHeight;
+            onHeightChange(height);
+          };
+          
+          // Check height on next tick and periodically
+          setTimeout(checkHeight, 50);
+          setTimeout(checkHeight, 200);
+          setTimeout(checkHeight, 500);
+        }
+        return children;
+      }}
+    </FrameContextConsumer>
+  );
+};
+
+/**
  * Iframe is used here for style isolation, since react pdf uses pt unit.
  * It creates a sandbox document body that uses letter/A4 pt size as width.
  */
@@ -64,6 +95,16 @@ const ResumeIframe = ({
   enablePDFViewer?: boolean;
 }) => {
   const isA4 = documentSize === "A4";
+  const width = isA4 ? A4_WIDTH_PX : LETTER_WIDTH_PX;
+  const height = isA4 ? A4_HEIGHT_PX : LETTER_HEIGHT_PX;
+  
+  const [contentHeight, setContentHeight] = useState(height);
+  const numPages = Math.max(1, Math.ceil(contentHeight / height));
+
+  const handleHeightChange = useCallback((newHeight: number) => {
+    setContentHeight(prev => Math.max(prev, newHeight));
+  }, []);
+
   const iframeInitialContent = useMemo(
     () => getIframeInitialContent(isA4),
     [isA4]
@@ -76,35 +117,55 @@ const ResumeIframe = ({
       </DynamicPDFViewer>
     );
   }
-  const width = isA4 ? A4_WIDTH_PX : LETTER_WIDTH_PX;
-  const height = isA4 ? A4_HEIGHT_PX : LETTER_HEIGHT_PX;
+
+  // Calculate total height needed for all pages plus gaps
+  const pageGap = 16; // 16px gap between pages
+  const totalHeight = (numPages * height + (numPages - 1) * pageGap) * scale;
 
   return (
-    <div
-      style={{
-        maxWidth: `${width * scale}px`,
-        maxHeight: `${height * scale}px`,
-      }}
-    >
-      {/* There is an outer div and an inner div here. The inner div sets the iframe width and uses transform scale to zoom in/out the resume iframe.
-        While zooming out or scaling down via transform, the element appears smaller but still occupies the same width/height. Therefore, we use the 
-        outer div to restrict the max width & height proportionally */}
-      <div
-        style={{
-          width: `${width}px`,
-          height: `${height}px`,
-          transform: `scale(${scale})`,
-        }}
-        className={`origin-top-left bg-white shadow-lg`}
+    <div className="h-full overflow-auto bg-gray-200">
+      <div 
+        className="flex flex-col items-center py-4"
+        style={{ minHeight: `${totalHeight + 32}px` }}
       >
-        <Frame
-          style={{ width: "100%", height: "100%" }}
-          initialContent={iframeInitialContent}
-          // key is used to force component to re-mount when document size changes
-          key={isA4 ? "A4" : "LETTER"}
-        >
-          {children}
-        </Frame>
+        {Array.from({ length: numPages }, (_, pageIndex) => (
+          <div
+            key={pageIndex}
+            style={{
+              width: `${width * scale}px`,
+              height: `${height * scale}px`,
+              marginBottom: pageIndex < numPages - 1 ? `${pageGap}px` : 0,
+              flexShrink: 0,
+            }}
+          >
+            <div
+              style={{
+                width: `${width}px`,
+                height: `${height}px`,
+                transform: `scale(${scale})`,
+                transformOrigin: "top left",
+                overflow: "hidden",
+              }}
+              className="bg-white shadow-lg rounded-sm"
+            >
+              <div style={{ marginTop: `-${pageIndex * height}px` }}>
+                <Frame
+                  style={{ 
+                    width: "100%", 
+                    height: `${height * numPages}px`,
+                    border: "none",
+                  }}
+                  initialContent={iframeInitialContent}
+                  key={`${isA4 ? "A4" : "LETTER"}-page-${pageIndex}-${numPages}`}
+                >
+                  <ContentMeasurer onHeightChange={handleHeightChange}>
+                    {children}
+                  </ContentMeasurer>
+                </Frame>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
