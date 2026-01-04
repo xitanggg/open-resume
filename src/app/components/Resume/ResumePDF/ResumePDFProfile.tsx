@@ -20,8 +20,8 @@ export const ResumePDFProfile = ({
   themeColor: string;
   isPDF: boolean;
 }) => {
-  const { name, email, phone, url, summary, location } = profile;
-  const iconProps = { email, phone, location, url };
+  const { name, email, phone, linkedIn, summary, location, github, portfolio } = profile;
+  const iconProps = { email, phone, location, linkedIn, github, portfolio};
 
   return (
     <ResumePDFSection style={{ marginTop: spacing["4"] }}>
@@ -35,7 +35,7 @@ export const ResumePDFProfile = ({
       {summary && <ResumePDFText>{summary}</ResumePDFText>}
       <View
         style={{
-          ...styles.flexRowBetween,
+          ...styles.flexRow,
           flexWrap: "wrap",
           marginTop: spacing["0.5"],
         }}
@@ -85,6 +85,8 @@ export const ResumePDFProfile = ({
                 ...styles.flexRow,
                 alignItems: "center",
                 gap: spacing["1"],
+                width: "33.33%",
+                marginBottom: spacing["2"],
               }}
             >
               <ResumePDFIcon type={iconType} isPDF={isPDF} />

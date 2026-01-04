@@ -7,7 +7,7 @@ import { ResumeProfile } from "lib/redux/types";
 export const ProfileForm = () => {
   const profile = useAppSelector(selectProfile);
   const dispatch = useAppDispatch();
-  const { name, email, phone, url, summary, location } = profile;
+  const { name, email, phone, linkedIn, summary, location, github, portfolio} = profile;
 
   const handleProfileChange = (field: keyof ResumeProfile, value: string) => {
     dispatch(changeProfile({ field, value }));
@@ -15,7 +15,7 @@ export const ProfileForm = () => {
 
   return (
     <BaseForm>
-      <div className="grid grid-cols-6 gap-3">
+      <div className="grid grid-cols-2">
         <Input
           label="Name"
           labelClassName="col-span-full"
@@ -49,11 +49,25 @@ export const ProfileForm = () => {
           onChange={handleProfileChange}
         />
         <Input
-          label="Website"
+          label="Linked In"
           labelClassName="col-span-4"
-          name="url"
-          placeholder="linkedin.com/in/khanacademy"
-          value={url}
+          name="linkedIn"
+          placeholder="pontusberg.com"
+          value={linkedIn}
+          onChange={handleProfileChange}
+        />
+        <Input 
+          label="GitHub"
+          name="github"
+          placeholder="github.com/pontusBerg"
+          value={github}
+          onChange={handleProfileChange}
+        />
+        <Input 
+          label="Portfolio"
+          name="portfolio"
+          placeholder="pontusberg.com"
+          value={portfolio}
           onChange={handleProfileChange}
         />
         <Input

@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { ShowForm } from "lib/redux/settingsSlice";
 import type { RootState } from "lib/redux/store";
 import type {
   FeaturedSkill,
@@ -9,7 +10,6 @@ import type {
   ResumeSkills,
   ResumeWorkExperience,
 } from "lib/redux/types";
-import type { ShowForm } from "lib/redux/settingsSlice";
 
 export const initialProfile: ResumeProfile = {
   name: "",
@@ -17,7 +17,9 @@ export const initialProfile: ResumeProfile = {
   email: "",
   phone: "",
   location: "",
-  url: "",
+  linkedIn: "",
+  github: "",
+  portfolio: ""
 };
 
 export const initialWorkExperience: ResumeWorkExperience = {
@@ -67,12 +69,12 @@ export const initialResumeState: Resume = {
 export type CreateChangeActionWithDescriptions<T> = {
   idx: number;
 } & (
-  | {
+    | {
       field: Exclude<keyof T, "descriptions">;
       value: string;
     }
-  | { field: "descriptions"; value: string[] }
-);
+    | { field: "descriptions"; value: string[] }
+  );
 
 export const resumeSlice = createSlice({
   name: "resume",
@@ -116,11 +118,11 @@ export const resumeSlice = createSlice({
       action: PayloadAction<
         | { field: "descriptions"; value: string[] }
         | {
-            field: "featuredSkills";
-            idx: number;
-            skill: string;
-            rating: number;
-          }
+          field: "featuredSkills";
+          idx: number;
+          skill: string;
+          rating: number;
+        }
       >
     ) => {
       const { field } = action.payload;

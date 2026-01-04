@@ -2,8 +2,10 @@ export interface ResumeProfile {
   name: string;
   email: string;
   phone: string;
-  url: string;
+  linkedIn: string;
   summary: string;
+  portfolio: string;
+  github: string;
   location: string;
 }
 
