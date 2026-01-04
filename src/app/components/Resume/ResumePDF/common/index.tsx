@@ -131,9 +131,10 @@ export const ResumePDFLink = ({
   return (
     <a
       href={src}
-      style={{ textDecoration: "none" }}
+      style={{ textDecoration: "none", lineHeight: "1.3" }}
       target="_blank"
       rel="noreferrer"
+
     >
       {children}
     </a>

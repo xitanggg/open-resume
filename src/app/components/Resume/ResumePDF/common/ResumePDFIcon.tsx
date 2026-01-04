@@ -1,5 +1,6 @@
 import { Svg, Path } from "@react-pdf/renderer";
 import { styles } from "components/Resume/ResumePDF/styles";
+import { Resume, ResumeProfile } from "lib/redux/types";
 
 /**
  * Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License
@@ -18,15 +19,17 @@ const GITHUB_PATH_D =
 const LINKEDIN_PATH_D =
   "M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z";
 const PORTFOLIO_PATH_D =
-  "M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z";
+  "M0 96C0 60.7 28.7 32 64 32H196.1c19.1 0 37.4 7.6 50.9 21.1L289.9 96H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96z";
 
 
-  const TYPE_TO_PATH_D = {
+
+  export type ResumeProfileUrls = Omit<ResumeProfile, "name" | "summary">;
+
+  const TYPE_TO_PATH_D: Record<keyof ResumeProfileUrls, string> = {
   email: EMAIL_PATH_D,
   phone: PHONE_PATH_D,
   location: LOCATION_PATH_D,
-  url: URL_PATH_D,
-  url_github: GITHUB_PATH_D,
+  github: GITHUB_PATH_D,
   linkedIn: LINKEDIN_PATH_D,
   portfolio: PORTFOLIO_PATH_D,
 } as const;
@@ -43,7 +46,7 @@ export const ResumePDFIcon = ({
   type,
   isPDF,
 }: {
-  type: IconType;
+  type: keyof ResumeProfileUrls;
   isPDF: boolean;
 }) => {
   const pathD = TYPE_TO_PATH_D[type];

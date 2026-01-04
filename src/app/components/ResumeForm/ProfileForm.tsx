@@ -15,7 +15,7 @@ export const ProfileForm = () => {
 
   return (
     <BaseForm>
-      <div className="grid grid-cols-2">
+      <div className="">
         <Input
           label="Name"
           labelClassName="col-span-full"
@@ -32,9 +32,9 @@ export const ProfileForm = () => {
           value={summary}
           onChange={handleProfileChange}
         />
+        <div className="grid grid-cols-2 gap-4 mt-4">
         <Input
           label="Email"
-          labelClassName="col-span-4"
           name="email"
           placeholder="hello@khanacademy.org"
           value={email}
@@ -42,22 +42,20 @@ export const ProfileForm = () => {
         />
         <Input
           label="Phone"
-          labelClassName="col-span-2"
           name="phone"
           placeholder="(123)456-7890"
           value={phone}
           onChange={handleProfileChange}
         />
         <Input
-          label="Linked In"
-          labelClassName="col-span-4"
+          label="LinkedIn Username"
           name="linkedIn"
           placeholder="pontusberg.com"
           value={linkedIn}
           onChange={handleProfileChange}
         />
         <Input 
-          label="GitHub"
+          label="GitHub Username"
           name="github"
           placeholder="github.com/pontusBerg"
           value={github}
@@ -72,12 +70,12 @@ export const ProfileForm = () => {
         />
         <Input
           label="Location"
-          labelClassName="col-span-2"
           name="location"
           placeholder="NYC, NY"
           value={location}
           onChange={handleProfileChange}
         />
+        </div>
       </div>
     </BaseForm>
   );
