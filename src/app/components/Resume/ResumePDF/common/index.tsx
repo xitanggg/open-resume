@@ -1,5 +1,4 @@
 import { Link, Text, View } from "@react-pdf/renderer";
-import type { Style } from "@react-pdf/types";
 import { spacing, styles } from "components/Resume/ResumePDF/styles";
 import { DEBUG_RESUME_PDF_FLAG } from "lib/constants";
 import { DEFAULT_FONT_COLOR } from "lib/redux/settingsSlice";
@@ -12,7 +11,7 @@ export const ResumePDFSection = ({
 }: {
   themeColor?: string;
   heading?: string;
-  style?: Style;
+  style?: React.ComponentProps<typeof View>["style"];
   children: React.ReactNode;
 }) => (
   <View
@@ -20,7 +19,6 @@ export const ResumePDFSection = ({
       ...styles.flexCol,
       gap: spacing["2"],
       marginTop: spacing["5"],
-      ...style,
     }}
   >
     {heading && (
@@ -59,7 +57,7 @@ export const ResumePDFText = ({
 }: {
   bold?: boolean;
   themeColor?: string;
-  style?: Style;
+  style?: React.ComponentProps<typeof Text>["style"];
   children: React.ReactNode;
 }) => {
   return (
@@ -150,7 +148,7 @@ export const ResumeFeaturedSkill = ({
   skill: string;
   rating: number;
   themeColor: string;
-  style?: Style;
+  style?: React.ComponentProps<typeof View>["style"];
 }) => {
   const numCircles = 5;
 
