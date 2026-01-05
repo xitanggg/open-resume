@@ -30,7 +30,12 @@ export const extractResumeFromSections = (
   const { skills } = extractSkills(sections);
 
   return {
-    profile,
+    profile: {
+      ...profile,
+      github: "",
+      portfolio: "",
+      linkedIn: ""
+    },
     educations,
     workExperiences,
     projects,
