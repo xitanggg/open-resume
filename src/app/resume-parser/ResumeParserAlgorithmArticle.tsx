@@ -99,6 +99,7 @@ export const ResumeParserAlgorithmArticle = ({
       profile.phone,
       <Scores key={"Phone"} scores={profileScores.phone} />,
     ],
+    
   ];
 
   return (

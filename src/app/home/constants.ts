@@ -15,7 +15,9 @@ export const END_HOME_RESUME: Resume = {
     email: "hello@openresume.com",
     phone: "123-456-7890",
     location: "NYC, NY",
-    url: "linkedin.com/in/john-doe",
+    github: "https://github.com/john-doe",
+    linkedIn: "https://www.linkedin.com/in/john-doe",
+    portfolio: "https://john-doe.com",
   },
   workExperiences: [
     {

@@ -20,8 +20,11 @@ const TableRow = ({
   label: string;
   value: string | string[];
   className?: string | false;
-}) => (
-  <tr className={cx("divide-x", className)}>
+}) => {
+
+
+
+  return <tr className={cx("divide-x", className)}>
     <th className="px-3 py-2 font-medium" scope="row">
       {label}
     </th>
@@ -36,7 +39,7 @@ const TableRow = ({
           ))}
     </td>
   </tr>
-);
+};
 
 export const ResumeTable = ({ resume }: { resume: Resume }) => {
   const educations =
@@ -64,7 +67,6 @@ export const ResumeTable = ({ resume }: { resume: Resume }) => {
         <TableRow label="Email" value={resume.profile.email} />
         <TableRow label="Phone" value={resume.profile.phone} />
         <TableRow label="Location" value={resume.profile.location} />
-        <TableRow label="Link" value={resume.profile.url} />
         <TableRow label="Summary" value={resume.profile.summary} />
         <TableRowHeader>Education</TableRowHeader>
         {educations.map((education, idx) => (
