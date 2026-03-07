@@ -21,6 +21,7 @@ export const Resume = () => {
   const [scale, setScale] = useState(0.8);
   const resume = useAppSelector(selectResume);
   const settings = useAppSelector(selectSettings);
+  // Ensure document is re-created when any settings change
   const document = useMemo(
     () => <ResumePDF resume={resume} settings={settings} isPDF={true} />,
     [resume, settings]
@@ -54,6 +55,7 @@ export const Resume = () => {
             documentSize={settings.documentSize}
             document={document}
             fileName={resume.profile.name + " - Resume"}
+            key={settings.themeColor}
           />
         </div>
         <ResumeControlBarBorder />

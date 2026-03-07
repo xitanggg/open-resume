@@ -13,6 +13,7 @@ export const END_HOME_RESUME: Resume = {
     summary:
       "Software engineer obsessed with building exceptional products that people love",
     email: "hello@openresume.com",
+    github: "github.com/john-doe",
     phone: "123-456-7890",
     location: "NYC, NY",
     url: "linkedin.com/in/john-doe",
@@ -65,6 +66,7 @@ export const END_HOME_RESUME: Resume = {
     {
       project: "OpenResume",
       date: "Spring 2023",
+      url: "openresume.com",
       descriptions: [
         "Created and launched a free resume builder web app that allows thousands of users to create professional resume easily and land their dream jobs",
       ],

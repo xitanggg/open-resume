@@ -11,4 +11,11 @@ export const THEME_COLORS = [
   "#0ea5e9", // Sky-500
   "#818cf8", // Indigo-400
   "#6366f1", // Indigo-500
+  "#1e293b", // Slate-800 (Dark Gray)
+  "#b45309", // Orange-900 (Dark Orange, replaces #0f172a)
+  "#1e40af", // Blue-900 (Dark Blue)
+  "#581c87", // Purple-900 (Dark Purple)
+  "#14532d", // Green-900 (Dark Green)
+  "#991b1b", // Red-900 (Dark Red)
+  "#134e4a", // Teal-900 (Dark Teal)
 ];

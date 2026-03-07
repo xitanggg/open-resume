@@ -27,14 +27,17 @@ export interface Settings {
     skills: boolean;
     custom: boolean;
   };
+  contactOrder: string[];
+  skillsDisplayMode: "bullet" | "comma";
 }
 
 export type ShowForm = keyof Settings["formToShow"];
 export type FormWithBulletPoints = keyof Settings["showBulletPoints"];
-export type GeneralSetting = Exclude<
-  keyof Settings,
-  "formToShow" | "formToHeading" | "formsOrder" | "showBulletPoints"
->;
+export type GeneralSetting =
+  | "themeColor"
+  | "fontFamily"
+  | "fontSize"
+  | "documentSize";
 
 export const DEFAULT_THEME_COLOR = "#38bdf8"; // sky-400
 export const DEFAULT_FONT_FAMILY = "Roboto";
@@ -67,6 +70,8 @@ export const initialSettings: Settings = {
     skills: true,
     custom: true,
   },
+  contactOrder: ["email", "phone", "url", "github", "location"],
+  skillsDisplayMode: "bullet" as "bullet" | "comma",
 };
 
 export const settingsSlice = createSlice({
@@ -121,6 +126,25 @@ export const settingsSlice = createSlice({
       const { field, value } = action.payload;
       draft["showBulletPoints"][field] = value;
     },
+    changeContactOrder: (
+      draft,
+      action: PayloadAction<{ field: string; direction: "up" | "down" }>
+    ) => {
+      const { field, direction } = action.payload;
+      const idx = draft.contactOrder.indexOf(field);
+      if (idx === -1) return;
+      const newIdx = direction === "up" ? idx - 1 : idx + 1;
+      if (newIdx < 0 || newIdx >= draft.contactOrder.length) return;
+      const temp = draft.contactOrder[idx];
+      draft.contactOrder[idx] = draft.contactOrder[newIdx];
+      draft.contactOrder[newIdx] = temp;
+    },
+    changeSkillsDisplayMode: (
+      draft,
+      action: PayloadAction<"bullet" | "comma">
+    ) => {
+      draft.skillsDisplayMode = action.payload;
+    },
     setSettings: (draft, action: PayloadAction<Settings>) => {
       return action.payload;
     },
@@ -133,6 +157,8 @@ export const {
   changeFormHeading,
   changeFormOrder,
   changeShowBulletPoints,
+  changeContactOrder,
+  changeSkillsDisplayMode,
   setSettings,
 } = settingsSlice.actions;
 
@@ -157,5 +183,10 @@ export const selectIsLastForm = (form: ShowForm) => (state: RootState) =>
 export const selectShowBulletPoints =
   (form: FormWithBulletPoints) => (state: RootState) =>
     state.settings.showBulletPoints[form];
+
+export const selectContactOrder = (state: RootState) =>
+  state.settings.contactOrder;
+export const selectSkillsDisplayMode = (state: RootState) =>
+  state.settings.skillsDisplayMode;
 
 export default settingsSlice.reducer;

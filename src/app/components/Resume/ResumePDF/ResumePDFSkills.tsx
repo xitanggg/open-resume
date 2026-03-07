@@ -3,6 +3,7 @@ import {
   ResumePDFSection,
   ResumePDFBulletList,
   ResumeFeaturedSkill,
+  ResumePDFText,
 } from "components/Resume/ResumePDF/common";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import type { ResumeSkills } from "lib/redux/types";
@@ -12,11 +13,13 @@ export const ResumePDFSkills = ({
   skills,
   themeColor,
   showBulletPoints,
+  skillsDisplayMode = "bullet",
 }: {
   heading: string;
   skills: ResumeSkills;
   themeColor: string;
   showBulletPoints: boolean;
+  skillsDisplayMode?: "bullet" | "comma";
 }) => {
   const { descriptions, featuredSkills } = skills;
   const featuredSkillsWithText = featuredSkills.filter((item) => item.skill);
@@ -55,11 +58,38 @@ export const ResumePDFSkills = ({
           ))}
         </View>
       )}
-      <View style={{ ...styles.flexCol }}>
-        <ResumePDFBulletList
-          items={descriptions}
-          showBulletPoints={showBulletPoints}
-        />
+      <View
+        style={
+          skillsDisplayMode === "comma"
+            ? { flexDirection: "row", flexWrap: "wrap", gap: spacing["1.5"], marginTop: spacing["0.5"] }
+            : { ...styles.flexCol }
+        }
+      >
+        {skillsDisplayMode === "comma" ? (
+          descriptions.map((skill, idx) => (
+            <View
+              key={idx}
+              style={{
+                border: `1pt solid ${themeColor}`,
+                borderRadius: "3pt",
+                paddingTop: "2pt",
+                paddingBottom: "2pt",
+                paddingLeft: spacing["2"],
+                paddingRight: spacing["2"],
+                backgroundColor: themeColor + "20", // 20 = ~12% opacity hex
+              }}
+            >
+              <ResumePDFText style={{ lineHeight: "1.3" }}>
+                {skill}
+              </ResumePDFText>
+            </View>
+          ))
+        ) : (
+          <ResumePDFBulletList
+            items={descriptions}
+            showBulletPoints={showBulletPoints}
+          />
+        )}
       </View>
     </ResumePDFSection>
   );

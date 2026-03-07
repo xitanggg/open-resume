@@ -36,6 +36,8 @@ export const matchCityAndState = (item: TextItem) =>
 // Url
 // Simple url regex that matches "xxx.xxx/xxx" (xxx = anything not space)
 export const matchUrl = (item: TextItem) => item.text.match(/\S+\.[a-z]+\/\S+/);
+export const matchGithubUrl = (item: TextItem) =>
+  item.text.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/\S+/i);
 // Match https://xxx.xxx where s is optional
 const matchUrlHttpFallback = (item: TextItem) =>
   item.text.match(/https?:\/\/\S+\.\S+/);
@@ -146,6 +148,9 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
     textItems,
     URL_FEATURE_SETS
   );
+  const github =
+    textItems.find((item) => matchGithubUrl(item))?.text ||
+    (url.toLowerCase().includes("github.com") ? url : "");
   const [summary, summaryScores] = getTextWithHighestFeatureScore(
     textItems,
     SUMMARY_FEATURE_SETS,
@@ -171,6 +176,7 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
       phone,
       location,
       url,
+      github,
       // Dedicated section takes higher precedence over profile summary
       summary: summarySection || objectiveSection || summary,
     },
