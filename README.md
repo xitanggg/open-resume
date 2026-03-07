@@ -60,12 +60,27 @@ OpenResume is created with the NextJS web framework and follows its project stru
 2. Change the directory `cd open-resume`
 3. Install the dependency `npm install`
 4. Start a development server `npm run dev`
-5. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see forked OpenResume live
+5. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see OpenResume live
 
 ### Method 2: Docker
 
-1. Download the repo `git clone https://github.com/ADITYANAIR01/open-resume.git`
+1. Download the repo `git clone https://github.com/ADITYANAIR01/open-resume.git/`
 2. Change the directory `cd open-resume`
 3. Build the container `docker build -t open-resume .`
 4. Start the container `docker run --name open-resume -p 3000:3000 open-resume`
 5. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see OpenResume live
+
+## 🔄 Synced Forked Improvements Done
+
+The following updates were synced from the latest fork improvements:
+
+- Reorderable contact info section with a GitHub field
+- Objective moved below contact info in form and PDF
+- Clickable project link field (embedded in project name)
+- Comma-separated skills mode with pill UI and left/right reordering
+- Comma-separated skills rendered as pill boxes in PDF and live preview
+- Skill pill color now matches theme and updates dynamically
+- Added 6 new dark theme colors to the theme picker
+- Fixed `react-contenteditable` cursor jump bug in bullet textarea
+- Fixed `ResumePDFText` import bug in skills PDF
+
