@@ -22,12 +22,12 @@ export const useRegisterReactPDFFont = () => {
           },
           {
             src: `fonts/${fontFamily}-Italic.ttf`,
-            fontStyle: "italics",
+            fontStyle: "italic",
           },
           {
             src: `fonts/${fontFamily}-BoldItalic.ttf`,
             fontWeight: "bold",
-            fontStyle: "italics",
+            fontStyle: "italic",
           },
         ],
       });
