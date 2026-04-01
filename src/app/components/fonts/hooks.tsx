@@ -20,6 +20,15 @@ export const useRegisterReactPDFFont = () => {
             src: `fonts/${fontFamily}-Bold.ttf`,
             fontWeight: "bold",
           },
+          {
+            src: `fonts/${fontFamily}-Italic.ttf`,
+            fontStyle: "italics",
+          },
+          {
+            src: `fonts/${fontFamily}-BoldItalic.ttf`,
+            fontWeight: "bold",
+            fontStyle: "italics",
+          },
         ],
       });
     });
