@@ -1,8 +1,26 @@
 import { Text, View, Link } from "@react-pdf/renderer";
 import type { Style } from "@react-pdf/types";
+import ReactMarkdown from "react-markdown";
+import type { Components } from "react-markdown";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import { DEBUG_RESUME_PDF_FLAG } from "lib/constants";
 import { DEFAULT_FONT_COLOR } from "lib/redux/settingsSlice";
+
+const markdownComponents: Components = {
+  p: ({ children }) => <Text>{children}</Text>,
+  strong: ({ children }) => (
+    <Text style={{ fontWeight: "bold" }}>{children}</Text>
+  ),
+  em: ({ children }) => (
+    <Text style={{ fontStyle: "italic" }}>{children}</Text>
+  ),
+  a: ({ href, children }) =>
+    href ? <Link src={href}>{children}</Link> : <Text>{children}</Text>,
+  br: () => <Text>{"\n"}</Text>,
+  code: ({ children }) => (
+    <Text style={{ fontFamily: "Courier" }}>{children}</Text>
+  ),
+};
 
 export const ResumePDFSection = ({
   themeColor,
@@ -104,7 +122,9 @@ export const ResumePDFBulletList = ({
           <ResumePDFText
             style={{ lineHeight: "1.3", flexGrow: 1, flexBasis: 0 }}
           >
-            {item}
+            <ReactMarkdown components={markdownComponents}>
+              {item}
+            </ReactMarkdown>
           </ResumePDFText>
         </View>
       ))}
