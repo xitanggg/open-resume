@@ -57,6 +57,7 @@ export const ResumePDF = ({
         heading={formToHeading["workExperiences"]}
         workExperiences={workExperiences}
         themeColor={themeColor}
+        isPDF={isPDF}
       />
     ),
     educations: () => (
@@ -65,6 +66,7 @@ export const ResumePDF = ({
         educations={educations}
         themeColor={themeColor}
         showBulletPoints={showBulletPoints["educations"]}
+        isPDF={isPDF}
       />
     ),
     projects: () => (
@@ -72,6 +74,7 @@ export const ResumePDF = ({
         heading={formToHeading["projects"]}
         projects={projects}
         themeColor={themeColor}
+        isPDF={isPDF}
       />
     ),
     skills: () => (
@@ -80,6 +83,7 @@ export const ResumePDF = ({
         skills={skills}
         themeColor={themeColor}
         showBulletPoints={showBulletPoints["skills"]}
+        isPDF={isPDF}
       />
     ),
     custom: () => (
@@ -88,6 +92,7 @@ export const ResumePDF = ({
         custom={custom}
         themeColor={themeColor}
         showBulletPoints={showBulletPoints["custom"]}
+        isPDF={isPDF}
       />
     ),
   };

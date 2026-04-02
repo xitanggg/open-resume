@@ -11,10 +11,12 @@ export const ResumePDFProject = ({
   heading,
   projects,
   themeColor,
+  isPDF,
 }: {
   heading: string;
   projects: ResumeProject[];
   themeColor: string;
+  isPDF: boolean;
 }) => {
   return (
     <ResumePDFSection themeColor={themeColor} heading={heading}>
@@ -30,7 +32,7 @@ export const ResumePDFProject = ({
             <ResumePDFText>{date}</ResumePDFText>
           </View>
           <View style={{ ...styles.flexCol, marginTop: spacing["0.5"] }}>
-            <ResumePDFBulletList items={descriptions} />
+            <ResumePDFBulletList items={descriptions} isPDF={isPDF} />
           </View>
         </View>
       ))}

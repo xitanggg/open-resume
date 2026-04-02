@@ -1,12 +1,14 @@
-import { Text, View, Link } from "@react-pdf/renderer";
+import { useMemo } from "react";
+import { Text, View } from "@react-pdf/renderer";
 import type { Style } from "@react-pdf/types";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import { DEBUG_RESUME_PDF_FLAG } from "lib/constants";
 import { DEFAULT_FONT_COLOR } from "lib/redux/settingsSlice";
+import { ResumePDFLink } from "components/Resume/ResumePDF/ResumePDFLink";
 
-const markdownComponents: Components = {
+const createMarkdownComponents = (isPDF: boolean): Components => ({
   p: ({ children }) => <Text>{children}</Text>,
   strong: ({ children }) => (
     <Text style={{ fontWeight: "bold" }}>{children}</Text>
@@ -15,12 +17,18 @@ const markdownComponents: Components = {
     <Text style={{ fontStyle: "italic" }}>{children}</Text>
   ),
   a: ({ href, children }) =>
-    href ? <Link src={href}>{children}</Link> : <Text>{children}</Text>,
+    href ? (
+      <ResumePDFLink src={href} isPDF={isPDF}>
+        {children}
+      </ResumePDFLink>
+    ) : (
+      <Text>{children}</Text>
+    ),
   br: () => <Text>{"\n"}</Text>,
   code: ({ children }) => (
     <Text style={{ fontFamily: "Courier" }}>{children}</Text>
   ),
-};
+});
 
 export const ResumePDFSection = ({
   themeColor,
@@ -97,10 +105,17 @@ export const ResumePDFText = ({
 export const ResumePDFBulletList = ({
   items,
   showBulletPoints = true,
+  isPDF,
 }: {
   items: string[];
   showBulletPoints?: boolean;
+  isPDF: boolean;
 }) => {
+  const markdownComponents = useMemo(
+    () => createMarkdownComponents(isPDF),
+    [isPDF]
+  );
+
   return (
     <>
       {items.map((item, idx) => (
@@ -129,34 +144,6 @@ export const ResumePDFBulletList = ({
         </View>
       ))}
     </>
-  );
-};
-
-export const ResumePDFLink = ({
-  src,
-  isPDF,
-  children,
-}: {
-  src: string;
-  isPDF: boolean;
-  children: React.ReactNode;
-}) => {
-  if (isPDF) {
-    return (
-      <Link src={src} style={{ textDecoration: "none" }}>
-        {children}
-      </Link>
-    );
-  }
-  return (
-    <a
-      href={src}
-      style={{ textDecoration: "none" }}
-      target="_blank"
-      rel="noreferrer"
-    >
-      {children}
-    </a>
   );
 };
 

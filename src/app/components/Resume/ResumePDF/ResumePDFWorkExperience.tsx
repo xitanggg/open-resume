@@ -11,10 +11,12 @@ export const ResumePDFWorkExperience = ({
   heading,
   workExperiences,
   themeColor,
+  isPDF,
 }: {
   heading: string;
   workExperiences: ResumeWorkExperience[];
   themeColor: string;
+  isPDF: boolean;
 }) => {
   return (
     <ResumePDFSection themeColor={themeColor} heading={heading}>
@@ -40,7 +42,7 @@ export const ResumePDFWorkExperience = ({
               <ResumePDFText>{date}</ResumePDFText>
             </View>
             <View style={{ ...styles.flexCol, marginTop: spacing["1.5"] }}>
-              <ResumePDFBulletList items={descriptions} />
+              <ResumePDFBulletList items={descriptions} isPDF={isPDF} />
             </View>
           </View>
         );
