@@ -12,11 +12,13 @@ export const ResumePDFSkills = ({
   skills,
   themeColor,
   showBulletPoints,
+  isPDF,
 }: {
   heading: string;
   skills: ResumeSkills;
   themeColor: string;
   showBulletPoints: boolean;
+  isPDF: boolean;
 }) => {
   const { descriptions, featuredSkills } = skills;
   const featuredSkillsWithText = featuredSkills.filter((item) => item.skill);
@@ -59,6 +61,7 @@ export const ResumePDFSkills = ({
         <ResumePDFBulletList
           items={descriptions}
           showBulletPoints={showBulletPoints}
+          isPDF={isPDF}
         />
       </View>
     </ResumePDFSection>

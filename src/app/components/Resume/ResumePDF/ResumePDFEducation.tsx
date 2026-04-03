@@ -12,11 +12,13 @@ export const ResumePDFEducation = ({
   educations,
   themeColor,
   showBulletPoints,
+  isPDF,
 }: {
   heading: string;
   educations: ResumeEducation[];
   themeColor: string;
   showBulletPoints: boolean;
+  isPDF: boolean;
 }) => {
   return (
     <ResumePDFSection themeColor={themeColor} heading={heading}>
@@ -52,6 +54,7 @@ export const ResumePDFEducation = ({
                   <ResumePDFBulletList
                     items={descriptions}
                     showBulletPoints={showBulletPoints}
+                    isPDF={isPDF}
                   />
                 </View>
               )}

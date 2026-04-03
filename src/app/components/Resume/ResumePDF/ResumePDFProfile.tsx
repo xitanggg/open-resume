@@ -5,11 +5,11 @@ import {
 } from "components/Resume/ResumePDF/common/ResumePDFIcon";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import {
-  ResumePDFLink,
   ResumePDFSection,
   ResumePDFText,
 } from "components/Resume/ResumePDF/common";
 import type { ResumeProfile } from "lib/redux/types";
+import { ResumePDFLink } from "components/Resume/ResumePDF/ResumePDFLink";
 
 export const ResumePDFProfile = ({
   profile,
