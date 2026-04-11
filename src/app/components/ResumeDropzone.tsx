@@ -2,16 +2,11 @@ import { useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { parseResumeFromPdf } from "lib/parse-resume-from-pdf";
-import {
-  getHasUsedAppBefore,
-  saveStateToLocalStorage,
-} from "lib/redux/local-storage";
-import { type ShowForm, initialSettings } from "lib/redux/settingsSlice";
+import { saveParsedResumeToBuilderState } from "lib/redux/parsed-resume-to-builder-state";
 import { useRouter } from "next/navigation";
 import addPdfSrc from "public/assets/add-pdf.svg";
 import Image from "next/image";
 import { cx } from "lib/cx";
-import { deepClone } from "lib/deep-clone";
 
 const defaultFileState = {
   name: "",
@@ -31,6 +26,8 @@ export const ResumeDropzone = ({
   const [file, setFile] = useState(defaultFileState);
   const [isHoveredOnDropzone, setIsHoveredOnDropzone] = useState(false);
   const [hasNonPdfFile, setHasNonPdfFile] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
   const router = useRouter();
 
   const hasFile = Boolean(file.name);
@@ -41,7 +38,8 @@ export const ResumeDropzone = ({
     }
 
     const { name, size } = newFile;
-    const fileUrl = URL.createObjectURL(newFile);
+    const blob = new Blob([newFile], { type: "application/pdf" });
+    const fileUrl = URL.createObjectURL(blob);
     setFile({ name, size, fileUrl });
     onFileUrlChange(fileUrl);
   };
@@ -51,9 +49,11 @@ export const ResumeDropzone = ({
     const newFile = event.dataTransfer.files[0];
     if (newFile.name.endsWith(".pdf")) {
       setHasNonPdfFile(false);
+      setErrorMessage("");
       setNewFile(newFile);
     } else {
       setHasNonPdfFile(true);
+      setErrorMessage("Only PDF file is supported.");
     }
     setIsHoveredOnDropzone(false);
   };
@@ -63,35 +63,41 @@ export const ResumeDropzone = ({
     if (!files) return;
 
     const newFile = files[0];
-    setNewFile(newFile);
+    if (newFile.name.endsWith(".pdf")) {
+      setHasNonPdfFile(false);
+      setErrorMessage("");
+      setNewFile(newFile);
+    } else {
+      setHasNonPdfFile(true);
+      setErrorMessage("Only PDF file is supported.");
+    }
   };
 
   const onRemove = () => {
     setFile(defaultFileState);
+    setErrorMessage("");
+    setHasNonPdfFile(false);
     onFileUrlChange("");
   };
 
   const onImportClick = async () => {
-    const resume = await parseResumeFromPdf(file.fileUrl);
-    const settings = deepClone(initialSettings);
+    if (isImporting) return;
 
-    // Set formToShow settings based on uploaded resume if users have used the app before
-    if (getHasUsedAppBefore()) {
-      const sections = Object.keys(settings.formToShow) as ShowForm[];
-      const sectionToFormToShow: Record<ShowForm, boolean> = {
-        workExperiences: resume.workExperiences.length > 0,
-        educations: resume.educations.length > 0,
-        projects: resume.projects.length > 0,
-        skills: resume.skills.descriptions.length > 0,
-        custom: resume.custom.descriptions.length > 0,
-      };
-      for (const section of sections) {
-        settings.formToShow[section] = sectionToFormToShow[section];
-      }
+    setErrorMessage("");
+    setIsImporting(true);
+    try {
+      const parsedResume = await parseResumeFromPdf(file.fileUrl);
+      saveParsedResumeToBuilderState(parsedResume);
+      router.push("/resume-builder");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to parse resume. Please try another PDF file.";
+      setErrorMessage(message);
+    } finally {
+      setIsImporting(false);
     }
-
-    saveStateToLocalStorage({ resume, settings });
-    router.push("/resume-builder");
   };
 
   return (
@@ -181,9 +187,11 @@ export const ResumeDropzone = ({
                 <button
                   type="button"
                   className="btn-primary"
+                  disabled={isImporting}
                   onClick={onImportClick}
                 >
-                  Import and Continue <span aria-hidden="true">→</span>
+                  {isImporting ? "Importing..." : "Import and Continue"}
+                  <span aria-hidden="true">→</span>
                 </button>
               )}
               <p className={cx(" text-gray-500", !playgroundView && "mt-6")}>
@@ -191,6 +199,9 @@ export const ResumeDropzone = ({
                 single column resume
               </p>
             </>
+          )}
+          {errorMessage && (
+            <p className="mt-4 text-sm text-red-500">{errorMessage}</p>
           )}
         </div>
       </div>

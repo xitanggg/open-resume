@@ -54,7 +54,7 @@ export const readPdf = async (fileUrl: string): Promise<TextItems> => {
       // since non system font name by default is a loaded name, e.g. "g_d8_f1"
       // Reference: https://github.com/mozilla/pdf.js/pull/15659
       const fontObj = commonObjs.get(pdfFontName);
-      const fontName = fontObj.name;
+      const fontName = fontObj?.name ?? pdfFontName;
 
       // pdfjs reads a "-" as "-­‐" in the resume example. This is to revert it.
       // Note "-­‐" is "-&#x00AD;‐" with a soft hyphen in between. It is not the same as "--"
@@ -69,6 +69,44 @@ export const readPdf = async (fileUrl: string): Promise<TextItems> => {
       };
       return newItem;
     });
+
+    // Some resumes (including OpenResume exports) encode clickable links as annotations.
+    // Add annotation URLs as synthetic text items so parser can reliably extract links.
+    const annotations = await page.getAnnotations();
+    const annotationTextItems: TextItems = annotations
+      .map((annotation: any) => {
+        const rawUrl =
+          annotation?.url || annotation?.unsafeUrl || annotation?.action || "";
+        if (!rawUrl) return null;
+
+        const normalizedText = rawUrl
+          .replace(/^mailto:/i, "")
+          .replace(/^tel:/i, "");
+        const rect = annotation?.rect as number[] | undefined;
+        const x = rect?.[0] ?? 0;
+        const y = rect?.[3] ?? 0;
+        const width = rect && rect.length >= 4 ? rect[2] - rect[0] : 0;
+        const height = rect && rect.length >= 4 ? rect[3] - rect[1] : 0;
+
+        const newItem: TextItem = {
+          text: normalizedText,
+          x,
+          y,
+          width,
+          height,
+          fontName: "",
+          hasEOL: false,
+        };
+        return newItem;
+      })
+      .filter((item): item is TextItem => Boolean(item));
+
+    const existingTexts = new Set(pageTextItems.map((item) => item.text));
+    for (const annotationTextItem of annotationTextItems) {
+      if (!existingTexts.has(annotationTextItem.text)) {
+        pageTextItems.push(annotationTextItem);
+      }
+    }
 
     // Some pdf's text items are not in order. This is most likely a result of creating it
     // from design softwares, e.g. canvas. The commented out method can sort pageTextItems

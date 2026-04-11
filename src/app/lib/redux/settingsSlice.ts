@@ -29,6 +29,7 @@ export interface Settings {
   };
   contactOrder: string[];
   skillsDisplayMode: "bullet" | "comma";
+  customDisplayMode: "bullet" | "comma";
 }
 
 export type ShowForm = keyof Settings["formToShow"];
@@ -72,6 +73,7 @@ export const initialSettings: Settings = {
   },
   contactOrder: ["email", "phone", "url", "github", "location"],
   skillsDisplayMode: "bullet" as "bullet" | "comma",
+  customDisplayMode: "bullet" as "bullet" | "comma",
 };
 
 export const settingsSlice = createSlice({
@@ -145,6 +147,12 @@ export const settingsSlice = createSlice({
     ) => {
       draft.skillsDisplayMode = action.payload;
     },
+    changeCustomDisplayMode: (
+      draft,
+      action: PayloadAction<"bullet" | "comma">
+    ) => {
+      draft.customDisplayMode = action.payload;
+    },
     setSettings: (draft, action: PayloadAction<Settings>) => {
       return action.payload;
     },
@@ -159,6 +167,7 @@ export const {
   changeShowBulletPoints,
   changeContactOrder,
   changeSkillsDisplayMode,
+  changeCustomDisplayMode,
   setSettings,
 } = settingsSlice.actions;
 
@@ -166,19 +175,19 @@ export const selectSettings = (state: RootState) => state.settings;
 export const selectThemeColor = (state: RootState) => state.settings.themeColor;
 
 export const selectFormToShow = (state: RootState) => state.settings.formToShow;
-export const selectShowByForm = (form: ShowForm) => (state: RootState) =>
+export const selectShowByForm = (form: ShowForm) => (state: RootState) =>       
   state.settings.formToShow[form];
 
 export const selectFormToHeading = (state: RootState) =>
   state.settings.formToHeading;
-export const selectHeadingByForm = (form: ShowForm) => (state: RootState) =>
+export const selectHeadingByForm = (form: ShowForm) => (state: RootState) =>    
   state.settings.formToHeading[form];
 
 export const selectFormsOrder = (state: RootState) => state.settings.formsOrder;
-export const selectIsFirstForm = (form: ShowForm) => (state: RootState) =>
+export const selectIsFirstForm = (form: ShowForm) => (state: RootState) =>      
   state.settings.formsOrder[0] === form;
-export const selectIsLastForm = (form: ShowForm) => (state: RootState) =>
-  state.settings.formsOrder[state.settings.formsOrder.length - 1] === form;
+export const selectIsLastForm = (form: ShowForm) => (state: RootState) =>       
+  state.settings.formsOrder[state.settings.formsOrder.length - 1] === form;     
 
 export const selectShowBulletPoints =
   (form: FormWithBulletPoints) => (state: RootState) =>
@@ -188,5 +197,7 @@ export const selectContactOrder = (state: RootState) =>
   state.settings.contactOrder;
 export const selectSkillsDisplayMode = (state: RootState) =>
   state.settings.skillsDisplayMode;
+export const selectCustomDisplayMode = (state: RootState) =>
+  state.settings.customDisplayMode;
 
 export default settingsSlice.reducer;

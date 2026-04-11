@@ -41,6 +41,7 @@ export interface ResumeSkills {
 }
 
 export interface ResumeCustom {
+  sectionName: string;
   descriptions: string[];
 }
 

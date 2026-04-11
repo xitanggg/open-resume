@@ -34,16 +34,16 @@ export const matchCityAndState = (item: TextItem) =>
   item.text.match(/[A-Z][a-zA-Z\s]+, [A-Z]{2}/);
 
 // Url
-// Simple url regex that matches "xxx.xxx/xxx" (xxx = anything not space)
-export const matchUrl = (item: TextItem) => item.text.match(/\S+\.[a-z]+\/\S+/);
+// Better url regex that matches either "http/https://" or "www." or just a domain like "domain.com/path"
+export const matchUrl = (item: TextItem) => item.text.match(/(?:https?:\/\/)?(?:www\.)?(?!github\.com)[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/i);
 export const matchGithubUrl = (item: TextItem) =>
   item.text.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/\S+/i);
 // Match https://xxx.xxx where s is optional
 const matchUrlHttpFallback = (item: TextItem) =>
-  item.text.match(/https?:\/\/\S+\.\S+/);
+  item.text.match(/https?:\/\/[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/i);
 // Match www.xxx.xxx
 const matchUrlWwwFallback = (item: TextItem) =>
-  item.text.match(/www\.\S+\.\S+/);
+  item.text.match(/www\.[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/i);
 const hasSlash = (item: TextItem) => item.text.includes("/");
 
 // Summary
@@ -148,9 +148,22 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
     textItems,
     URL_FEATURE_SETS
   );
+  const nonGithubUrlFromTextItems =
+    textItems
+      .map((item) => item.text.match(/\S+\.[a-z]+\/\S+/)?.[0] || "")
+      .find(
+        (text) =>
+          text &&
+          !text.toLowerCase().includes("github.com") &&
+          !text.includes("@")
+      ) || "";
   const github =
     textItems.find((item) => matchGithubUrl(item))?.text ||
     (url.toLowerCase().includes("github.com") ? url : "");
+  const normalizedUrl =
+    url.toLowerCase().includes("github.com") && nonGithubUrlFromTextItems
+      ? nonGithubUrlFromTextItems
+      : url;
   const [summary, summaryScores] = getTextWithHighestFeatureScore(
     textItems,
     SUMMARY_FEATURE_SETS,
@@ -175,7 +188,7 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
       email,
       phone,
       location,
-      url,
+      url: normalizedUrl,
       github,
       // Dedicated section takes higher precedence over profile summary
       summary: summarySection || objectiveSection || summary,

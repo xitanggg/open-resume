@@ -21,11 +21,11 @@ import {
 // prettier-ignore
 const WORK_EXPERIENCE_KEYWORDS_LOWERCASE = ['work', 'experience', 'employment', 'history', 'job'];
 // prettier-ignore
-const JOB_TITLES = ['Accountant', 'Administrator', 'Advisor', 'Agent', 'Analyst', 'Apprentice', 'Architect', 'Assistant', 'Associate', 'Auditor', 'Bartender', 'Biologist', 'Bookkeeper', 'Buyer', 'Carpenter', 'Cashier', 'CEO', 'Clerk', 'Co-op', 'Co-Founder', 'Consultant', 'Coordinator', 'CTO', 'Developer', 'Designer', 'Director', 'Driver', 'Editor', 'Electrician', 'Engineer', 'Extern', 'Founder', 'Freelancer', 'Head', 'Intern', 'Janitor', 'Journalist', 'Laborer', 'Lawyer', 'Lead', 'Manager', 'Mechanic', 'Member', 'Nurse', 'Officer', 'Operator', 'Operation', 'Photographer', 'President', 'Producer', 'Recruiter', 'Representative', 'Researcher', 'Sales', 'Server', 'Scientist', 'Specialist', 'Supervisor', 'Teacher', 'Technician', 'Trader', 'Trainee', 'Treasurer', 'Tutor', 'Vice', 'VP', 'Volunteer', 'Webmaster', 'Worker'];
+export const JOB_TITLES = ['Accountant', 'Administrator', 'Advisor', 'Agent', 'Analyst', 'Apprentice', 'Architect', 'Assistant', 'Associate', 'Auditor', 'Bartender', 'Biologist', 'Bookkeeper', 'Buyer', 'Carpenter', 'Cashier', 'CEO', 'Clerk', 'Co-op', 'Co-Founder', 'Consultant', 'Coordinator', 'CTO', 'Developer', 'Designer', 'Director', 'Driver', 'Editor', 'Electrician', 'Engineer', 'Extern', 'Founder', 'Freelancer', 'Head', 'Intern', 'Janitor', 'Journalist', 'Laborer', 'Lawyer', 'Lead', 'Manager', 'Mechanic', 'Member', 'Nurse', 'Officer', 'Operator', 'Operation', 'Photographer', 'President', 'Producer', 'Recruiter', 'Representative', 'Researcher', 'Sales', 'Server', 'Scientist', 'Specialist', 'Supervisor', 'Teacher', 'Technician', 'Trader', 'Trainee', 'Treasurer', 'Tutor', 'Vice', 'VP', 'Volunteer', 'Webmaster', 'Worker', 'Programmer', 'Executive', 'Writer', 'Consulting', 'Partner', 'Principal', 'Chemist', 'Instructor', 'Professor', 'Supervisor', 'Fellow', 'Strategist', 'Staff', 'Resident', 'Educator', 'Pharmacist', 'Physician', 'Creator', 'Publisher', 'Author', 'Attendant', 'Representative', 'Ambassador', 'Inspector', 'Investigator', 'Planner', 'Estimator', 'Contractor', 'Owner', 'President', 'Secretary', 'Treasurer', 'Chair'];
 
 const hasJobTitle = (item: TextItem) =>
   JOB_TITLES.some((jobTitle) =>
-    item.text.split(/\s/).some((word) => word === jobTitle)
+    item.text.split(/[\s,|-]+/).some((word) => word.toLowerCase() === jobTitle.toLowerCase())
   );
 const hasMoreThan5Words = (item: TextItem) => item.text.split(/\s/).length > 5;
 const JOB_TITLE_FEATURE_SET: FeatureSet[] = [

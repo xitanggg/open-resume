@@ -8,6 +8,7 @@ import type {
   ResumeProject,
   ResumeSkills,
   ResumeWorkExperience,
+  ResumeCustom,
 } from "lib/redux/types";
 import type { ShowForm } from "lib/redux/settingsSlice";
 
@@ -52,7 +53,8 @@ export const initialSkills: ResumeSkills = {
   descriptions: [],
 };
 
-export const initialCustom = {
+export const initialCustom: ResumeCustom = {
+  sectionName: "CUSTOM SECTION",
   descriptions: [],
 };
 

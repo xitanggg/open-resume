@@ -90,6 +90,7 @@ export const ResumePDF = ({
         custom={custom}
         themeColor={themeColor}
         showBulletPoints={showBulletPoints["custom"]}
+        customDisplayMode={settings.customDisplayMode ?? "bullet"}
       />
     ),
   };
