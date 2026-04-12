@@ -105,10 +105,23 @@ export const saveParsedResumeToBuilderState = (
   options?: ParsedResumeImportOptions
 ) => {
   const nextState = getBuilderStateFromParsedResume(parsedResume, options);
-  saveStateToLocalStorage(nextState);
-  const savedState = loadStateFromLocalStorage();
-  if (!savedState?.resume) {
+  const didSave = saveStateToLocalStorage(nextState);
+  if (!didSave) {
     throw new Error("Unable to save parsed data to local storage.");
   }
+
+  const savedState = loadStateFromLocalStorage();
+  if (!savedState?.resume || !savedState?.settings) {
+    throw new Error("Unable to save parsed data to local storage.");
+  }
+
+  const hasResumeMismatch =
+    JSON.stringify(savedState.resume) !== JSON.stringify(nextState.resume);
+  const hasSettingsMismatch =
+    JSON.stringify(savedState.settings) !== JSON.stringify(nextState.settings);
+  if (hasResumeMismatch || hasSettingsMismatch) {
+    throw new Error("Parsed data was not persisted correctly.");
+  }
+
   return nextState;
 };

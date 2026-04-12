@@ -34,9 +34,36 @@ const DEGREES = ["Associate", "Bachelor", "Master", "PhD", "Ph.", "B.A.", "B.S."
 const hasDegree = (item: TextItem) =>
   DEGREES.some((degree) => item.text.includes(degree)) ||
   /[ABM][A-Z\.]/.test(item.text); // Match AA, B.S., MBA, etc.
-const matchGPA = (item: TextItem) => item.text.match(/[0-4]\.\d{1,2}(?:\s*\/\s*4\.0)?/);
+export const matchGPA = (item: TextItem) => {
+  const text = item.text.replace(/\s+/g, " ").trim();
+
+  const labeledMatch = text.match(
+    /\b(?:cgpa|gpa|grade)\s*[:\-]?\s*([0-9]{1,2}(?:\.\d{1,2})?(?:\s*\/\s*(?:4(?:\.0+)?|5(?:\.0+)?|10(?:\.0+)?))?)\b/i
+  );
+  if (labeledMatch?.[1]) {
+    return [labeledMatch[1]] as RegExpMatchArray;
+  }
+
+  const scaledMatch = text.match(
+    /\b([0-9]{1,2}(?:\.\d{1,2})?\s*\/\s*(?:4(?:\.0+)?|5(?:\.0+)?|10(?:\.0+)?))\b/i
+  );
+  if (scaledMatch?.[1]) {
+    return [scaledMatch[1].replace(/\s+/g, "")] as RegExpMatchArray;
+  }
+
+  const decimalMatch = text.match(/\b([0-4]\.\d{1,2})\b/);
+  if (decimalMatch?.[1]) {
+    return [decimalMatch[1]] as RegExpMatchArray;
+  }
+
+  return null;
+};
 const matchGrade = (item: TextItem) => {
-  const grade = parseFloat(item.text);
+  const labeledMatch = item.text.match(
+    /\b(?:grade|percentage|marks?)\s*[:\-]?\s*([0-9]{1,3}(?:\.\d{1,2})?)\b/i
+  );
+  const gradeText = labeledMatch?.[1] ?? item.text;
+  const grade = parseFloat(gradeText);
   if (Number.isFinite(grade) && grade <= 110) {
     return [String(grade)] as RegExpMatchArray;
   }

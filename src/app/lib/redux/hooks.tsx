@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   useDispatch,
   useSelector,
@@ -21,15 +21,41 @@ import type { Resume } from "lib/redux/types";
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+const SAVE_TO_LOCAL_STORAGE_DEBOUNCE_MS = 250;
+
 /**
  * Hook to save store to local storage on store change
  */
 export const useSaveStateToLocalStorageOnChange = () => {
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestStateRef = useRef<RootState | null>(null);
+
   useEffect(() => {
+    const flushPendingSave = () => {
+      if (!latestStateRef.current) return;
+      saveStateToLocalStorage(latestStateRef.current);
+      latestStateRef.current = null;
+    };
+
     const unsubscribe = store.subscribe(() => {
-      saveStateToLocalStorage(store.getState());
+      latestStateRef.current = store.getState();
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
+      saveTimeoutRef.current = setTimeout(() => {
+        flushPendingSave();
+        saveTimeoutRef.current = null;
+      }, SAVE_TO_LOCAL_STORAGE_DEBOUNCE_MS);
     });
-    return unsubscribe;
+
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      flushPendingSave();
+      unsubscribe();
+    };
   }, []);
 };
 

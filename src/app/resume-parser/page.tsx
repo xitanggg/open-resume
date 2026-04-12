@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { readPdf } from "lib/parse-resume-from-pdf/read-pdf";
 import type { TextItems } from "lib/parse-resume-from-pdf/types";
 import { groupTextItemsIntoLines } from "lib/parse-resume-from-pdf/group-text-items-into-lines";
@@ -11,10 +11,29 @@ import { PrimaryButton } from "components/Button";
 import { Heading, Link, Paragraph } from "components/documentation";
 import { ResumeTable } from "resume-parser/ResumeTable";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
-import { ResumeParserAlgorithmArticle } from "resume-parser/ResumeParserAlgorithmArticle";
 import { saveParsedResumeToBuilderState } from "lib/redux/parsed-resume-to-builder-state";
 import { useRouter } from "next/navigation";
-import { PDFBoundingBoxOverlay } from "resume-parser/PDFBoundingBoxOverlay";
+import dynamic from "next/dynamic";
+
+const ResumeParserAlgorithmArticle = dynamic(
+  () =>
+    import("resume-parser/ResumeParserAlgorithmArticle").then(
+      (mod) => mod.ResumeParserAlgorithmArticle
+    ),
+  {
+    loading: () => (
+      <p className="mt-4 text-sm text-gray-500">Loading parser deep dive...</p>
+    ),
+  }
+);
+
+const PDFBoundingBoxOverlay = dynamic(
+  () =>
+    import("resume-parser/PDFBoundingBoxOverlay").then(
+      (mod) => mod.PDFBoundingBoxOverlay
+    ),
+  { ssr: false }
+);
 
 const RESUME_EXAMPLES = [
   {
@@ -52,13 +71,14 @@ export default function ResumeParser() {
   const [loadInBuilderError, setLoadInBuilderError] = useState("");
   const router = useRouter();
 
-  const lines = groupTextItemsIntoLines(textItems || []);
-  const sections = groupLinesIntoSections(lines);
-  const resume = extractResumeFromSections(sections);
+  const lines = useMemo(() => groupTextItemsIntoLines(textItems || []), [textItems]);
+  const sections = useMemo(() => groupLinesIntoSections(lines), [lines]);
+  const resume = useMemo(() => extractResumeFromSections(sections), [sections]);
   const canLoadInBuilder = hasParsedResume && !isParsing;
 
   useEffect(() => {
     let isCurrent = true;
+    const abortController = new AbortController();
 
     async function parsePdfIntoTextItems() {
       if (!fileUrl) {
@@ -74,12 +94,17 @@ export default function ResumeParser() {
       setParseError("");
       setIsParsing(true);
       try {
-        const parsedTextItems = await readPdf(fileUrl);
+        const parsedTextItems = await readPdf(fileUrl, {
+          signal: abortController.signal,
+        });
         if (isCurrent) {
           setTextItems(parsedTextItems);
           setHasParsedResume(true);
         }
       } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+          return;
+        }
         if (isCurrent) {
           const message =
             error instanceof Error
@@ -100,6 +125,7 @@ export default function ResumeParser() {
 
     return () => {
       isCurrent = false;
+      abortController.abort();
     };
   }, [fileUrl]);
 
@@ -237,23 +263,27 @@ export default function ResumeParser() {
               </p>
             )}
             {isParsing && (
-                <p className="mt-1 text-sm text-gray-500">Parsing your PDF...</p>
+                <p className="mt-1 text-sm text-gray-500" role="status" aria-live="polite">
+                  Parsing your PDF...
+                </p>
               )}
               {parseError && (
-                <p className="mt-2 text-sm text-red-500">{parseError}</p>
+                <p className="mt-2 text-sm text-red-500" role="alert">{parseError}</p>
               )}
               {loadInBuilderError && (
-                <p className="mt-2 text-sm text-red-500">{loadInBuilderError}</p>
+                <p className="mt-2 text-sm text-red-500" role="alert">{loadInBuilderError}</p>
               )}
             <Heading level={2} className="!mt-[1.2em]">
               Resume Parsing Results
             </Heading>
             <ResumeTable resume={resume} />
-            <ResumeParserAlgorithmArticle
-              textItems={textItems}
-              lines={lines}
-              sections={sections}
-            />
+            {hasParsedResume && (
+              <ResumeParserAlgorithmArticle
+                textItems={textItems}
+                lines={lines}
+                sections={sections}
+              />
+            )}
             <div className="pt-24" />
           </section>
         </div>

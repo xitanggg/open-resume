@@ -33,9 +33,67 @@ const hasParenthesis = (item: TextItem) => /\([0-9]+\)/.test(item.text);
 export const matchCityAndState = (item: TextItem) =>
   item.text.match(/[A-Z][a-zA-Z\s]+, [A-Z]{2}/);
 
+const LOCATION_SEGMENT_REGEXES = [
+  /[A-Z][a-zA-Z.'-]+(?:\s+[A-Z][a-zA-Z.'-]+)*,\s*[A-Z]{2}\b/,
+  /[A-Z][a-zA-Z.'-]+(?:\s+[A-Z][a-zA-Z.'-]+)*,\s*[A-Z][a-zA-Z.'-]+(?:\s+[A-Z][a-zA-Z.'-]+)*/,
+  /[A-Z][a-zA-Z.'-]+(?:\s+[A-Z][a-zA-Z.'-]+)+\s+[A-Z]{2}\b/,
+] as const;
+
+const CONTACT_SEGMENT_SPLITTER = /[\|\u2022\u00B7]/;
+const looksLikeContactInfoNoise = (segment: string) => {
+  const lower = segment.toLowerCase();
+  return (
+    segment.includes("@") ||
+    /https?:\/\//i.test(segment) ||
+    /www\./i.test(segment) ||
+    lower.includes("linkedin.com") ||
+    lower.includes("github.com") ||
+    /\d{3}/.test(segment)
+  );
+};
+
+export const matchLocation = (item: TextItem) => {
+  const segments = item.text
+    .split(CONTACT_SEGMENT_SPLITTER)
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+
+  for (const segment of segments) {
+    if (looksLikeContactInfoNoise(segment)) continue;
+
+    for (const regex of LOCATION_SEGMENT_REGEXES) {
+      const match = segment.match(regex);
+      if (match) {
+        return match;
+      }
+    }
+  }
+
+  for (const regex of LOCATION_SEGMENT_REGEXES) {
+    const match = item.text.match(regex);
+    if (match) {
+      return match;
+    }
+  }
+
+  return null;
+};
+
 // Url
 // Better url regex that matches either "http/https://" or "www." or just a domain like "domain.com/path"
-export const matchUrl = (item: TextItem) => item.text.match(/(?:https?:\/\/)?(?:www\.)?(?!github\.com)[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/i);
+export const matchUrl = (item: TextItem) => {
+  const match = item.text.match(
+    /(?:https?:\/\/)?(?:www\.)?(?!github\.com)[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/i
+  );
+  if (!match) return null;
+
+  const matchStartIdx = match.index ?? -1;
+  if (matchStartIdx > 0 && item.text[matchStartIdx - 1] === "@") {
+    return null;
+  }
+
+  return match;
+};
 export const matchGithubUrl = (item: TextItem) =>
   item.text.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/\S+/i);
 // Match https://xxx.xxx where s is optional
@@ -96,6 +154,7 @@ const PHONE_FEATURE_SETS: FeatureSet[] = [
 
 // Location -> match location regex <City>, <ST>
 const LOCATION_FEATURE_SETS: FeatureSet[] = [
+  [matchLocation, 4, true],
   [matchCityAndState, 4, true],
   [isBold, -1], // Name
   [hasAt, -4], // Email

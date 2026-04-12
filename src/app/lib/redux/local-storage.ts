@@ -18,8 +18,9 @@ export const saveStateToLocalStorage = (state: RootState) => {
   try {
     const stringifiedState = JSON.stringify(state);
     localStorage.setItem(LOCAL_STORAGE_KEY, stringifiedState);
+    return true;
   } catch (e) {
-    // Ignore
+    return false;
   }
 };
 

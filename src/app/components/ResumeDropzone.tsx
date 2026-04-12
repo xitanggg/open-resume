@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { parseResumeFromPdf } from "lib/parse-resume-from-pdf";
@@ -32,14 +32,21 @@ export const ResumeDropzone = ({
 
   const hasFile = Boolean(file.name);
 
+  useEffect(() => {
+    return () => {
+      if (file.fileUrl) {
+        URL.revokeObjectURL(file.fileUrl);
+      }
+    };
+  }, [file.fileUrl]);
+
   const setNewFile = (newFile: File) => {
     if (file.fileUrl) {
       URL.revokeObjectURL(file.fileUrl);
     }
 
     const { name, size } = newFile;
-    const blob = new Blob([newFile], { type: "application/pdf" });
-    const fileUrl = URL.createObjectURL(blob);
+    const fileUrl = URL.createObjectURL(newFile);
     setFile({ name, size, fileUrl });
     onFileUrlChange(fileUrl);
   };
@@ -47,7 +54,12 @@ export const ResumeDropzone = ({
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const newFile = event.dataTransfer.files[0];
-    if (newFile.name.endsWith(".pdf")) {
+    if (!newFile) {
+      setIsHoveredOnDropzone(false);
+      return;
+    }
+
+    if (isPdfFile(newFile)) {
       setHasNonPdfFile(false);
       setErrorMessage("");
       setNewFile(newFile);
@@ -63,7 +75,9 @@ export const ResumeDropzone = ({
     if (!files) return;
 
     const newFile = files[0];
-    if (newFile.name.endsWith(".pdf")) {
+    if (!newFile) return;
+
+    if (isPdfFile(newFile)) {
       setHasNonPdfFile(false);
       setErrorMessage("");
       setNewFile(newFile);
@@ -74,6 +88,9 @@ export const ResumeDropzone = ({
   };
 
   const onRemove = () => {
+    if (file.fileUrl) {
+      URL.revokeObjectURL(file.fileUrl);
+    }
     setFile(defaultFileState);
     setErrorMessage("");
     setHasNonPdfFile(false);
@@ -81,13 +98,13 @@ export const ResumeDropzone = ({
   };
 
   const onImportClick = async () => {
-    if (isImporting) return;
+    if (isImporting || !file.fileUrl) return;
 
     setErrorMessage("");
     setIsImporting(true);
     try {
       const parsedResume = await parseResumeFromPdf(file.fileUrl);
-      saveParsedResumeToBuilderState(parsedResume);
+      saveParsedResumeToBuilderState(parsedResume, { enableSmartLayout: true });
       router.push("/resume-builder");
     } catch (error) {
       const message =
@@ -154,6 +171,7 @@ export const ResumeDropzone = ({
               type="button"
               className="outline-theme-blue rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
               title="Remove file"
+              disabled={isImporting}
               onClick={onRemove}
             >
               <XMarkIcon className="h-6 w-6" />
@@ -194,6 +212,11 @@ export const ResumeDropzone = ({
                   <span aria-hidden="true">→</span>
                 </button>
               )}
+              {isImporting && !playgroundView && (
+                <p className="mt-2 text-sm text-gray-500" role="status" aria-live="polite">
+                  Parsing and preparing your resume. This can take a few seconds.
+                </p>
+              )}
               <p className={cx(" text-gray-500", !playgroundView && "mt-6")}>
                 Note: {!playgroundView ? "Import" : "Parser"} works best on
                 single column resume
@@ -201,7 +224,7 @@ export const ResumeDropzone = ({
             </>
           )}
           {errorMessage && (
-            <p className="mt-4 text-sm text-red-500">{errorMessage}</p>
+            <p className="mt-4 text-sm text-red-500" role="alert">{errorMessage}</p>
           )}
         </div>
       </div>
@@ -218,3 +241,6 @@ const getFileSizeString = (fileSizeB: number) => {
     return fileSizeMB.toPrecision(3) + " MB";
   }
 };
+
+const isPdfFile = (file: File) =>
+  file.type === "application/pdf" || /\.pdf$/i.test(file.name);

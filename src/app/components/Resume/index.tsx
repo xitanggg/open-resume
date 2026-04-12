@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useDeferredValue, useState, useMemo } from "react";
 import { ResumeIframeCSR } from "components/Resume/ResumeIFrame";
 import { ResumePDF } from "components/Resume/ResumePDF";
 import {
@@ -21,9 +21,21 @@ export const Resume = () => {
   const [scale, setScale] = useState(0.8);
   const resume = useAppSelector(selectResume);
   const settings = useAppSelector(selectSettings);
-  // Ensure document is re-created when any settings change
-  const document = useMemo(
-    () => <ResumePDF resume={resume} settings={settings} isPDF={true} />,
+  const deferredResume = useDeferredValue(resume);
+  const deferredSettings = useDeferredValue(settings);
+
+  const exportDocument = useMemo(
+    () => (
+      <ResumePDF
+        resume={deferredResume}
+        settings={deferredSettings}
+        isPDF={true}
+      />
+    ),
+    [deferredResume, deferredSettings]
+  );
+  const previewDocument = useMemo(
+    () => <ResumePDF resume={resume} settings={settings} isPDF={DEBUG_RESUME_PDF_FLAG} />,
     [resume, settings]
   );
 
@@ -42,18 +54,14 @@ export const Resume = () => {
               scale={scale}
               enablePDFViewer={DEBUG_RESUME_PDF_FLAG}
             >
-              <ResumePDF
-                resume={resume}
-                settings={settings}
-                isPDF={DEBUG_RESUME_PDF_FLAG}
-              />
+              {previewDocument}
             </ResumeIframeCSR>
           </section>
           <ResumeControlBarCSR
             scale={scale}
             setScale={setScale}
             documentSize={settings.documentSize}
-            document={document}
+            document={exportDocument}
             fileName={resume.profile.name + " - Resume"}
             key={settings.themeColor}
           />
