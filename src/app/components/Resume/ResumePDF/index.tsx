@@ -72,6 +72,7 @@ export const ResumePDF = ({
         heading={formToHeading["projects"]}
         projects={projects}
         themeColor={themeColor}
+        isPDF={isPDF}
       />
     ),
     skills: () => (
@@ -80,6 +81,7 @@ export const ResumePDF = ({
         skills={skills}
         themeColor={themeColor}
         showBulletPoints={showBulletPoints["skills"]}
+        skillsDisplayMode={settings.skillsDisplayMode ?? "bullet"}
       />
     ),
     custom: () => (
@@ -88,6 +90,7 @@ export const ResumePDF = ({
         custom={custom}
         themeColor={themeColor}
         showBulletPoints={showBulletPoints["custom"]}
+        customDisplayMode={settings.customDisplayMode ?? "bullet"}
       />
     ),
   };
@@ -123,6 +126,7 @@ export const ResumePDF = ({
               profile={profile}
               themeColor={themeColor}
               isPDF={isPDF}
+              contactOrder={settings.contactOrder}
             />
             {showFormsOrder.map((form) => {
               const Component = formTypeToComponent[form];

@@ -1,17 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { parseResumeFromPdf } from "lib/parse-resume-from-pdf";
-import {
-  getHasUsedAppBefore,
-  saveStateToLocalStorage,
-} from "lib/redux/local-storage";
-import { type ShowForm, initialSettings } from "lib/redux/settingsSlice";
+import { saveParsedResumeToBuilderState } from "lib/redux/parsed-resume-to-builder-state";
 import { useRouter } from "next/navigation";
 import addPdfSrc from "public/assets/add-pdf.svg";
 import Image from "next/image";
 import { cx } from "lib/cx";
-import { deepClone } from "lib/deep-clone";
 
 const defaultFileState = {
   name: "",
@@ -31,9 +26,19 @@ export const ResumeDropzone = ({
   const [file, setFile] = useState(defaultFileState);
   const [isHoveredOnDropzone, setIsHoveredOnDropzone] = useState(false);
   const [hasNonPdfFile, setHasNonPdfFile] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
   const router = useRouter();
 
   const hasFile = Boolean(file.name);
+
+  useEffect(() => {
+    return () => {
+      if (file.fileUrl) {
+        URL.revokeObjectURL(file.fileUrl);
+      }
+    };
+  }, [file.fileUrl]);
 
   const setNewFile = (newFile: File) => {
     if (file.fileUrl) {
@@ -49,11 +54,18 @@ export const ResumeDropzone = ({
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const newFile = event.dataTransfer.files[0];
-    if (newFile.name.endsWith(".pdf")) {
+    if (!newFile) {
+      setIsHoveredOnDropzone(false);
+      return;
+    }
+
+    if (isPdfFile(newFile)) {
       setHasNonPdfFile(false);
+      setErrorMessage("");
       setNewFile(newFile);
     } else {
       setHasNonPdfFile(true);
+      setErrorMessage("Only PDF file is supported.");
     }
     setIsHoveredOnDropzone(false);
   };
@@ -63,35 +75,46 @@ export const ResumeDropzone = ({
     if (!files) return;
 
     const newFile = files[0];
-    setNewFile(newFile);
+    if (!newFile) return;
+
+    if (isPdfFile(newFile)) {
+      setHasNonPdfFile(false);
+      setErrorMessage("");
+      setNewFile(newFile);
+    } else {
+      setHasNonPdfFile(true);
+      setErrorMessage("Only PDF file is supported.");
+    }
   };
 
   const onRemove = () => {
+    if (file.fileUrl) {
+      URL.revokeObjectURL(file.fileUrl);
+    }
     setFile(defaultFileState);
+    setErrorMessage("");
+    setHasNonPdfFile(false);
     onFileUrlChange("");
   };
 
   const onImportClick = async () => {
-    const resume = await parseResumeFromPdf(file.fileUrl);
-    const settings = deepClone(initialSettings);
+    if (isImporting || !file.fileUrl) return;
 
-    // Set formToShow settings based on uploaded resume if users have used the app before
-    if (getHasUsedAppBefore()) {
-      const sections = Object.keys(settings.formToShow) as ShowForm[];
-      const sectionToFormToShow: Record<ShowForm, boolean> = {
-        workExperiences: resume.workExperiences.length > 0,
-        educations: resume.educations.length > 0,
-        projects: resume.projects.length > 0,
-        skills: resume.skills.descriptions.length > 0,
-        custom: resume.custom.descriptions.length > 0,
-      };
-      for (const section of sections) {
-        settings.formToShow[section] = sectionToFormToShow[section];
-      }
+    setErrorMessage("");
+    setIsImporting(true);
+    try {
+      const parsedResume = await parseResumeFromPdf(file.fileUrl);
+      saveParsedResumeToBuilderState(parsedResume, { enableSmartLayout: true });
+      router.push("/resume-builder");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to parse resume. Please try another PDF file.";
+      setErrorMessage(message);
+    } finally {
+      setIsImporting(false);
     }
-
-    saveStateToLocalStorage({ resume, settings });
-    router.push("/resume-builder");
   };
 
   return (
@@ -148,6 +171,7 @@ export const ResumeDropzone = ({
               type="button"
               className="outline-theme-blue rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
               title="Remove file"
+              disabled={isImporting}
               onClick={onRemove}
             >
               <XMarkIcon className="h-6 w-6" />
@@ -181,16 +205,26 @@ export const ResumeDropzone = ({
                 <button
                   type="button"
                   className="btn-primary"
+                  disabled={isImporting}
                   onClick={onImportClick}
                 >
-                  Import and Continue <span aria-hidden="true">→</span>
+                  {isImporting ? "Importing..." : "Import and Continue"}
+                  <span aria-hidden="true">→</span>
                 </button>
+              )}
+              {isImporting && !playgroundView && (
+                <p className="mt-2 text-sm text-gray-500" role="status" aria-live="polite">
+                  Parsing and preparing your resume. This can take a few seconds.
+                </p>
               )}
               <p className={cx(" text-gray-500", !playgroundView && "mt-6")}>
                 Note: {!playgroundView ? "Import" : "Parser"} works best on
                 single column resume
               </p>
             </>
+          )}
+          {errorMessage && (
+            <p className="mt-4 text-sm text-red-500" role="alert">{errorMessage}</p>
           )}
         </div>
       </div>
@@ -207,3 +241,6 @@ const getFileSizeString = (fileSizeB: number) => {
     return fileSizeMB.toPrecision(3) + " MB";
   }
 };
+
+const isPdfFile = (file: File) =>
+  file.type === "application/pdf" || /\.pdf$/i.test(file.name);

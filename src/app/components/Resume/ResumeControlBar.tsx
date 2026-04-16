@@ -27,10 +27,17 @@ const ResumeControlBar = ({
   });
 
   const [instance, update] = usePDF({ document });
+  const isDownloadReady = Boolean(instance.url) && !instance.loading && !instance.error;
 
   // Hook to update pdf when document changes
   useEffect(() => {
-    update();
+    const timeoutId = window.setTimeout(() => {
+      update();
+    }, 150);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
   }, [update, document]);
 
   return (
@@ -60,13 +67,30 @@ const ResumeControlBar = ({
         </label>
       </div>
       <a
-        className="ml-1 flex items-center gap-1 rounded-md border border-gray-300 px-3 py-0.5 hover:bg-gray-100 lg:ml-8"
-        href={instance.url!}
+        className={`ml-1 flex items-center gap-1 rounded-md border border-gray-300 px-3 py-0.5 lg:ml-8 ${
+          isDownloadReady
+            ? "hover:bg-gray-100"
+            : "cursor-not-allowed opacity-50"
+        }`}
+        href={isDownloadReady ? instance.url ?? "#" : "#"}
         download={fileName}
+        aria-disabled={!isDownloadReady}
+        onClick={(event) => {
+          if (!isDownloadReady) {
+            event.preventDefault();
+          }
+        }}
       >
         <ArrowDownTrayIcon className="h-4 w-4" />
-        <span className="whitespace-nowrap">Download Resume</span>
+        <span className="whitespace-nowrap">
+          {instance.loading ? "Preparing PDF..." : "Download Resume"}
+        </span>
       </a>
+      {instance.error && (
+        <p className="absolute bottom-[-1.4rem] right-[var(--resume-padding)] text-xs text-red-500">
+          Unable to generate PDF right now.
+        </p>
+      )}
     </div>
   );
 };

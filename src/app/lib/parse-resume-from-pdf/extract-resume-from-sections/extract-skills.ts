@@ -12,7 +12,19 @@ export const extractSkills = (sections: ResumeSectionToLines) => {
   const lines = getSectionLinesByKeywords(sections, ["skill"]);
   const descriptionsLineIdx = getDescriptionsLineIdx(lines) ?? 0;
   const descriptionsLines = lines.slice(descriptionsLineIdx);
-  const descriptions = getBulletPointsFromLines(descriptionsLines);
+  let descriptions = getBulletPointsFromLines(descriptionsLines);
+
+  const hasComma = descriptions.some((desc) => desc.includes(","));
+  const isLikelyCommaSeparatedList = hasComma;
+
+  if (isLikelyCommaSeparatedList) {
+    descriptions = descriptions
+      .map((desc) => desc.replace(/(?=https?:\/\/)/g, ", ").split(","))
+      .flat()
+      .map((text) => text.trim())
+      .filter(Boolean)
+      .filter((text) => !text.match(/^https?:\/\//) && !text.match(/^www\./));
+  }
 
   const featuredSkills = deepClone(initialFeaturedSkills);
   if (descriptionsLineIdx !== 0) {

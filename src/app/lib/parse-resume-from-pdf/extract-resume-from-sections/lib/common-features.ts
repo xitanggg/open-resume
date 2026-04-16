@@ -14,9 +14,9 @@ export const hasLetterAndIsAllUpperCase = (item: TextItem) =>
   hasLetter(item) && item.text.toUpperCase() === item.text;
 
 // Date Features
-const hasYear = (item: TextItem) => /(?:19|20)\d{2}/.test(item.text);
+export const hasYear = (item: TextItem) => /(?:19|20)\d{2}/.test(item.text);    
 // prettier-ignore
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const hasMonth = (item: TextItem) =>
   MONTHS.some(
     (month) =>
@@ -25,11 +25,11 @@ const hasMonth = (item: TextItem) =>
 const SEASONS = ["Summer", "Fall", "Spring", "Winter"];
 const hasSeason = (item: TextItem) =>
   SEASONS.some((season) => item.text.includes(season));
-const hasPresent = (item: TextItem) => item.text.includes("Present");
+const hasPresent = (item: TextItem) => item.text.toLowerCase().includes("present") || item.text.toLowerCase().includes("current") || item.text.toLowerCase().includes("now");
 export const DATE_FEATURE_SETS: FeatureSet[] = [
-  [hasYear, 1],
+  [hasYear, 2],
   [hasMonth, 1],
   [hasSeason, 1],
-  [hasPresent, 1],
+  [hasPresent, 2],
   [hasComma, -1],
 ];

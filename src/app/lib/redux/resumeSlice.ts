@@ -8,6 +8,7 @@ import type {
   ResumeProject,
   ResumeSkills,
   ResumeWorkExperience,
+  ResumeCustom,
 } from "lib/redux/types";
 import type { ShowForm } from "lib/redux/settingsSlice";
 
@@ -18,6 +19,7 @@ export const initialProfile: ResumeProfile = {
   phone: "",
   location: "",
   url: "",
+  github: "",
 };
 
 export const initialWorkExperience: ResumeWorkExperience = {
@@ -39,6 +41,7 @@ export const initialProject: ResumeProject = {
   project: "",
   date: "",
   descriptions: [],
+  url: "",
 };
 
 export const initialFeaturedSkill: FeaturedSkill = { skill: "", rating: 4 };
@@ -50,7 +53,8 @@ export const initialSkills: ResumeSkills = {
   descriptions: [],
 };
 
-export const initialCustom = {
+export const initialCustom: ResumeCustom = {
+  sectionName: "CUSTOM SECTION",
   descriptions: [],
 };
 

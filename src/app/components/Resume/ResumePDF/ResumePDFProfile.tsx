@@ -11,17 +11,32 @@ import {
 } from "components/Resume/ResumePDF/common";
 import type { ResumeProfile } from "lib/redux/types";
 
+const DEFAULT_CONTACT_ORDER = ["email", "phone", "url", "github", "location"];
+
 export const ResumePDFProfile = ({
   profile,
   themeColor,
   isPDF,
+  contactOrder,
 }: {
   profile: ResumeProfile;
   themeColor: string;
   isPDF: boolean;
+  contactOrder?: string[];
 }) => {
-  const { name, email, phone, url, summary, location } = profile;
-  const iconProps = { email, phone, location, url };
+  const { name, email, phone, url, summary, location, github } = profile;
+  const iconPropsMap: Record<string, string> = {
+    email,
+    phone,
+    location,
+    url,
+    github,
+  };
+
+  const orderedFields =
+    contactOrder && contactOrder.length > 0
+      ? contactOrder
+      : DEFAULT_CONTACT_ORDER;
 
   return (
     <ResumePDFSection style={{ marginTop: spacing["4"] }}>
@@ -32,7 +47,6 @@ export const ResumePDFProfile = ({
       >
         {name}
       </ResumePDFText>
-      {summary && <ResumePDFText>{summary}</ResumePDFText>}
       <View
         style={{
           ...styles.flexRowBetween,
@@ -40,19 +54,30 @@ export const ResumePDFProfile = ({
           marginTop: spacing["0.5"],
         }}
       >
-        {Object.entries(iconProps).map(([key, value]) => {
+        {orderedFields.map((key) => {
+          const value = iconPropsMap[key];
           if (!value) return null;
 
-          let iconType = key as IconType;
-          if (key === "url") {
+          let iconType: IconType = "url";
+          if (key === "email") {
+            iconType = "email";
+          } else if (key === "phone") {
+            iconType = "phone";
+          } else if (key === "location") {
+            iconType = "location";
+          } else if (key === "github") {
+            iconType = "url_github";
+          } else if (key === "url") {
             if (value.includes("github")) {
               iconType = "url_github";
             } else if (value.includes("linkedin")) {
               iconType = "url_linkedin";
+            } else {
+              iconType = "url";
             }
           }
 
-          const shouldUseLinkWrapper = ["email", "url", "phone"].includes(key);
+          const shouldUseLinkWrapper = ["email", "url", "phone", "github"].includes(key);
           const Wrapper = ({ children }: { children: React.ReactNode }) => {
             if (!shouldUseLinkWrapper) return <>{children}</>;
 
@@ -63,7 +88,7 @@ export const ResumePDFProfile = ({
                 break;
               }
               case "phone": {
-                src = `tel:${value.replace(/[^\d+]/g, "")}`; // Keep only + and digits
+                src = `tel:${value.replace(/[^\d+]/g, "")}`;
                 break;
               }
               default: {
@@ -95,6 +120,11 @@ export const ResumePDFProfile = ({
           );
         })}
       </View>
+      {summary && (
+        <ResumePDFText style={{ marginTop: spacing["1"] }}>
+          {summary}
+        </ResumePDFText>
+      )}
     </ResumePDFSection>
   );
 };

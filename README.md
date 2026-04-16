@@ -41,7 +41,7 @@ You can learn more about the resume parser algorithm in the ["Resume Parser Algo
 | **PDF Reader** | [PDF.js](https://github.com/mozilla/pdf.js) | PDF.js reads content from PDF files and is used by the resume parser at its first step to read a resume PDF’s content. |
 | **PDF Renderer** | [React-pdf](https://github.com/diegomura/react-pdf) | React-pdf creates PDF files and is used by the resume builder to create a downloadable PDF file. |
 
-## 📁 Project Structure
+##  Project Structure
 
 OpenResume is created with the NextJS web framework and follows its project structure. The source code can be found in `src/app`. There are a total of 4 page routes as shown in the table below. (Code path is relative to `src/app`)
 
@@ -56,7 +56,7 @@ OpenResume is created with the NextJS web framework and follows its project stru
 
 ### Method 1: npm
 
-1. Download the repo `git clone https://github.com/xitanggg/open-resume.git`
+1. Download the repo `git clone https://github.com/ADITYANAIR01/open-resume.git`
 2. Change the directory `cd open-resume`
 3. Install the dependency `npm install`
 4. Start a development server `npm run dev`
@@ -64,8 +64,23 @@ OpenResume is created with the NextJS web framework and follows its project stru
 
 ### Method 2: Docker
 
-1. Download the repo `git clone https://github.com/xitanggg/open-resume.git`
+1. Download the repo `git clone https://github.com/ADITYANAIR01/open-resume.git/`
 2. Change the directory `cd open-resume`
 3. Build the container `docker build -t open-resume .`
-4. Start the container `docker run -p 3000:3000 open-resume`
+4. Start the container `docker run --name open-resume -p 3000:3000 open-resume`
 5. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see OpenResume live
+
+## 🔄 Synced Forked Improvements Done
+
+The following updates were synced from the latest fork improvements:
+
+- Reorderable contact info section with a GitHub field
+- Objective moved below contact info in form and PDF
+- Clickable project link field (embedded in project name)
+- Comma-separated skills mode with pill UI and left/right reordering
+- Comma-separated skills rendered as pill boxes in PDF and live preview
+- Skill pill color now matches theme and updates dynamically
+- Added 6 new dark theme colors to the theme picker
+- Fixed `react-contenteditable` cursor jump bug in bullet textarea
+- Fixed `ResumePDFText` import bug in skills PDF
+

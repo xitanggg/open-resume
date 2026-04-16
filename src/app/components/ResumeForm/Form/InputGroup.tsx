@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import ContentEditable from "react-contenteditable";
+import { useState, useEffect, useRef } from "react";
 import { useAutosizeTextareaHeight } from "lib/hooks/useAutosizeTextareaHeight";
 
 interface InputProps<K extends string, V extends string | string[]> {
@@ -105,12 +104,9 @@ export const BulletListTextarea = <T extends string>(
 /**
  * BulletListTextareaGeneral is a textarea where each new line starts with a bullet point.
  *
- * In its core, it uses a div with contentEditable set to True. However, when
- * contentEditable is True, user can paste in any arbitrary html and it would
- * render. So to make it behaves like a textarea, it strips down all html while
- * keeping only the text part.
- *
- * Reference: https://stackoverflow.com/a/74998090/7699841
+ * Uses a native contentEditable div controlled via a ref so that the DOM is only
+ * updated when the value changes from outside (e.g. loaded from localStorage) and
+ * NOT on every user keystroke. This prevents the cursor from jumping on backspace.
  */
 const BulletListTextareaGeneral = <T extends string>({
   label,
@@ -121,25 +117,51 @@ const BulletListTextareaGeneral = <T extends string>({
   onChange,
   showBulletPoints = true,
 }: InputProps<T, string[]> & { showBulletPoints?: boolean }) => {
-  const html = getHTMLFromBulletListStrings(bulletListStrings);
+  const divRef = useRef<HTMLDivElement>(null);
+  // Tracks the stringified value we last wrote into the DOM so we can distinguish
+  // user edits (no DOM update needed) from external changes (DOM must be refreshed).
+  const lastWrittenJsonRef = useRef<string | null>(null);
+
+  // Set initial HTML content on mount only.
+  useEffect(() => {
+    if (divRef.current) {
+      divRef.current.innerHTML = getHTMLFromBulletListStrings(bulletListStrings);
+      lastWrittenJsonRef.current = JSON.stringify(bulletListStrings);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Sync when the value changes externally (e.g. import / localStorage load),
+  // but skip the update when the change originated from the user typing.
+  useEffect(() => {
+    const incoming = JSON.stringify(bulletListStrings);
+    if (incoming !== lastWrittenJsonRef.current && divRef.current) {
+      divRef.current.innerHTML = getHTMLFromBulletListStrings(bulletListStrings);
+      lastWrittenJsonRef.current = incoming;
+    }
+  }, [bulletListStrings]);
+
+  const handleInput = () => {
+    if (!divRef.current) return;
+    const newStrings = getBulletListStringsFromInnerText(
+      divRef.current.innerText
+    );
+    // Record what we're about to propagate so the effect above won't reset the DOM.
+    lastWrittenJsonRef.current = JSON.stringify(newStrings);
+    onChange(name, newStrings);
+  };
+
   return (
     <InputGroupWrapper label={label} className={wrapperClassName}>
-      <ContentEditable
-        contentEditable={true}
+      <div
+        ref={divRef}
+        contentEditable
+        suppressContentEditableWarning
+        data-placeholder={placeholder}
         className={`${INPUT_CLASS_NAME} cursor-text [&>div]:list-item ${
           showBulletPoints ? "pl-7" : "[&>div]:list-['']"
         }`}
-        // Note: placeholder currently doesn't work
-        placeholder={placeholder}
-        onChange={(e) => {
-          if (e.type === "input") {
-            const { innerText } = e.currentTarget as HTMLDivElement;
-            const newBulletListStrings =
-              getBulletListStringsFromInnerText(innerText);
-            onChange(name, newBulletListStrings);
-          }
-        }}
-        html={html}
+        onInput={handleInput}
       />
     </InputGroupWrapper>
   );
@@ -173,13 +195,21 @@ const getBulletListStringsFromInnerText = (innerText: string) => {
   return getStringsByLineBreak(newInnerText);
 };
 
+const escapeHtml = (text: string) =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
 const getHTMLFromBulletListStrings = (bulletListStrings: string[]) => {
   // If bulletListStrings is an empty array, make it an empty div
   if (bulletListStrings.length === 0) {
     return "<div></div>";
   }
 
-  return bulletListStrings.map((text) => `<div>${text}</div>`).join("");
+  return bulletListStrings
+    .map((text) => `<div>${escapeHtml(text)}</div>`)
+    .join("");
 };
 
 /**

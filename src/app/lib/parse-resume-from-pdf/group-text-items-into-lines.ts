@@ -65,6 +65,7 @@ const shouldAddSpaceBetweenText = (leftText: string, rightText: string) => {
     [":", ",", "|", ".", ...BULLET_POINTS].includes(leftTextEnd) &&
       rightTextStart !== " ",
     leftTextEnd !== " " && ["|", ...BULLET_POINTS].includes(rightTextStart),
+    rightText.startsWith("http") && leftTextEnd !== " ",
   ];
 
   return conditions.some((condition) => condition);

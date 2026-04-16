@@ -2,15 +2,10 @@ import { BULLET_POINTS } from "lib/parse-resume-from-pdf/extract-resume-from-sec
 import { isBold } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/common-features";
 import type { Lines, Line, Subsections } from "lib/parse-resume-from-pdf/types";
 
-/**
- * Divide lines into subsections based on difference in line gap or bold text.
- *
- * For profile section, we can directly pass all the text items to the feature
- * scoring systems. But for other sections, such as education and work experience,
- * we have to first divide the section into subsections since there can be multiple
- * schools or work experiences in the section. The feature scoring system then
- * process each subsection to retrieve each's resume attributes and append the results.
- */
+// prettier-ignore
+const SCHOOLS = ['College', 'University', 'Institute', 'School', 'Academy', 'BASIS', 'Magnet', 'Polytechnic', 'Seminary', 'Conservatory', 'Faculty', 'Bootcamp']
+const DEGREES = ["Associate", "Bachelor", "Master", "PhD", "Ph.", "B.A.", "B.S.", "B.E.", "B.Sc", "M.A.", "M.S.", "M.E.", "MBA", "M.Sc", "J.D.", "M.D.", "Doctorate", "Certificate", "BBA", "Diploma"]
+
 export const divideSectionIntoSubsections = (lines: Lines): Subsections => {
   // The main heuristic to determine a subsection is to check if its vertical line gap
   // is larger than the typical line gap * 1.4
@@ -23,10 +18,12 @@ export const divideSectionIntoSubsections = (lines: Lines): Subsections => {
   if (subsections.length === 1) {
     const isLineNewSubsectionByBold = (line: Line, prevLine: Line) => {
       if (
-        !isBold(prevLine[0]) &&
-        isBold(line[0]) &&
-        // Ignore bullet points that sometimes being marked as bolded
-        !BULLET_POINTS.includes(line[0].text)
+        (!isBold(prevLine[0]) &&
+          isBold(line[0]) &&
+          // Ignore bullet points that sometimes being marked as bolded
+          !BULLET_POINTS.includes(line[0].text)) ||
+        // also split if the new line has a significantly larger font size
+        line[0].height > prevLine[0].height + 1
       ) {
         return true;
       }
@@ -36,10 +33,35 @@ export const divideSectionIntoSubsections = (lines: Lines): Subsections => {
     subsections = createSubsections(lines, isLineNewSubsectionByBold);
   }
 
+  // Another fallback: if it is still 1 block, try splitting when a second school or degree appears
+  if (subsections.length === 1) {
+    const isLineNewSubsectionByKeywords = (line: Line, prevLine: Line, currentSubsection: Lines) => {
+      const lineText = line[0].text;
+      if (BULLET_POINTS.includes(lineText)) return false;
+
+      const lineHasSchool = SCHOOLS.some(s => lineText.includes(s));
+      const lineHasDegree = DEGREES.some(d => lineText.includes(d));
+      
+      if (!lineHasSchool && !lineHasDegree) return false;
+
+      const subsectionHasSchool = currentSubsection.some(l => SCHOOLS.some(s => l[0].text.includes(s)));
+      const subsectionHasDegree = currentSubsection.some(l => DEGREES.some(d => l[0].text.includes(d)));
+
+      if (lineHasSchool && subsectionHasSchool) return true;
+      if (lineHasDegree && subsectionHasDegree) return true;
+
+      return false;
+    };
+    const keywordSubsections = createSubsections(lines, isLineNewSubsectionByKeywords);
+    if (keywordSubsections.length > 1) {
+      subsections = keywordSubsections;
+    }
+  }
+
   return subsections;
 };
 
-type IsLineNewSubsection = (line: Line, prevLine: Line) => boolean;
+type IsLineNewSubsection = (line: Line, prevLine: Line, currentSubsection: Lines) => boolean;
 
 const createIsLineNewSubsectionByLineGap = (
   lines: Lines
@@ -80,7 +102,7 @@ const createSubsections = (
       subsection.push(line);
       continue;
     }
-    if (isLineNewSubsection(line, lines[i - 1])) {
+    if (isLineNewSubsection(line, lines[i - 1], subsection)) {
       subsections.push(subsection);
       subsection = [];
     }

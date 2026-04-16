@@ -34,7 +34,32 @@ export const getBulletPointsFromLines = (lines: Lines): string[] => {
   // Simply return all lines with text item joined together if there is no bullet point
   const firstBulletPointLineIndex = getFirstBulletPointLineIdx(lines);
   if (firstBulletPointLineIndex === undefined) {
-    return lines.map((line) => line.map((item) => item.text).join(" "));
+    return lines.map((line) => {
+      if (line.length > 1) {
+        // If a line has multiple text items but no bullets, check if they are "boxes" / a grid.
+        // If they are scattered text items separated by significant gaps (x distance > width), we comma-separate them.
+        let textParts = [];
+        for (let i = 0; i < line.length; i++) {
+          const item = line[i];
+          const text = item.text.trim();
+          if (!text) continue;
+          
+          if (i > 0) {
+            const prevItem = line[i - 1];
+            const gap = item.x - (prevItem.x + prevItem.width);
+            if (gap > 15 || item.x > prevItem.x + prevItem.width + 15) {
+              textParts.push(", ");
+            } else {
+              textParts.push(" ");
+            }
+          }
+          textParts.push(text);
+        }
+        
+        return textParts.join("").trim();
+      }
+      return line.map((item) => item.text).join(" ");
+    });
   }
 
   // Otherwise, process and remove bullet points
