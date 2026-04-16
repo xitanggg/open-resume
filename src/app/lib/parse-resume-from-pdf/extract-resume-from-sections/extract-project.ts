@@ -17,7 +17,7 @@ import {
 } from "lib/parse-resume-from-pdf/extract-resume-from-sections/lib/bullet-points";
 
 const URL_REGEX =
-  /(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/\S*)?/gi;
+  /((?:https?:\/\/|www\.)(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[^\s)]*)?|(?:[a-zA-Z0-9-]+\.)+(?:com|org|net|io|me|co|app|dev|edu|gov|tech|vercel\.app|netlify\.app)(?:\/[^\s)]*)?)/gi;
 const matchUrl = (text: string) =>
   text.match(URL_REGEX)?.[0] ?? "";
 
@@ -31,6 +31,8 @@ const escapeRegex = (text: string) =>
 
 const cleanProjectText = (text: string) =>
   text
+    .replace(new RegExp(`\\[([^\\]]+)\\]\\(${URL_REGEX.source}\\)`, "gi"), "$1")
+    .replace(new RegExp(`\\s*\\(${URL_REGEX.source}\\)\\s*`, "gi"), " ")
     .replace(URL_REGEX, " ")
     .replace(/\s+/g, " ")
     .trim();

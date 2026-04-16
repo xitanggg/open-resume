@@ -33,10 +33,23 @@ export const divideSectionIntoSubsections = (lines: Lines): Subsections => {
     subsections = createSubsections(lines, isLineNewSubsectionByBold);
   }
 
-  // Another fallback: if it is still 1 block, try splitting when a degree or date-like structure appears on a short line
+  // Another fallback: if it is still 1 block, try splitting when a second school or degree appears
   if (subsections.length === 1) {
-    const isLineNewSubsectionByKeywords = (line: Line, prevLine: Line) => {     
-      if (DEGREES.some(d => line[0].text.includes(d)) && !DEGREES.some(d => prevLine[0].text.includes(d))) return true;
+    const isLineNewSubsectionByKeywords = (line: Line, prevLine: Line, currentSubsection: Lines) => {
+      const lineText = line[0].text;
+      if (BULLET_POINTS.includes(lineText)) return false;
+
+      const lineHasSchool = SCHOOLS.some(s => lineText.includes(s));
+      const lineHasDegree = DEGREES.some(d => lineText.includes(d));
+      
+      if (!lineHasSchool && !lineHasDegree) return false;
+
+      const subsectionHasSchool = currentSubsection.some(l => SCHOOLS.some(s => l[0].text.includes(s)));
+      const subsectionHasDegree = currentSubsection.some(l => DEGREES.some(d => l[0].text.includes(d)));
+
+      if (lineHasSchool && subsectionHasSchool) return true;
+      if (lineHasDegree && subsectionHasDegree) return true;
+
       return false;
     };
     const keywordSubsections = createSubsections(lines, isLineNewSubsectionByKeywords);
@@ -48,7 +61,7 @@ export const divideSectionIntoSubsections = (lines: Lines): Subsections => {
   return subsections;
 };
 
-type IsLineNewSubsection = (line: Line, prevLine: Line) => boolean;
+type IsLineNewSubsection = (line: Line, prevLine: Line, currentSubsection: Lines) => boolean;
 
 const createIsLineNewSubsectionByLineGap = (
   lines: Lines
@@ -89,7 +102,7 @@ const createSubsections = (
       subsection.push(line);
       continue;
     }
-    if (isLineNewSubsection(line, lines[i - 1])) {
+    if (isLineNewSubsection(line, lines[i - 1], subsection)) {
       subsections.push(subsection);
       subsection = [];
     }
