@@ -10,7 +10,20 @@ export const groupTextItemsIntoLines = (textItems: TextItems): Lines => {
 
   // Group text items into lines based on hasEOL
   let line: Line = [];
+  let prevPageNumber = textItems[0]?.pageNumber;
   for (let item of textItems) {
+    const pageNumber = item.pageNumber;
+    if (
+      line.length > 0 &&
+      prevPageNumber !== undefined &&
+      pageNumber !== undefined &&
+      pageNumber !== prevPageNumber
+    ) {
+      lines.push(line);
+      line = [];
+    }
+    prevPageNumber = pageNumber;
+
     // If item is EOL, add current line to lines and start a new empty line
     if (item.hasEOL) {
       if (item.text.trim() !== "") {
