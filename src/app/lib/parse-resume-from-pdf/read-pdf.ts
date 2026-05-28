@@ -66,6 +66,7 @@ export const readPdf = async (fileUrl: string): Promise<TextItems> => {
         text: newText,
         x,
         y,
+        pageNumber: i,
       };
       return newItem;
     });

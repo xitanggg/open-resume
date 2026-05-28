@@ -8,6 +8,7 @@ export interface TextItem {
   height: number;
   fontName: string;
   hasEOL: boolean;
+  pageNumber?: number;
 }
 export type TextItems = TextItem[];
 
