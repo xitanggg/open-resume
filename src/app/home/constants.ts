@@ -65,6 +65,7 @@ export const END_HOME_RESUME: Resume = {
     {
       project: "OpenResume",
       date: "Spring 2023",
+      url:"https://github.com/xitanggg/open-resume",
       descriptions: [
         "Created and launched a free resume builder web app that allows thousands of users to create professional resume easily and land their dream jobs",
       ],
