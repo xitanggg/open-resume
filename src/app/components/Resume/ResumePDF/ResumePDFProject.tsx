@@ -18,7 +18,7 @@ export const ResumePDFProject = ({
 }) => {
   return (
     <ResumePDFSection themeColor={themeColor} heading={heading}>
-      {projects.map(({ project, date, descriptions }, idx) => (
+      {projects.map(({ project, date, descriptions, url }, idx) => (
         <View key={idx}>
           <View
             style={{
@@ -26,7 +26,18 @@ export const ResumePDFProject = ({
               marginTop: spacing["0.5"],
             }}
           >
-            <ResumePDFText bold={true}>{project}</ResumePDFText>
+            {url ? (
+              <a 
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none", color: "inherit" }}
+              href={url}
+               >
+                <ResumePDFText bold={true}>{project}</ResumePDFText>
+              </a>
+            ) : (
+              <ResumePDFText bold={true}>{project}</ResumePDFText>
+            )}
             <ResumePDFText>{date}</ResumePDFText>
           </View>
           <View style={{ ...styles.flexCol, marginTop: spacing["0.5"] }}>
