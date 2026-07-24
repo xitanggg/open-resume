@@ -8,7 +8,7 @@ import { ResumePDFSkills } from "components/Resume/ResumePDF/ResumePDFSkills";
 import { ResumePDFCustom } from "components/Resume/ResumePDF/ResumePDFCustom";
 import { DEFAULT_FONT_COLOR } from "lib/redux/settingsSlice";
 import type { Settings, ShowForm } from "lib/redux/settingsSlice";
-import type { Resume } from "lib/redux/types";
+import type { Resume, ResumeCustomSection } from "lib/redux/types";
 import { SuppressResumePDFErrorMessage } from "components/Resume/ResumePDF/common/SuppressResumePDFErrorMessage";
 
 /**
@@ -35,7 +35,7 @@ export const ResumePDF = ({
   settings: Settings;
   isPDF?: boolean;
 }) => {
-  const { profile, workExperiences, educations, projects, skills, custom } =
+  const { profile, workExperiences, educations, projects, skills, customSections } =
     resume;
   const { name } = profile;
   const {
@@ -51,45 +51,59 @@ export const ResumePDF = ({
 
   const showFormsOrder = formsOrder.filter((form) => formToShow[form]);
 
-  const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
-    workExperiences: () => (
-      <ResumePDFWorkExperience
-        heading={formToHeading["workExperiences"]}
-        workExperiences={workExperiences}
-        themeColor={themeColor}
-      />
-    ),
-    educations: () => (
-      <ResumePDFEducation
-        heading={formToHeading["educations"]}
-        educations={educations}
-        themeColor={themeColor}
-        showBulletPoints={showBulletPoints["educations"]}
-      />
-    ),
-    projects: () => (
-      <ResumePDFProject
-        heading={formToHeading["projects"]}
-        projects={projects}
-        themeColor={themeColor}
-      />
-    ),
-    skills: () => (
-      <ResumePDFSkills
-        heading={formToHeading["skills"]}
-        skills={skills}
-        themeColor={themeColor}
-        showBulletPoints={showBulletPoints["skills"]}
-      />
-    ),
-    custom: () => (
-      <ResumePDFCustom
-        heading={formToHeading["custom"]}
-        custom={custom}
-        themeColor={themeColor}
-        showBulletPoints={showBulletPoints["custom"]}
-      />
-    ),
+  const getFormComponent = (form: ShowForm): (() => JSX.Element) => {
+    switch (form) {
+      case "workExperiences":
+        return () => (
+          <ResumePDFWorkExperience
+            heading={formToHeading["workExperiences"]}
+            workExperiences={workExperiences}
+            themeColor={themeColor}
+          />
+        );
+      case "educations":
+        return () => (
+          <ResumePDFEducation
+            heading={formToHeading["educations"]}
+            educations={educations}
+            themeColor={themeColor}
+            showBulletPoints={showBulletPoints["educations"]}
+          />
+        );
+      case "projects":
+        return () => (
+          <ResumePDFProject
+            heading={formToHeading["projects"]}
+            projects={projects}
+            themeColor={themeColor}
+          />
+        );
+      case "skills":
+        return () => (
+          <ResumePDFSkills
+            heading={formToHeading["skills"]}
+            skills={skills}
+            themeColor={themeColor}
+            showBulletPoints={showBulletPoints["skills"]}
+          />
+        );
+      default: {
+        // Dynamic custom sections: look up by sectionId
+        const section: ResumeCustomSection | undefined = customSections?.find(
+          (s) => s.id === form
+        );
+        if (!section) return () => <></>;
+        const customData = { descriptions: section.descriptions };
+        return () => (
+          <ResumePDFCustom
+            heading={formToHeading[form] ?? "CUSTOM SECTION"}
+            custom={customData}
+            themeColor={themeColor}
+            showBulletPoints={showBulletPoints[form] ?? true}
+          />
+        );
+      }
+    }
   };
 
   return (
@@ -125,7 +139,7 @@ export const ResumePDF = ({
               isPDF={isPDF}
             />
             {showFormsOrder.map((form) => {
-              const Component = formTypeToComponent[form];
+              const Component = getFormComponent(form);
               return <Component key={form} />;
             })}
           </View>

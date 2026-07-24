@@ -14,19 +14,34 @@ import {
   selectIsLastForm,
   selectShowByForm,
   ShowForm,
+  addCustomSectionInSettings,
+  deleteCustomSectionInSettings,
 } from "lib/redux/settingsSlice";
+import {
+  addCustomSectionInResume,
+  deleteCustomSectionInResume,
+} from "lib/redux/resumeSlice";
 import {
   BuildingOfficeIcon,
   AcademicCapIcon,
   LightBulbIcon,
   WrenchIcon,
   PlusSmallIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/outline";
 import {
   addSectionInForm,
   deleteSectionInFormByIdx,
   moveSectionInForm,
 } from "lib/redux/resumeSlice";
+
+const STATIC_FORM_TO_ICON: Record<string, typeof BuildingOfficeIcon> = {
+  workExperiences: BuildingOfficeIcon,
+  educations: AcademicCapIcon,
+  projects: LightBulbIcon,
+  skills: WrenchIcon,
+  custom: WrenchIcon,
+};
 
 /**
  * BaseForm is the bare bone form, i.e. just the outline with no title and no control buttons.
@@ -45,14 +60,6 @@ export const BaseForm = ({
     {children}
   </section>
 );
-
-const FORM_TO_ICON: { [section in ShowForm]: typeof BuildingOfficeIcon } = {
-  workExperiences: BuildingOfficeIcon,
-  educations: AcademicCapIcon,
-  projects: LightBulbIcon,
-  skills: WrenchIcon,
-  custom: WrenchIcon,
-};
 
 export const Form = ({
   form,
@@ -81,7 +88,20 @@ export const Form = ({
     dispatch(changeFormOrder({ form, type }));
   };
 
-  const Icon = FORM_TO_ICON[form];
+  // Custom dynamic sections (not one of the built-in named sections) show a delete button
+  const isCustomDynamicSection =
+    form !== "workExperiences" &&
+    form !== "educations" &&
+    form !== "projects" &&
+    form !== "skills" &&
+    form !== "custom";
+
+  const handleDeleteCustomSection = () => {
+    dispatch(deleteCustomSectionInSettings({ sectionId: form }));
+    dispatch(deleteCustomSectionInResume({ sectionId: form }));
+  };
+
+  const Icon = STATIC_FORM_TO_ICON[form] ?? DocumentTextIcon;
 
   return (
     <BaseForm
@@ -107,6 +127,12 @@ export const Form = ({
             <MoveIconButton type="down" onClick={handleMoveClick} />
           )}
           <ShowIconButton show={showForm} setShow={setShowForm} />
+          {isCustomDynamicSection && (
+            <DeleteIconButton
+              onClick={handleDeleteCustomSection}
+              tooltipText="Delete section"
+            />
+          )}
         </div>
       </div>
       <ExpanderWithHeightTransition expanded={showForm}>

@@ -38,5 +38,6 @@ export const extractResumeFromSections = (
     custom: {
       descriptions: [],
     },
+    customSections: [],
   };
 };

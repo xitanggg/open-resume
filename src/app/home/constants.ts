@@ -87,6 +87,7 @@ export const END_HOME_RESUME: Resume = {
   custom: {
     descriptions: [],
   },
+  customSections: [],
 };
 
 export const START_HOME_RESUME: Resume = {
@@ -106,4 +107,5 @@ export const START_HOME_RESUME: Resume = {
   custom: {
     descriptions: [],
   },
+  customSections: [],
 };

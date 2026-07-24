@@ -2,29 +2,31 @@ import { Form } from "components/ResumeForm/Form";
 import { BulletListIconButton } from "components/ResumeForm/Form/IconButton";
 import { BulletListTextarea } from "components/ResumeForm/Form/InputGroup";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
-import { changeCustom, selectCustom } from "lib/redux/resumeSlice";
+import {
+  changeCustomSection,
+  selectCustomSectionById,
+} from "lib/redux/resumeSlice";
 import {
   selectShowBulletPoints,
   changeShowBulletPoints,
 } from "lib/redux/settingsSlice";
 
-export const CustomForm = () => {
-  const custom = useAppSelector(selectCustom);
+export const CustomForm = ({ sectionId }: { sectionId: string }) => {
+  const section = useAppSelector(selectCustomSectionById(sectionId));
   const dispatch = useAppDispatch();
-  const { descriptions } = custom;
-  const form = "custom";
-  const showBulletPoints = useAppSelector(selectShowBulletPoints(form));
+  const descriptions = section?.descriptions ?? [];
+  const showBulletPoints = useAppSelector(selectShowBulletPoints(sectionId));
 
   const handleCustomChange = (field: "descriptions", value: string[]) => {
-    dispatch(changeCustom({ field, value }));
+    dispatch(changeCustomSection({ sectionId, field, value }));
   };
 
   const handleShowBulletPoints = (value: boolean) => {
-    dispatch(changeShowBulletPoints({ field: form, value }));
+    dispatch(changeShowBulletPoints({ field: sectionId, value }));
   };
 
   return (
-    <Form form={form}>
+    <Form form={sectionId}>
       <div className="col-span-full grid grid-cols-6 gap-3">
         <div className="relative col-span-full">
           <BulletListTextarea
@@ -34,11 +36,11 @@ export const CustomForm = () => {
             placeholder="Bullet points"
             value={descriptions}
             onChange={handleCustomChange}
-            showBulletPoints={showBulletPoints}
+            showBulletPoints={showBulletPoints ?? true}
           />
           <div className="absolute left-[7.7rem] top-[0.07rem]">
             <BulletListIconButton
-              showBulletPoints={showBulletPoints}
+              showBulletPoints={showBulletPoints ?? true}
               onClick={handleShowBulletPoints}
             />
           </div>

@@ -3,6 +3,7 @@ import type { RootState } from "lib/redux/store";
 import type {
   FeaturedSkill,
   Resume,
+  ResumeCustomSection,
   ResumeEducation,
   ResumeProfile,
   ResumeProject,
@@ -61,6 +62,7 @@ export const initialResumeState: Resume = {
   projects: [initialProject],
   skills: initialSkills,
   custom: initialCustom,
+  customSections: [],
 };
 
 // Keep the field & value type in sync with CreateHandleChangeArgsWithDescriptions (components\ResumeForm\types.ts)
@@ -141,6 +143,36 @@ export const resumeSlice = createSlice({
       const { value } = action.payload;
       draft.custom.descriptions = value;
     },
+    changeCustomSection: (
+      draft,
+      action: PayloadAction<{
+        sectionId: string;
+        field: "descriptions";
+        value: string[];
+      }>
+    ) => {
+      const { sectionId, value } = action.payload;
+      const section = draft.customSections.find((s) => s.id === sectionId);
+      if (section) {
+        section.descriptions = value;
+      }
+    },
+    addCustomSectionInResume: (
+      draft,
+      action: PayloadAction<{ sectionId: string }>
+    ) => {
+      const { sectionId } = action.payload;
+      draft.customSections.push({ id: sectionId, descriptions: [] });
+    },
+    deleteCustomSectionInResume: (
+      draft,
+      action: PayloadAction<{ sectionId: string }>
+    ) => {
+      const { sectionId } = action.payload;
+      draft.customSections = draft.customSections.filter(
+        (s) => s.id !== sectionId
+      );
+    },
     addSectionInForm: (draft, action: PayloadAction<{ form: ShowForm }>) => {
       const { form } = action.payload;
       switch (form) {
@@ -170,18 +202,18 @@ export const resumeSlice = createSlice({
       if (form !== "skills" && form !== "custom") {
         if (
           (idx === 0 && direction === "up") ||
-          (idx === draft[form].length - 1 && direction === "down")
+          (idx === draft[form as "workExperiences" | "educations" | "projects"].length - 1 && direction === "down")
         ) {
           return draft;
         }
 
-        const section = draft[form][idx];
+        const section = draft[form as "workExperiences" | "educations" | "projects"][idx];
         if (direction === "up") {
-          draft[form][idx] = draft[form][idx - 1];
-          draft[form][idx - 1] = section;
+          draft[form as "workExperiences" | "educations" | "projects"][idx] = draft[form as "workExperiences" | "educations" | "projects"][idx - 1];
+          draft[form as "workExperiences" | "educations" | "projects"][idx - 1] = section;
         } else {
-          draft[form][idx] = draft[form][idx + 1];
-          draft[form][idx + 1] = section;
+          draft[form as "workExperiences" | "educations" | "projects"][idx] = draft[form as "workExperiences" | "educations" | "projects"][idx + 1];
+          draft[form as "workExperiences" | "educations" | "projects"][idx + 1] = section;
         }
       }
     },
@@ -191,7 +223,7 @@ export const resumeSlice = createSlice({
     ) => {
       const { form, idx } = action.payload;
       if (form !== "skills" && form !== "custom") {
-        draft[form].splice(idx, 1);
+        (draft[form as "workExperiences" | "educations" | "projects"] as any[]).splice(idx, 1);
       }
     },
     setResume: (draft, action: PayloadAction<Resume>) => {
@@ -207,6 +239,9 @@ export const {
   changeProjects,
   changeSkills,
   changeCustom,
+  changeCustomSection,
+  addCustomSectionInResume,
+  deleteCustomSectionInResume,
   addSectionInForm,
   moveSectionInForm,
   deleteSectionInFormByIdx,
@@ -221,5 +256,10 @@ export const selectEducations = (state: RootState) => state.resume.educations;
 export const selectProjects = (state: RootState) => state.resume.projects;
 export const selectSkills = (state: RootState) => state.resume.skills;
 export const selectCustom = (state: RootState) => state.resume.custom;
+export const selectCustomSections = (state: RootState) =>
+  state.resume.customSections;
+export const selectCustomSectionById =
+  (sectionId: string) => (state: RootState) =>
+    state.resume.customSections.find((s) => s.id === sectionId);
 
 export default resumeSlice.reducer;
