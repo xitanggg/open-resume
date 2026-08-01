@@ -62,6 +62,10 @@ export const ResumePDFText = ({
   style?: Style;
   children: React.ReactNode;
 }) => {
+  if (children === "" || children === null || children === undefined) {
+    return null;
+  }
+
   return (
     <Text
       style={{
@@ -85,7 +89,7 @@ export const ResumePDFBulletList = ({
 }) => {
   return (
     <>
-      {items.map((item, idx) => (
+      {items.filter((item) => item).map((item, idx) => (
         <View style={{ ...styles.flexRow }} key={idx}>
           {showBulletPoints && (
             <ResumePDFText

@@ -152,9 +152,17 @@ export const resumeSlice = createSlice({
       }>
     ) => {
       const { sectionId, value } = action.payload;
+      if (sectionId === "custom") {
+        if (!draft.custom) draft.custom = { descriptions: [] };
+        draft.custom.descriptions = value;
+        return;
+      }
+      if (!draft.customSections) draft.customSections = [];
       const section = draft.customSections.find((s) => s.id === sectionId);
       if (section) {
         section.descriptions = value;
+      } else {
+        draft.customSections.push({ id: sectionId, descriptions: value });
       }
     },
     addCustomSectionInResume: (
@@ -162,6 +170,7 @@ export const resumeSlice = createSlice({
       action: PayloadAction<{ sectionId: string }>
     ) => {
       const { sectionId } = action.payload;
+      if (!draft.customSections) draft.customSections = [];
       draft.customSections.push({ id: sectionId, descriptions: [] });
     },
     deleteCustomSectionInResume: (
@@ -169,6 +178,10 @@ export const resumeSlice = createSlice({
       action: PayloadAction<{ sectionId: string }>
     ) => {
       const { sectionId } = action.payload;
+      if (!draft.customSections) {
+        draft.customSections = [];
+        return;
+      }
       draft.customSections = draft.customSections.filter(
         (s) => s.id !== sectionId
       );
@@ -227,7 +240,14 @@ export const resumeSlice = createSlice({
       }
     },
     setResume: (draft, action: PayloadAction<Resume>) => {
-      return action.payload;
+      const resume = action.payload;
+      if (!resume.customSections) {
+        resume.customSections = [];
+      }
+      if (!resume.custom) {
+        resume.custom = { descriptions: [] };
+      }
+      return resume;
     },
   },
 });
@@ -257,9 +277,11 @@ export const selectProjects = (state: RootState) => state.resume.projects;
 export const selectSkills = (state: RootState) => state.resume.skills;
 export const selectCustom = (state: RootState) => state.resume.custom;
 export const selectCustomSections = (state: RootState) =>
-  state.resume.customSections;
+  state.resume.customSections ?? [];
 export const selectCustomSectionById =
-  (sectionId: string) => (state: RootState) =>
-    state.resume.customSections.find((s) => s.id === sectionId);
+  (sectionId: string) => (state: RootState) => {
+    if (sectionId === "custom") return state.resume.custom;
+    return state.resume.customSections?.find((s) => s.id === sectionId);
+  };
 
 export default resumeSlice.reducer;

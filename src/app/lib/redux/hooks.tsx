@@ -39,16 +39,36 @@ export const useSetInitialStore = () => {
     const state = loadStateFromLocalStorage();
     if (!state) return;
     if (state.resume) {
-      // We merge the initial state with the stored state to ensure
-      // backward compatibility, since new fields might be added to
-      // the initial state over time.
       const mergedResumeState = deepMerge(
         initialResumeState,
         state.resume
       ) as Resume;
       dispatch(setResume(mergedResumeState));
-    }
-    if (state.settings) {
+
+      if (state.settings) {
+        const mergedSettingsState = deepMerge(
+          initialSettings,
+          state.settings
+        ) as Settings;
+
+        // Ensure customSections from resume are present in settings
+        if (mergedResumeState.customSections && mergedResumeState.customSections.length > 0) {
+          for (const section of mergedResumeState.customSections) {
+            if (!mergedSettingsState.formToShow[section.id]) {
+              mergedSettingsState.formToShow[section.id] = true;
+            }
+            if (!mergedSettingsState.formToHeading[section.id]) {
+              mergedSettingsState.formToHeading[section.id] = (section as any).heading || "CUSTOM SECTION";
+            }
+            if (!mergedSettingsState.formsOrder.includes(section.id)) {
+              mergedSettingsState.formsOrder.push(section.id);
+            }
+          }
+        }
+
+        dispatch(setSettings(mergedSettingsState));
+      }
+    } else if (state.settings) {
       const mergedSettingsState = deepMerge(
         initialSettings,
         state.settings

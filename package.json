@@ -11,6 +11,7 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@heroicons/react": "^2.0.18",
     "@react-pdf/renderer": "^3.1.10",
     "@reduxjs/toolkit": "^1.9.5",

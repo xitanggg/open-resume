@@ -32,3 +32,58 @@
   --resume-control-bar-height: 3rem;
   --resume-padding: 1.5rem;
 }
+
+/* AI Animations */
+@keyframes ai-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ai-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ai-cursor {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes ai-sparkle-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(139, 92, 246, 0.15);
+  }
+}
+
+.animate-ai-slide-in {
+  animation: ai-slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-ai-fade-in {
+  animation: ai-fade-in 0.2s ease-out forwards;
+}
+
+.animate-ai-cursor {
+  animation: ai-cursor 0.8s ease-in-out infinite;
+}
+
+.animate-ai-sparkle-pulse {
+  animation: ai-sparkle-pulse 2s ease-in-out infinite;
+}
