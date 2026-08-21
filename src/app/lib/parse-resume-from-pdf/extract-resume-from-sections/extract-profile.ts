@@ -23,10 +23,24 @@ export const matchEmail = (item: TextItem) => item.text.match(/\S+@\S+\.\S+/);
 const hasAt = (item: TextItem) => item.text.includes("@");
 
 // Phone
-// Simple phone regex that matches (xxx)-xxx-xxxx where () and - are optional, - can also be space
+// Supports common national and international phone number formats.
+//
+// Examples:
+// 9198765432
+// 1234567890
+// 123-456-7890
+// 123 456 7890
+// (123) 456-7890
+// +91 98765 43210
+// +44 20 7946 0958
+// +1 555 123 4567
 export const matchPhone = (item: TextItem) =>
-  item.text.match(/\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}/);
-const hasParenthesis = (item: TextItem) => /\([0-9]+\)/.test(item.text);
+  item.text.match(
+    /(?<!\d)(?:\+\d{1,3}[\s.-]?)?(?:\(\d{1,4}\)|\d{1,4})(?:[\s.-]?\d{2,4}){2,4}(?!\d)/
+  );
+
+const hasParenthesis = (item: TextItem) =>
+  /\([0-9]+\)/.test(item.text);
 
 // Location
 // Simple location regex that matches "<City>, <ST>"
@@ -36,16 +50,20 @@ export const matchCityAndState = (item: TextItem) =>
 // Url
 // Simple url regex that matches "xxx.xxx/xxx" (xxx = anything not space)
 export const matchUrl = (item: TextItem) => item.text.match(/\S+\.[a-z]+\/\S+/);
+
 // Match https://xxx.xxx where s is optional
 const matchUrlHttpFallback = (item: TextItem) =>
   item.text.match(/https?:\/\/\S+\.\S+/);
+
 // Match www.xxx.xxx
 const matchUrlWwwFallback = (item: TextItem) =>
   item.text.match(/www\.\S+\.\S+/);
+
 const hasSlash = (item: TextItem) => item.text.includes("/");
 
 // Summary
-const has4OrMoreWords = (item: TextItem) => item.text.split(" ").length >= 4;
+const has4OrMoreWords = (item: TextItem) =>
+  item.text.split(" ").length >= 4;
 
 /**
  *              Unique Attribute
@@ -66,6 +84,7 @@ const NAME_FEATURE_SETS: FeatureSet[] = [
   [matchOnlyLetterSpaceOrPeriod, 3, true],
   [isBold, 2],
   [hasLetterAndIsAllUpperCase, 2],
+
   // Match against other unique attributes
   [hasAt, -4], // Email
   [hasNumber, -4], // Phone
@@ -86,7 +105,7 @@ const EMAIL_FEATURE_SETS: FeatureSet[] = [
   [has4OrMoreWords, -4], // Summary
 ];
 
-// Phone -> match phone regex (xxx)-xxx-xxxx
+// Phone -> match flexible national and international phone formats
 const PHONE_FEATURE_SETS: FeatureSet[] = [
   [matchPhone, 4, true],
   [hasLetter, -4], // Name, Email, Location, Url, Summary
@@ -130,22 +149,27 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
     textItems,
     NAME_FEATURE_SETS
   );
+
   const [email, emailScores] = getTextWithHighestFeatureScore(
     textItems,
     EMAIL_FEATURE_SETS
   );
+
   const [phone, phoneScores] = getTextWithHighestFeatureScore(
     textItems,
     PHONE_FEATURE_SETS
   );
+
   const [location, locationScores] = getTextWithHighestFeatureScore(
     textItems,
     LOCATION_FEATURE_SETS
   );
+
   const [url, urlScores] = getTextWithHighestFeatureScore(
     textItems,
     URL_FEATURE_SETS
   );
+
   const [summary, summaryScores] = getTextWithHighestFeatureScore(
     textItems,
     SUMMARY_FEATURE_SETS,
@@ -154,11 +178,14 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
   );
 
   const summaryLines = getSectionLinesByKeywords(sections, ["summary"]);
+
   const summarySection = summaryLines
     .flat()
     .map((textItem) => textItem.text)
     .join(" ");
+
   const objectiveLines = getSectionLinesByKeywords(sections, ["objective"]);
+
   const objectiveSection = objectiveLines
     .flat()
     .map((textItem) => textItem.text)
@@ -171,9 +198,11 @@ export const extractProfile = (sections: ResumeSectionToLines) => {
       phone,
       location,
       url,
+
       // Dedicated section takes higher precedence over profile summary
       summary: summarySection || objectiveSection || summary,
     },
+
     // For debugging
     profileScores: {
       name: nameScores,
