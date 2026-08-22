@@ -1,15 +1,23 @@
 import { useState } from "react";
+
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+
 import { parseResumeFromPdf } from "lib/parse-resume-from-pdf";
+import { parseResumeFromDocx } from "lib/parse-resume-from-docx";
+
 import {
   getHasUsedAppBefore,
   saveStateToLocalStorage,
 } from "lib/redux/local-storage";
+
 import { type ShowForm, initialSettings } from "lib/redux/settingsSlice";
+
 import { useRouter } from "next/navigation";
+
 import addPdfSrc from "public/assets/add-pdf.svg";
 import Image from "next/image";
+
 import { cx } from "lib/cx";
 import { deepClone } from "lib/deep-clone";
 
@@ -30,7 +38,8 @@ export const ResumeDropzone = ({
 }) => {
   const [file, setFile] = useState(defaultFileState);
   const [isHoveredOnDropzone, setIsHoveredOnDropzone] = useState(false);
-  const [hasNonPdfFile, setHasNonPdfFile] = useState(false);
+  const [hasUnsupportedFile, setHasUnsupportedFile] = useState(false);
+
   const router = useRouter();
 
   const hasFile = Boolean(file.name);
@@ -42,42 +51,87 @@ export const ResumeDropzone = ({
 
     const { name, size } = newFile;
     const fileUrl = URL.createObjectURL(newFile);
+
     setFile({ name, size, fileUrl });
     onFileUrlChange(fileUrl);
   };
 
+  const isSupportedFile = (newFile: File) => {
+    const fileName = newFile.name.toLowerCase();
+
+    return fileName.endsWith(".pdf") || fileName.endsWith(".docx");
+  };
+
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+
     const newFile = event.dataTransfer.files[0];
-    if (newFile.name.endsWith(".pdf")) {
-      setHasNonPdfFile(false);
+
+    if (!newFile) {
+      setIsHoveredOnDropzone(false);
+      return;
+    }
+
+    if (isSupportedFile(newFile)) {
+      setHasUnsupportedFile(false);
       setNewFile(newFile);
     } else {
-      setHasNonPdfFile(true);
+      setHasUnsupportedFile(true);
     }
+
     setIsHoveredOnDropzone(false);
   };
 
-  const onInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onInputChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
-    if (!files) return;
+
+    if (!files || files.length === 0) return;
 
     const newFile = files[0];
-    setNewFile(newFile);
+
+    if (isSupportedFile(newFile)) {
+      setHasUnsupportedFile(false);
+      setNewFile(newFile);
+    } else {
+      setHasUnsupportedFile(true);
+    }
+
+    // Allow selecting the same file again after removing/rejecting it.
+    event.target.value = "";
   };
 
   const onRemove = () => {
+    if (file.fileUrl) {
+      URL.revokeObjectURL(file.fileUrl);
+    }
+
     setFile(defaultFileState);
+    setHasUnsupportedFile(false);
     onFileUrlChange("");
   };
 
   const onImportClick = async () => {
-    const resume = await parseResumeFromPdf(file.fileUrl);
+    const fileName = file.name.toLowerCase();
+
+    let resume;
+
+    if (fileName.endsWith(".pdf")) {
+      resume = await parseResumeFromPdf(file.fileUrl);
+    } else if (fileName.endsWith(".docx")) {
+      resume = await parseResumeFromDocx(file.fileUrl);
+    } else {
+      return;
+    }
+
     const settings = deepClone(initialSettings);
 
-    // Set formToShow settings based on uploaded resume if users have used the app before
+    // Set formToShow settings based on uploaded resume
+    // if users have used the app before
     if (getHasUsedAppBefore()) {
       const sections = Object.keys(settings.formToShow) as ShowForm[];
+
       const sectionToFormToShow: Record<ShowForm, boolean> = {
         workExperiences: resume.workExperiences.length > 0,
         educations: resume.educations.length > 0,
@@ -85,6 +139,7 @@ export const ResumeDropzone = ({
         skills: resume.skills.descriptions.length > 0,
         custom: resume.custom.descriptions.length > 0,
       };
+
       for (const section of sections) {
         settings.formToShow[section] = sectionToFormToShow[section];
       }
@@ -119,11 +174,12 @@ export const ResumeDropzone = ({
           <Image
             src={addPdfSrc}
             className="mx-auto h-14 w-14"
-            alt="Add pdf"
+            alt="Add PDF or DOCX"
             aria-hidden="true"
             priority
           />
         )}
+
         {!hasFile ? (
           <>
             <p
@@ -132,8 +188,9 @@ export const ResumeDropzone = ({
                 !playgroundView && "text-lg font-semibold"
               )}
             >
-              Browse a pdf file or drop it here
+              Browse a PDF or DOCX file or drop it here
             </p>
+
             <p className="flex text-sm text-gray-500">
               <LockClosedIcon className="mr-1 mt-1 h-3 w-3 text-gray-400" />
               File data is used locally and never leaves your browser
@@ -144,6 +201,7 @@ export const ResumeDropzone = ({
             <div className="pl-7 font-semibold text-gray-900">
               {file.name} - {getFileSizeString(file.size)}
             </div>
+
             <button
               type="button"
               className="outline-theme-blue rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
@@ -154,6 +212,7 @@ export const ResumeDropzone = ({
             </button>
           </div>
         )}
+
         <div className="pt-4">
           {!hasFile ? (
             <>
@@ -164,15 +223,19 @@ export const ResumeDropzone = ({
                 )}
               >
                 Browse file
+
                 <input
                   type="file"
                   className="sr-only"
-                  accept=".pdf"
+                  accept=".pdf,.docx"
                   onChange={onInputChange}
                 />
               </label>
-              {hasNonPdfFile && (
-                <p className="mt-6 text-red-400">Only pdf file is supported</p>
+
+              {hasUnsupportedFile && (
+                <p className="mt-6 text-red-400">
+                  Only PDF and DOCX files are supported
+                </p>
               )}
             </>
           ) : (
@@ -183,10 +246,17 @@ export const ResumeDropzone = ({
                   className="btn-primary"
                   onClick={onImportClick}
                 >
-                  Import and Continue <span aria-hidden="true">→</span>
+                  Import and Continue{" "}
+                  <span aria-hidden="true">→</span>
                 </button>
               )}
-              <p className={cx(" text-gray-500", !playgroundView && "mt-6")}>
+
+              <p
+                className={cx(
+                  "text-gray-500",
+                  !playgroundView && "mt-6"
+                )}
+              >
                 Note: {!playgroundView ? "Import" : "Parser"} works best on
                 single column resume
               </p>
@@ -201,6 +271,7 @@ export const ResumeDropzone = ({
 const getFileSizeString = (fileSizeB: number) => {
   const fileSizeKB = fileSizeB / 1024;
   const fileSizeMB = fileSizeKB / 1024;
+
   if (fileSizeKB < 1000) {
     return fileSizeKB.toPrecision(3) + " KB";
   } else {

@@ -21,6 +21,7 @@
     "autoprefixer": "10.4.14",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
+    "mammoth": "^1.12.1",
     "next": "13.4.4",
     "pdfjs": "^2.5.0",
     "pdfjs-dist": "^3.7.107",
