@@ -12,6 +12,7 @@ export interface Settings {
     projects: boolean;
     skills: boolean;
     custom: boolean;
+    [key: string]: boolean;
   };
   formToHeading: {
     workExperiences: string;
@@ -19,6 +20,7 @@ export interface Settings {
     projects: string;
     skills: string;
     custom: string;
+    [key: string]: string;
   };
   formsOrder: ShowForm[];
   showBulletPoints: {
@@ -26,11 +28,12 @@ export interface Settings {
     projects: boolean;
     skills: boolean;
     custom: boolean;
+    [key: string]: boolean;
   };
 }
 
-export type ShowForm = keyof Settings["formToShow"];
-export type FormWithBulletPoints = keyof Settings["showBulletPoints"];
+export type ShowForm = string;
+export type FormWithBulletPoints = string;
 export type GeneralSetting = Exclude<
   keyof Settings,
   "formToShow" | "formToHeading" | "formsOrder" | "showBulletPoints"
@@ -121,6 +124,26 @@ export const settingsSlice = createSlice({
       const { field, value } = action.payload;
       draft["showBulletPoints"][field] = value;
     },
+    addCustomSectionInSettings: (
+      draft,
+      action: PayloadAction<{ sectionId: string; heading: string }>
+    ) => {
+      const { sectionId, heading } = action.payload;
+      draft.formToShow[sectionId] = true;
+      draft.formToHeading[sectionId] = heading;
+      draft.showBulletPoints[sectionId] = true;
+      draft.formsOrder.push(sectionId);
+    },
+    deleteCustomSectionInSettings: (
+      draft,
+      action: PayloadAction<{ sectionId: string }>
+    ) => {
+      const { sectionId } = action.payload;
+      delete draft.formToShow[sectionId];
+      delete draft.formToHeading[sectionId];
+      delete draft.showBulletPoints[sectionId];
+      draft.formsOrder = draft.formsOrder.filter((id) => id !== sectionId);
+    },
     setSettings: (draft, action: PayloadAction<Settings>) => {
       return action.payload;
     },
@@ -133,6 +156,8 @@ export const {
   changeFormHeading,
   changeFormOrder,
   changeShowBulletPoints,
+  addCustomSectionInSettings,
+  deleteCustomSectionInSettings,
   setSettings,
 } = settingsSlice.actions;
 

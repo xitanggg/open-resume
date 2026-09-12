@@ -75,18 +75,32 @@ export const ResumeDropzone = ({
     const resume = await parseResumeFromPdf(file.fileUrl);
     const settings = deepClone(initialSettings);
 
-    // Set formToShow settings based on uploaded resume if users have used the app before
-    if (getHasUsedAppBefore()) {
-      const sections = Object.keys(settings.formToShow) as ShowForm[];
-      const sectionToFormToShow: Record<ShowForm, boolean> = {
-        workExperiences: resume.workExperiences.length > 0,
-        educations: resume.educations.length > 0,
-        projects: resume.projects.length > 0,
-        skills: resume.skills.descriptions.length > 0,
-        custom: resume.custom.descriptions.length > 0,
-      };
-      for (const section of sections) {
-        settings.formToShow[section] = sectionToFormToShow[section];
+    // Set formToShow settings based on uploaded resume
+    const sections = Object.keys(settings.formToShow) as ShowForm[];
+    const sectionToFormToShow: Record<string, boolean> = {
+      workExperiences: resume.workExperiences.length > 0,
+      educations: resume.educations.length > 0,
+      projects: resume.projects.length > 0,
+      skills: resume.skills.descriptions.length > 0,
+      custom: (resume.custom?.descriptions?.length ?? 0) > 0,
+    };
+    for (const section of sections) {
+      settings.formToShow[section] = sectionToFormToShow[section] ?? false;
+    }
+
+    if ((resume as any).customHeading) {
+      settings.formToHeading["custom"] = (resume as any).customHeading;
+    }
+
+    if (resume.customSections && resume.customSections.length > 0) {
+      for (const section of resume.customSections) {
+        const heading = (section as any).heading || "CUSTOM SECTION";
+        settings.formToShow[section.id] = true;
+        settings.formToHeading[section.id] = heading;
+        settings.showBulletPoints[section.id] = true;
+        if (!settings.formsOrder.includes(section.id)) {
+          settings.formsOrder.push(section.id);
+        }
       }
     }
 
