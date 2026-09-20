@@ -69,3 +69,7 @@ OpenResume is created with the NextJS web framework and follows its project stru
 3. Build the container `docker build -t open-resume .`
 4. Start the container `docker run -p 3000:3000 open-resume`
 5. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see OpenResume live
+
+## 🔗 相关工具 / Related tools
+
+- [简历大师 Resume Master](https://markmiller1.github.io/resume-master/) — 免费、纯前端、隐私优先的简历生成器，64 套模板 + 面试/谈薪指南，数据不出本机
