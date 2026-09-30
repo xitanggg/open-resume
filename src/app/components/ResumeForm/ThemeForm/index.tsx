@@ -31,7 +31,7 @@ export const ThemeForm = () => {
     <BaseForm>
       <div className="flex flex-col gap-6">
         <div className="flex items-center gap-2">
-          <Cog6ToothIcon className="h-6 w-6 text-gray-600" aria-hidden="true" />
+          <Cog6ToothIcon className="w-6 h-6 text-gray-600" aria-hidden="true" />
           <h1 className="text-lg font-semibold tracking-wide text-gray-900 ">
             Resume Setting
           </h1>
@@ -45,10 +45,10 @@ export const ThemeForm = () => {
             onChange={handleSettingsChange}
             inputStyle={{ color: themeColor }}
           />
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mt-2">
             {THEME_COLORS.map((color, idx) => (
               <div
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-sm text-white"
+                className="flex items-center justify-center w-10 h-10 text-sm text-white rounded-md cursor-pointer"
                 style={{ backgroundColor: color }}
                 key={idx}
                 onClick={() => handleSettingsChange("themeColor", color)}

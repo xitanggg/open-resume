@@ -1,25 +1,18 @@
 import { Form, FormSection } from "components/ResumeForm/Form";
-import {
-  Input,
-  BulletListTextarea,
-} from "components/ResumeForm/Form/InputGroup";
+import {Input,BulletListTextarea} from "components/ResumeForm/Form/InputGroup";
 import type { CreateHandleChangeArgsWithDescriptions } from "components/ResumeForm/types";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
-import {
-  changeWorkExperiences,
-  selectWorkExperiences,
-} from "lib/redux/resumeSlice";
+import {changeWorkExperiences,selectWorkExperiences} from "lib/redux/resumeSlice";
 import type { ResumeWorkExperience } from "lib/redux/types";
 
 export const WorkExperiencesForm = () => {
   const workExperiences = useAppSelector(selectWorkExperiences);
   const dispatch = useAppDispatch();
-
   const showDelete = workExperiences.length > 1;
 
   return (
     <Form form="workExperiences" addButtonText="Add Job">
-      {workExperiences.map(({ company, jobTitle, date, descriptions }, idx) => {
+      {workExperiences.map(({ company, jobTitle, date, locationWork, descriptions }, idx) => {
         const handleWorkExperienceChange = (
           ...[
             field,
@@ -29,7 +22,7 @@ export const WorkExperiencesForm = () => {
           // TS doesn't support passing union type to single call signature
           // https://github.com/microsoft/TypeScript/issues/54027
           // any is used here as a workaround
-          dispatch(changeWorkExperiences({ idx, field, value } as any));
+          dispatch(changeWorkExperiences({ idx, field, value, locationWork } as any));
         };
         const showMoveUp = idx !== 0;
         const showMoveDown = idx !== workExperiences.length - 1;
@@ -66,6 +59,14 @@ export const WorkExperiencesForm = () => {
               name="date"
               placeholder="Jun 2022 - Present"
               value={date}
+              onChange={handleWorkExperienceChange}
+            />
+            <Input
+              label="Location"
+              labelClassName="col-span-full"
+              name="locationWork"
+              placeholder="office"
+              value={locationWork}
               onChange={handleWorkExperienceChange}
             />
             <BulletListTextarea

@@ -2,9 +2,6 @@
 // https://stackoverflow.com/a/63486898/7699841
 import * as pdfjs from "pdfjs-dist";
 // @ts-ignore
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-
 import type { TextItem as PdfjsTextItem } from "pdfjs-dist/types/src/display/api";
 import type { TextItem, TextItems } from "lib/parse-resume-from-pdf/types";
 
@@ -21,7 +18,7 @@ import type { TextItem, TextItems } from "lib/parse-resume-from-pdf/types";
  *     const textItems = await readPdf(fileUrl);
  * }
  */
-export const readPdf = async (fileUrl: string): Promise<TextItems> => {
+export const readPdf = async (fileUrl:any): Promise<TextItems> => {
   const pdfFile = await pdfjs.getDocument(fileUrl).promise;
   let textItems: TextItems = [];
 

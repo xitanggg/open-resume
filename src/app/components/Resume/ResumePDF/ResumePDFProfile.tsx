@@ -1,14 +1,7 @@
 import { View } from "@react-pdf/renderer";
-import {
-  ResumePDFIcon,
-  type IconType,
-} from "components/Resume/ResumePDF/common/ResumePDFIcon";
+import { ResumePDFIcon, type IconType } from "components/Resume/ResumePDF/common/ResumePDFIcon";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
-import {
-  ResumePDFLink,
-  ResumePDFSection,
-  ResumePDFText,
-} from "components/Resume/ResumePDF/common";
+import { ResumePDFLink, ResumePDFSection, ResumePDFText } from "components/Resume/ResumePDF/common";
 import type { ResumeProfile } from "lib/redux/types";
 
 export const ResumePDFProfile = ({
@@ -32,7 +25,10 @@ export const ResumePDFProfile = ({
       >
         {name}
       </ResumePDFText>
-      {summary && <ResumePDFText>{summary}</ResumePDFText>}
+      {summary && <ResumePDFText style={{
+        fontSize: 20,
+      }}
+      >{summary}</ResumePDFText>}
       <View
         style={{
           ...styles.flexRowBetween,
@@ -42,7 +38,6 @@ export const ResumePDFProfile = ({
       >
         {Object.entries(iconProps).map(([key, value]) => {
           if (!value) return null;
-
           let iconType = key as IconType;
           if (key === "url") {
             if (value.includes("github")) {
@@ -85,6 +80,11 @@ export const ResumePDFProfile = ({
                 ...styles.flexRow,
                 alignItems: "center",
                 gap: spacing["1"],
+                fontSize: 20,
+                ... (key === "url" && {
+                  marginTop: 15,
+                  fontSize: 25
+                })
               }}
             >
               <ResumePDFIcon type={iconType} isPDF={isPDF} />
@@ -95,6 +95,6 @@ export const ResumePDFProfile = ({
           );
         })}
       </View>
-    </ResumePDFSection>
+    </ResumePDFSection >
   );
 };

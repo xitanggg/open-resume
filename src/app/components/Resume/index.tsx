@@ -35,7 +35,8 @@ export const Resume = () => {
       <div className="relative flex justify-center md:justify-start">
         <FlexboxSpacer maxWidth={50} className="hidden md:block" />
         <div className="relative">
-          <section className="h-[calc(100vh-var(--top-nav-bar-height)-var(--resume-control-bar-height))] overflow-hidden md:p-[var(--resume-padding)]">
+          <section className="h-[calc(100vh-var(--top-nav-bar-height)-var(--resume-control-bar-height))] w-full h-h-full
+           overflow-hidden md:p-[var(--resume-padding)]">
             <ResumeIframeCSR
               documentSize={settings.documentSize}
               scale={scale}
@@ -56,7 +57,7 @@ export const Resume = () => {
             fileName={resume.profile.name + " - Resume"}
           />
         </div>
-        <ResumeControlBarBorder />
+         <ResumeControlBarBorder /> 
       </div>
     </>
   );

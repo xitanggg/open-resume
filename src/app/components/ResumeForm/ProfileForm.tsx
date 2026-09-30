@@ -50,7 +50,7 @@ export const ProfileForm = () => {
         />
         <Input
           label="Website"
-          labelClassName="col-span-4"
+          labelClassName="col-span-4 font-extrabold"
           name="url"
           placeholder="linkedin.com/in/khanacademy"
           value={url}

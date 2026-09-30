@@ -18,7 +18,7 @@ export const ResumePDFWorkExperience = ({
 }) => {
   return (
     <ResumePDFSection themeColor={themeColor} heading={heading}>
-      {workExperiences.map(({ company, jobTitle, date, descriptions }, idx) => {
+      {workExperiences.map(({ company, jobTitle, date, descriptions,locationWork}, idx) => {
         // Hide company name if it is the same as the previous company
         const hideCompanyName =
           idx > 0 && company === workExperiences[idx - 1].company;
@@ -38,8 +38,10 @@ export const ResumePDFWorkExperience = ({
             >
               <ResumePDFText>{jobTitle}</ResumePDFText>
               <ResumePDFText>{date}</ResumePDFText>
+             
             </View>
             <View style={{ ...styles.flexCol, marginTop: spacing["1.5"] }}>
+               <ResumePDFText>{locationWork}</ResumePDFText>
               <ResumePDFBulletList items={descriptions} />
             </View>
           </View>
