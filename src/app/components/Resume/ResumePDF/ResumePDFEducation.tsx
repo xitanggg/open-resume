@@ -1,9 +1,5 @@
 import { View } from "@react-pdf/renderer";
-import {
-  ResumePDFBulletList,
-  ResumePDFSection,
-  ResumePDFText,
-} from "components/Resume/ResumePDF/common";
+import {ResumePDFBulletList,ResumePDFSection,ResumePDFText} from "components/Resume/ResumePDF/common";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import type { ResumeEducation } from "lib/redux/types";
 
@@ -21,7 +17,7 @@ export const ResumePDFEducation = ({
   return (
     <ResumePDFSection themeColor={themeColor} heading={heading}>
       {educations.map(
-        ({ school, degree, date, gpa, descriptions = [] }, idx) => {
+        ({ school, degree, locationEducation,date, gpa, descriptions = [] }, idx) => {
           // Hide school name if it is the same as the previous school
           const hideSchoolName =
             idx > 0 && school === educations[idx - 1].school;
@@ -40,12 +36,12 @@ export const ResumePDFEducation = ({
                     : spacing["1.5"],
                 }}
               >
-                <ResumePDFText>{`${
-                  gpa
+                <ResumePDFText>{`${gpa
                     ? `${degree} - ${Number(gpa) ? gpa + " GPA" : gpa}`
                     : degree
-                }`}</ResumePDFText>
+                  }`}</ResumePDFText>
                 <ResumePDFText>{date}</ResumePDFText>
+                <ResumePDFText>{locationEducation}</ResumePDFText>
               </View>
               {showDescriptions && (
                 <View style={{ ...styles.flexCol, marginTop: spacing["1.5"] }}>

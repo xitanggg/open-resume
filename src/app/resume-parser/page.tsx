@@ -52,12 +52,12 @@ export default function ResumeParser() {
   }, [fileUrl]);
 
   return (
-    <main className="h-full w-full overflow-hidden">
+    <main className="w-full h-full overflow-hidden">
       <div className="grid md:grid-cols-6">
         <div className="flex justify-center px-2 md:col-span-3 md:h-[calc(100vh-var(--top-nav-bar-height))] md:justify-end">
           <section className="mt-5 grow px-4 md:max-w-[600px] md:px-0">
             <div className="aspect-h-[9.5] aspect-w-7">
-              <iframe src={`${fileUrl}#navpanes=0`} className="h-full w-full" />
+              <iframe src={`${fileUrl}#navpanes=0`} className="w-full h-full" />
             </div>
           </section>
           <FlexboxSpacer maxWidth={45} className="hidden md:block" />
@@ -73,7 +73,7 @@ export default function ResumeParser() {
               ability to parse information from a resume PDF. Click around the
               PDF examples below to observe different parsing results.
             </Paragraph>
-            <div className="mt-3 flex gap-3">
+            <div className="flex gap-3 mt-3">
               {RESUME_EXAMPLES.map((example, idx) => (
                 <article
                   key={idx}

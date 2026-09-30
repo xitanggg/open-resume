@@ -20,16 +20,17 @@ export const EducationsForm = () => {
   const form = "educations";
   const showBulletPoints = useAppSelector(selectShowBulletPoints(form));
 
+
   return (
     <Form form={form} addButtonText="Add School">
-      {educations.map(({ school, degree, gpa, date, descriptions }, idx) => {
+      {educations.map(({ school, degree, gpa, date, descriptions,locationEducation }, idx) => {
         const handleEducationChange = (
           ...[
             field,
             value,
           ]: CreateHandleChangeArgsWithDescriptions<ResumeEducation>
         ) => {
-          dispatch(changeEducations({ idx, field, value } as any));
+          dispatch(changeEducations({ idx, field, value, location } as any));
         };
 
         const handleShowBulletPoints = (value: boolean) => {
@@ -63,6 +64,14 @@ export const EducationsForm = () => {
               name="date"
               placeholder="May 2018"
               value={date}
+              onChange={handleEducationChange}
+            />
+            <Input
+              label="Location"
+              labelClassName="col-span-full"
+              name="locationEducation"
+              placeholder="City, Country"
+              value={locationEducation}
               onChange={handleEducationChange}
             />
             <Input

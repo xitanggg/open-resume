@@ -135,22 +135,22 @@ export const ResumeDropzone = ({
               Browse a pdf file or drop it here
             </p>
             <p className="flex text-sm text-gray-500">
-              <LockClosedIcon className="mr-1 mt-1 h-3 w-3 text-gray-400" />
+              <LockClosedIcon className="w-3 h-3 mt-1 mr-1 text-gray-400" />
               File data is used locally and never leaves your browser
             </p>
           </>
         ) : (
           <div className="flex items-center justify-center gap-3 pt-3">
-            <div className="pl-7 font-semibold text-gray-900">
+            <div className="font-semibold text-gray-900 pl-7">
               {file.name} - {getFileSizeString(file.size)}
             </div>
             <button
               type="button"
-              className="outline-theme-blue rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+              className="p-1 text-gray-400 rounded-md outline-theme-blue hover:bg-gray-100 hover:text-gray-500"
               title="Remove file"
               onClick={onRemove}
             >
-              <XMarkIcon className="h-6 w-6" />
+              <XMarkIcon className="w-6 h-6" />
             </button>
           </div>
         )}
