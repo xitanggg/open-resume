@@ -1,5 +1,6 @@
 import { Text, View, Link } from "@react-pdf/renderer";
 import type { Style } from "@react-pdf/types";
+
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import { DEBUG_RESUME_PDF_FLAG } from "lib/constants";
 import { DEFAULT_FONT_COLOR } from "lib/redux/settingsSlice";
@@ -36,10 +37,11 @@ export const ResumePDFSection = ({
             debug={DEBUG_RESUME_PDF_FLAG}
           />
         )}
+
         <Text
           style={{
             fontWeight: "bold",
-            letterSpacing: "0.3pt", // tracking-wide -> 0.025em * 12 pt = 0.3pt
+            letterSpacing: "0.3pt",
           }}
           debug={DEBUG_RESUME_PDF_FLAG}
         >
@@ -47,6 +49,7 @@ export const ResumePDFSection = ({
         </Text>
       </View>
     )}
+
     {children}
   </View>
 );
@@ -76,6 +79,54 @@ export const ResumePDFText = ({
   );
 };
 
+/**
+ * Adds zero-width break opportunities to very long unbroken
+ * strings so React-PDF can wrap them instead of allowing
+ * them to overflow outside the page.
+ */
+export const ResumePDFTextWithBreaks = ({
+  bold = false,
+  themeColor,
+  style = {},
+  children,
+}: {
+  bold?: boolean;
+  themeColor?: string;
+  style?: Style;
+  children: string;
+}) => {
+  const parts = children.split(/(\s+)/);
+
+  return (
+    <ResumePDFText
+      bold={bold}
+      themeColor={themeColor}
+      style={style}
+    >
+      {parts.map((part, index) => {
+        if (/^\s+$/.test(part)) {
+          return part;
+        }
+
+        if (part.length <= 30) {
+          return part;
+        }
+
+        return (
+          <Text key={`long-word-${index}`}>
+            {Array.from(part).map((char, charIndex) => (
+              <Text key={`char-${index}-${charIndex}`}>
+                {char}
+                {"\u200B"}
+              </Text>
+            ))}
+          </Text>
+        );
+      })}
+    </ResumePDFText>
+  );
+};
+
 export const ResumePDFBulletList = ({
   items,
   showBulletPoints = true,
@@ -99,10 +150,20 @@ export const ResumePDFBulletList = ({
               {"•"}
             </ResumePDFText>
           )}
-          {/* A breaking change was introduced causing text layout to be wider than node's width
-              https://github.com/diegomura/react-pdf/issues/2182. flexGrow & flexBasis fixes it */}
+
+          {/*
+            A breaking change was introduced causing text layout
+            to be wider than node's width.
+
+            flexGrow & flexBasis fixes it.
+            https://github.com/diegomura/react-pdf/issues/2182
+          */}
           <ResumePDFText
-            style={{ lineHeight: "1.3", flexGrow: 1, flexBasis: 0 }}
+            style={{
+              lineHeight: "1.3",
+              flexGrow: 1,
+              flexBasis: 0,
+            }}
           >
             {item}
           </ResumePDFText>
@@ -123,11 +184,15 @@ export const ResumePDFLink = ({
 }) => {
   if (isPDF) {
     return (
-      <Link src={src} style={{ textDecoration: "none" }}>
+      <Link
+        src={src}
+        style={{ textDecoration: "none" }}
+      >
         {children}
       </Link>
     );
   }
+
   return (
     <a
       href={src}
@@ -154,10 +219,19 @@ export const ResumeFeaturedSkill = ({
   const numCircles = 5;
 
   return (
-    <View style={{ ...styles.flexRow, alignItems: "center", ...style }}>
-      <ResumePDFText style={{ marginRight: spacing[0.5] }}>
+    <View
+      style={{
+        ...styles.flexRow,
+        alignItems: "center",
+        ...style,
+      }}
+    >
+      <ResumePDFText
+        style={{ marginRight: spacing[0.5] }}
+      >
         {skill}
       </ResumePDFText>
+
       {[...Array(numCircles)].map((_, idx) => (
         <View
           key={idx}
@@ -165,7 +239,10 @@ export const ResumeFeaturedSkill = ({
             height: "9pt",
             width: "9pt",
             marginLeft: "2.25pt",
-            backgroundColor: rating >= idx ? themeColor : "#d9d9d9",
+            backgroundColor:
+              rating >= idx
+                ? themeColor
+                : "#d9d9d9",
             borderRadius: "100%",
           }}
         />
