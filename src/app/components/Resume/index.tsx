@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useMemo } from "react";
 import { ResumeIframeCSR } from "components/Resume/ResumeIFrame";
 import { ResumePDF } from "components/Resume/ResumePDF";
@@ -19,10 +20,18 @@ import { NonEnglishFontsCSSLazyLoader } from "components/fonts/NonEnglishFontsCS
 
 export const Resume = () => {
   const [scale, setScale] = useState(0.8);
+
   const resume = useAppSelector(selectResume);
   const settings = useAppSelector(selectSettings);
+
   const document = useMemo(
     () => <ResumePDF resume={resume} settings={settings} isPDF={true} />,
+    [resume, settings]
+  );
+
+  // Recreate the export document when resume or layout settings change.
+  const downloadKey = useMemo(
+    () => JSON.stringify({ resume, settings }),
     [resume, settings]
   );
 
@@ -32,8 +41,10 @@ export const Resume = () => {
   return (
     <>
       <NonEnglishFontsCSSLazyLoader />
+
       <div className="relative flex justify-center md:justify-start">
         <FlexboxSpacer maxWidth={50} className="hidden md:block" />
+
         <div className="relative">
           <section className="h-[calc(100vh-var(--top-nav-bar-height)-var(--resume-control-bar-height))] overflow-hidden md:p-[var(--resume-padding)]">
             <ResumeIframeCSR
@@ -48,7 +59,9 @@ export const Resume = () => {
               />
             </ResumeIframeCSR>
           </section>
+
           <ResumeControlBarCSR
+            key={downloadKey}
             scale={scale}
             setScale={setScale}
             documentSize={settings.documentSize}
@@ -56,6 +69,7 @@ export const Resume = () => {
             fileName={resume.profile.name + " - Resume"}
           />
         </div>
+
         <ResumeControlBarBorder />
       </div>
     </>
