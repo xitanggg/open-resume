@@ -52,7 +52,7 @@ const QAS = [
           experience, education, and skills, while omitting unnecessary sections
           like references. Additionally, OpenResume only offers a top down
           single column resume design as opposed to two column design, because
-          single column design works best for AST. <br />{" "}
+          single column design works best for ATS. <br />{" "}
         </p>
         <p>
           <span className="font-semibold">
