@@ -45,8 +45,14 @@ export default function ResumeParser() {
 
   useEffect(() => {
     async function test() {
-      const textItems = await readPdf(fileUrl);
-      setTextItems(textItems);
+      try {
+        const textItems = await readPdf(fileUrl);
+        setTextItems(textItems);
+      } catch (error) {
+        // Clear results so a failed read doesn't leave the previous resume's results showing
+        console.error("Failed to read pdf", error);
+        setTextItems([]);
+      }
     }
     test();
   }, [fileUrl]);
