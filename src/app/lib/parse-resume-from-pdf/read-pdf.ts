@@ -34,6 +34,24 @@ export const readPdf = async (fileUrl: string): Promise<TextItems> => {
     await page.getOperatorList();
     const commonObjs = page.commonObjs;
 
+    // Fonts can still be loading after getOperatorList resolves (e.g. in Firefox), and
+    // commonObjs.get without a callback throws for unresolved objects. Wait for them instead.
+    const pdfFontNames = new Set(
+      textContent.items.map((item) => (item as PdfjsTextItem).fontName)
+    );
+    const fontNames: Record<string, string> = {};
+    await Promise.all(
+      Array.from(pdfFontNames).map(
+        (pdfFontName) =>
+          new Promise<void>((resolve) => {
+            commonObjs.get(pdfFontName, (fontObj: { name: string }) => {
+              fontNames[pdfFontName] = fontObj.name;
+              resolve();
+            });
+          })
+      )
+    );
+
     // Convert Pdfjs TextItem type to new TextItem type
     const pageTextItems = textContent.items.map((item) => {
       const {
@@ -53,8 +71,7 @@ export const readPdf = async (fileUrl: string): Promise<TextItems> => {
       // Use commonObjs to convert font name to original name (e.g. "GVDLYI+Arial-BoldMT")
       // since non system font name by default is a loaded name, e.g. "g_d8_f1"
       // Reference: https://github.com/mozilla/pdf.js/pull/15659
-      const fontObj = commonObjs.get(pdfFontName);
-      const fontName = fontObj.name;
+      const fontName = fontNames[pdfFontName];
 
       // pdfjs reads a "-" as "-­‐" in the resume example. This is to revert it.
       // Note "-­‐" is "-&#x00AD;‐" with a soft hyphen in between. It is not the same as "--"
