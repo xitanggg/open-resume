@@ -1,6 +1,6 @@
 "use client";
-import { useMemo } from "react";
-import Frame from "react-frame-component";
+import { useEffect, useMemo, useState } from "react";
+import Frame, { useFrame } from "react-frame-component";
 import {
   A4_HEIGHT_PX,
   A4_WIDTH_PX,
@@ -49,25 +49,63 @@ const getIframeInitialContent = (isA4: boolean) => {
 };
 
 /**
+ * Rendered inside the iframe. Watches the iframe body's height and reports
+ * how many pages the resume content spans.
+ */
+const PageCountReporter = ({
+  pageHeight,
+  onPageCountChange,
+}: {
+  pageHeight: number;
+  onPageCountChange: (pageCount: number) => void;
+}) => {
+  const { document: frameDocument, window: frameWindow } = useFrame();
+
+  useEffect(() => {
+    const body = frameDocument?.body;
+    if (!body) return;
+    const update = () =>
+      onPageCountChange(
+        Math.max(1, Math.ceil(body.scrollHeight / pageHeight))
+      );
+    update();
+    const Observer =
+      (frameWindow as (Window & typeof globalThis) | undefined)
+        ?.ResizeObserver ?? ResizeObserver;
+    const observer = new Observer(update);
+    observer.observe(body);
+    return () => observer.disconnect();
+  }, [frameDocument, frameWindow, pageHeight, onPageCountChange]);
+
+  return null;
+};
+
+/**
  * Iframe is used here for style isolation, since react pdf uses pt unit.
  * It creates a sandbox document body that uses letter/A4 pt size as width.
+ *
+ * With multiPage, the iframe grows by one page height whenever the content
+ * overflows, and dashed lines mark where each page ends.
  */
 const ResumeIframe = ({
   documentSize,
   scale,
   children,
   enablePDFViewer = false,
+  multiPage = false,
 }: {
   documentSize: string;
   scale: number;
   children: React.ReactNode;
   enablePDFViewer?: boolean;
+  multiPage?: boolean;
 }) => {
   const isA4 = documentSize === "A4";
   const iframeInitialContent = useMemo(
     () => getIframeInitialContent(isA4),
     [isA4]
   );
+  const [pageCount, setPageCount] = useState(1);
 
   if (enablePDFViewer) {
     return (
@@ -77,7 +115,9 @@ const ResumeIframe = ({
     );
   }
   const width = isA4 ? A4_WIDTH_PX : LETTER_WIDTH_PX;
-  const height = isA4 ? A4_HEIGHT_PX : LETTER_HEIGHT_PX;
+  const pageHeight = isA4 ? A4_HEIGHT_PX : LETTER_HEIGHT_PX;
+  const shownPages = multiPage ? pageCount : 1;
+  const height = pageHeight * shownPages;
 
   return (
     <div
@@ -95,7 +135,7 @@ const ResumeIframe = ({
           height: `${height}px`,
           transform: `scale(${scale})`,
         }}
-        className={`origin-top-left bg-white shadow-lg`}
+        className={`relative origin-top-left bg-white shadow-lg`}
       >
         <Frame
           style={{ width: "100%", height: "100%" }}
@@ -104,7 +144,21 @@ const ResumeIframe = ({
           key={isA4 ? "A4" : "LETTER"}
         >
           {children}
+          {multiPage && (
+            <PageCountReporter
+              pageHeight={pageHeight}
+              onPageCountChange={setPageCount}
+            />
+          )}
         </Frame>
+        {/* Dashed lines marking page breaks */}
+        {Array.from({ length: shownPages - 1 }, (_, i) => (
+          <div
+            key={i}
+            className="pointer-events-none absolute left-0 right-0 border-t-2 border-dashed border-gray-300"
+            style={{ top: `${pageHeight * (i + 1)}px` }}
+          />
+        ))}
       </div>
     </div>
   );
